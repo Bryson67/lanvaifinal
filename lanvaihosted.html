@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULINK | Hosted Courses Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+        body { background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%); min-height: 100vh; padding: 2rem 1.5rem; color: #f0ecf7; }
+        .form-card { max-width: 1100px; margin: 0 auto; padding: 2rem; background: rgba(30, 22, 50, 0.3); border: 1px solid rgba(160, 120, 200, 0.1); border-radius: 24px; }
+        .form-header { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 2rem; }
+        .form-header h1 { font-size: 1.8rem; color: #f2ecff; display: flex; align-items: center; gap: 0.8rem; }
+        .form-header h1 a { color: #b69bdb; text-decoration: none; font-size: 1.6rem; transition: 0.2s; }
+        .form-header h1 a:hover { color: #d4bbf5; }
+        .form-header .badge { display: inline-block; padding: 0.2rem 1rem; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 30px; color: #fbbf24; font-size: 0.75rem; font-weight: 600; width: fit-content; }
+        .form-header p { color: #b8aad0; font-size: 1rem; }
+
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: #b8aad0; font-weight: 500; margin-bottom: 0.3rem; }
+        .form-group label .required { color: #f87171; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.7rem 1rem; background: rgba(12, 8, 24, 0.6); border: 1px solid rgba(180, 150, 220, 0.15); border-radius: 12px; color: #f0eaff; font-size: 0.95rem; outline: none; transition: 0.25s; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #a87cdb; box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #7a6a94; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-group select option { background: #1b142b; color: #eae0f5; }
+
+        .logo-upload { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .logo-upload input[type="file"] { flex: 1; min-width: 150px; padding: 0.5rem; background: rgba(12, 8, 24, 0.4); border: 1px solid rgba(180, 150, 220, 0.15); border-radius: 10px; color: #b8aad0; font-size: 0.85rem; }
+        .logo-preview { width: 60px; height: 60px; border-radius: 12px; background: rgba(20, 14, 40, 0.4); border: 1px solid rgba(160, 120, 200, 0.1); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #7a6a94; overflow: hidden; }
+        .logo-preview img { width: 100%; height: 100%; object-fit: contain; }
+
+        .consent-group { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 1rem; background: rgba(74, 222, 128, 0.05); border: 1px solid rgba(74, 222, 128, 0.1); border-radius: 12px; }
+        .consent-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: #4ade80; cursor: pointer; }
+        .consent-group label { color: #b8aad0; font-size: 0.9rem; cursor: pointer; margin-bottom: 0; }
+        .consent-group label strong { color: #4ade80; }
+
+        .section-title { font-size: 1.05rem; color: #e0d0ee; margin: 1.5rem 0 0.8rem 0; font-weight: 500; }
+
+        .submit-btn { width: 100%; padding: 0.9rem; background: linear-gradient(145deg, #f59e0b, #d97706); border: none; border-radius: 14px; font-size: 1.1rem; font-weight: 600; color: #0e0a1a; cursor: pointer; transition: 0.25s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+        .submit-btn:hover { transform: scale(1.01); box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+        #formFeedback { margin-top: 1.5rem; padding: 1rem 1.2rem; border-radius: 12px; background: rgba(74, 222, 128, 0.05); border: 1px solid rgba(74, 222, 128, 0.1); color: #b8aad0; font-size: 0.95rem; line-height: 1.6; }
+
+        .footer { text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid rgba(160, 120, 200, 0.08); color: #5e4d78; font-size: 0.85rem; }
+
+        /* Course Block Styles */
+        .course-block { background: rgba(40, 30, 65, 0.5); border: 1px solid rgba(160, 120, 200, 0.2); border-radius: 20px; padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; position: relative; }
+        .course-block .remove-block { position: absolute; top: 12px; right: 16px; background: transparent; border: none; color: #b08acf; font-size: 1.4rem; cursor: pointer; transition: 0.2s; }
+        .course-block .remove-block:hover { color: #f58aae; transform: scale(1.2); }
+        .course-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .course-grid .form-group { margin-bottom: 0; }
+        .course-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .course-grid-2 .form-group { margin-bottom: 0; }
+        .course-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .course-grid-3 .form-group { margin-bottom: 0; }
+        @media (max-width: 700px) { .course-grid, .course-grid-2, .course-grid-3 { grid-template-columns: 1fr; } }
+
+        .add-course-btn { background: rgba(130, 80, 190, 0.25); border: 1px solid rgba(170, 130, 220, 0.3); color: #cfbcfa; padding: 0.6rem 1.5rem; border-radius: 40px; font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .add-course-btn:hover { background: rgba(160, 110, 220, 0.3); border-color: #b18be0; color: white; transform: scale(1.02); }
+
+        .course-type-toggle { display: flex; gap: 1rem; margin: 0.5rem 0 0.8rem 0; align-items: center; flex-wrap: wrap; }
+        .course-type-toggle label { display: flex; align-items: center; gap: 0.5rem; font-weight: 400; font-size: 0.9rem; cursor: pointer; color: #b8aad0; padding: 0.3rem 0.8rem; border-radius: 30px; border: 1px solid rgba(160, 120, 200, 0.15); transition: 0.2s; }
+        .course-type-toggle label:hover { background: rgba(130, 80, 190, 0.15); }
+        .course-type-toggle input[type="radio"] { width: auto; margin-right: 0.2rem; accent-color: #a87cdb; }
+        .course-type-toggle .active-label { background: rgba(130, 80, 190, 0.2); border-color: #a87cdb; color: #e5d5fc; }
+
+        .course-type-content { display: none; padding: 0.8rem 0 0.3rem 0; border-top: 1px solid rgba(160, 120, 200, 0.1); margin-top: 0.3rem; }
+        .course-type-content.active { display: block; }
+
+        .file-upload-area { background: rgba(12, 8, 24, 0.4); border: 1px dashed rgba(160, 120, 200, 0.25); border-radius: 16px; padding: 1rem; text-align: center; color: #a28ebd; transition: 0.2s; cursor: pointer; }
+        .file-upload-area:hover { border-color: #a87cdb; background: rgba(130, 80, 190, 0.08); }
+        .file-upload-area input[type="file"] { width: 100%; padding: 0.5rem 0; background: transparent; border: none; color: #d2c2ea; }
+        .file-upload-area small { display: block; color: #7a6a94; font-size: 0.75rem; }
+
+        .topic-section { background: rgba(20, 14, 35, 0.4); border: 1px solid rgba(160, 120, 200, 0.08); border-radius: 14px; padding: 0.8rem 1rem; margin-bottom: 0.6rem; position: relative; }
+        .topic-section .remove-topic { position: absolute; top: 8px; right: 12px; background: transparent; border: none; color: #b08acf; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
+        .topic-section .remove-topic:hover { color: #f58aae; }
+        .topic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        .topic-grid .form-group { margin-bottom: 0; }
+        .topic-grid .file-upload-area { padding: 0.4rem 0.6rem; }
+        .topic-grid .file-upload-area input[type="file"] { padding: 0.3rem 0; font-size: 0.8rem; }
+        .topic-grid .file-upload-area small { font-size: 0.65rem; }
+        @media (max-width: 700px) { .topic-grid { grid-template-columns: 1fr; } }
+
+        .add-topic-btn { background: rgba(130, 80, 190, 0.15); border: 1px solid rgba(170, 130, 220, 0.2); color: #cfbcfa; padding: 0.3rem 1rem; border-radius: 30px; font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem; }
+        .add-topic-btn:hover { background: rgba(160, 110, 220, 0.2); border-color: #b18be0; color: white; }
+
+        @media (max-width: 480px) { body { padding: 1rem; } .form-card { padding: 0.8rem; } .course-block { padding: 0.8rem; } }
+    </style>
+</head>
+
+<body>
+    <div class="form-card">
+        <div class="form-header">
+            <h1> <a href="institution.html">⬅️</a> 🚀 EDULINK Hosted Courses</h1>
+            <span class="badge">For Bootcamps &amp; Small Institutions</span>
+            <p>Host your courses on EDULINK and reach more students</p>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast" class="toast-notification"></div>
+
+        <form id="hostedCourseForm" novalidate>
+            <!-- Institution Name -->
+            <div class="form-group">
+                <label>Institution / Bootcamp Name <span class="required">*</span></label>
+                <input type="text" id="instName" name="instName" placeholder="e.g. CodeCraft Bootcamp" required>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label>Email <span class="required">*</span></label>
+                <input type="email" id="instEmail" name="instEmail" placeholder="contact@bootcamp.com" required>
+            </div>
+
+            <!-- Logo -->
+            <div class="form-group">
+                <label>Institution Logo</label>
+                <div class="logo-upload">
+                    <input type="file" id="logoInput" name="logoInput" accept="image/*">
+                    <div class="logo-preview" id="logoPreview">📷 Logo</div>
+                </div>
+            </div>
+
+            <!-- About Us -->
+            <div class="form-group">
+                <label>About Us <span class="required">*</span></label>
+                <textarea id="aboutUs" name="aboutUs" placeholder="Tell students about your institution, mission, and what makes you unique..." required></textarea>
+            </div>
+
+            <!-- Achievements -->
+            <div class="form-group">
+                <label>Achievements</label>
+                <textarea id="achievements" name="achievements" placeholder="List your key achievements, awards, or success stories..."></textarea>
+            </div>
+
+            <!-- Consent: 10% share -->
+            <div class="form-group">
+                <div class="consent-group">
+                    <input type="checkbox" id="consentCheck" name="consentCheck" required>
+                    <label for="consentCheck">
+                        I agree that <strong>10% of all course revenue</strong> will be shared with EDULINK for hosting and marketing services. <span class="required">*</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- ===== COURSES SECTION ===== -->
+            <div class="section-title">📚 Courses Offered</div>
+            <small style="color: rgba(200, 170, 220, 0.6); display:block; margin-bottom:0.8rem;">Add courses with detailed information</small>
+
+            <div id="coursesContainer">
+                <!-- Course entries will be added here -->
+            </div>
+
+            <button type="button" class="add-course-btn" id="addCourseBtn">➕ Add Course</button>
+
+            <!-- Submit -->
+            <button type="submit" class="submit-btn" id="submitFormBtn" style="margin-top:2rem;">📤 Host Courses on EDULINK</button>
+        </form>
+
+        <div id="formFeedback"></div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 EDULINK | Smart Solutions for Smart Learners</p>
+    </footer>
+
+    <script>
+        // ==============================================
+        // MAIN LOGIC - LANVAI HOSTED COURSES
+        // ==============================================
+
+        // ===== TOAST =====
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 3000);
+        }
+
+        // ----- LOGO PREVIEW -----
+        var logoInput = document.getElementById('logoInput');
+        var logoPreview = document.getElementById('logoPreview');
+
+        logoInput.addEventListener('change', function(e) {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    logoPreview.innerHTML = '<img src="' + ev.target.result + '" alt="Logo preview">';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                logoPreview.innerHTML = '📷 Logo';
+            }
+        });
+
+        // ===== DYNAMIC COURSE BLOCKS =====
+        var coursesContainer = document.getElementById('coursesContainer');
+        var addCourseBtn = document.getElementById('addCourseBtn');
+        var courseCounter = 0;
+
+        function createTopicBlock() {
+            var topicDiv = document.createElement('div');
+            topicDiv.className = 'topic-section';
+            topicDiv.innerHTML = `
+                <button type="button" class="remove-topic" title="Remove this topic">✕</button>
+                <div class="topic-grid">
+                    <div class="form-group">
+                        <label style="font-size:0.7rem; opacity:0.6;">Topic Name <span class="required">*</span></label>
+                        <input type="text" class="topic-name" name="topic_name" placeholder="e.g. Introduction to Data Science" required>
+                    </div>
+                    <div class="form-group" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <div style="flex:1; min-width:120px;">
+                            <label style="font-size:0.7rem; opacity:0.6;">Video <span class="required">*</span></label>
+                            <div class="file-upload-area" style="padding:0.3rem 0.5rem;">
+                                <input type="file" class="topic-video" name="topic_video" accept="video/*" required>
+                                <small>Upload video</small>
+                            </div>
+                        </div>
+                        <div style="flex:1; min-width:120px;">
+                            <label style="font-size:0.7rem; opacity:0.6;">PDF <span class="required">*</span></label>
+                            <div class="file-upload-area" style="padding:0.3rem 0.5rem;">
+                                <input type="file" class="topic-pdf" name="topic_pdf" accept=".pdf" required>
+                                <small>Upload PDF</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            topicDiv.querySelectorAll('.file-upload-area input[type="file"]').forEach(function(input) {
+                input.addEventListener('change', function() {
+                    var small = this.parentElement.querySelector('small');
+                    if (this.files.length > 0) {
+                        small.textContent = this.files[0].name;
+                        small.style.color = '#4ade80';
+                    } else {
+                        var originalText = this.accept.includes('video') ? 'Upload video' : 'Upload PDF';
+                        small.textContent = originalText;
+                        small.style.color = '#7a6a94';
+                    }
+                });
+            });
+
+            topicDiv.querySelector('.remove-topic').addEventListener('click', function() {
+                var container = this.closest('.topics-container');
+                var topics = container.querySelectorAll('.topic-section');
+                if (topics.length > 1) {
+                    topicDiv.remove();
+                } else {
+                    showToast('You need at least one topic.', true);
+                }
+            });
+
+            return topicDiv;
+        }
+
+        function createCourseBlock(value) {
+            value = value || null;
+            var block = document.createElement('div');
+            block.className = 'course-block';
+            var idx = courseCounter++;
+            block.dataset.index = idx;
+
+            var courseType = (value && value.courseType) || 'semester';
+
+            block.innerHTML = `
+                <button type="button" class="remove-block" title="Remove this course">✕</button>
+                
+                <div class="course-grid">
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Course Name <span class="required">*</span></label>
+                        <input type="text" class="course-name" name="course_name_${idx}" placeholder="e.g. Data Science" value="${(value && value.name) || ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Price (USD) <span class="required">*</span></label>
+                        <input type="number" class="course-price" name="course_price_${idx}" placeholder="e.g. 2500" step="0.01" min="0" value="${(value && value.price) || ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Number of Semesters <span class="required">*</span></label>
+                        <input type="number" class="course-semesters" name="course_semesters_${idx}" placeholder="e.g. 2" min="1" step="1" value="${(value && value.semesters) || ''}" required>
+                    </div>
+                </div>
+                
+                <div class="course-grid-2" style="margin-top:0.5rem;">
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Certification Body</label>
+                        <input type="text" class="course-certification" name="course_certification_${idx}" placeholder="e.g. EDULINK, IBM, etc." value="${(value && value.certification) || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Category <span class="required">*</span></label>
+                        <select class="course-category" name="course_category_${idx}" required>
+                            <option value="">Select category</option>
+                            <option value="Degree" ${(value && value.category === 'Degree') ? 'selected' : ''}>Degree</option>
+                            <option value="Diploma" ${(value && value.category === 'Diploma') ? 'selected' : ''}>Diploma</option>
+                            <option value="Certificate" ${(value && value.category === 'Certificate') ? 'selected' : ''}>Certificate</option>
+                            <option value="Professional" ${(value && value.category === 'Professional') ? 'selected' : ''}>Professional</option>
+                            <option value="Short Course" ${(value && value.category === 'Short Course') ? 'selected' : ''}>Short Course</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Course Modes -->
+                <div class="course-grid-3" style="margin-top:0.5rem;">
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Delivery Mode <span class="required">*</span></label>
+                        <select class="course-delivery-mode" name="course_delivery_${idx}" required>
+                            <option value="">Select</option>
+                            <option value="Online" ${(value && value.deliveryMode === 'Online') ? 'selected' : ''}>Online</option>
+                            <option value="Hybrid" ${(value && value.deliveryMode === 'Hybrid') ? 'selected' : ''}>Hybrid</option>
+                            <option value="Physical" ${(value && value.deliveryMode === 'Physical') ? 'selected' : ''}>Physical</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Admission <span class="required">*</span></label>
+                        <select class="course-admission" name="course_admission_${idx}" required>
+                            <option value="">Select</option>
+                            <option value="Rolling" ${(value && value.admission === 'Rolling') ? 'selected' : ''}>Rolling</option>
+                            <option value="Intake" ${(value && value.admission === 'Intake') ? 'selected' : ''}>Intake</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Study <span class="required">*</span></label>
+                        <select class="course-study" name="course_study_${idx}" required>
+                            <option value="">Select</option>
+                            <option value="Part-time" ${(value && value.study === 'Part-time') ? 'selected' : ''}>Part-time</option>
+                            <option value="Full-time" ${(value && value.study === 'Full-time') ? 'selected' : ''}>Full-time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Course Type Toggle -->
+                <div class="course-type-toggle">
+                    <label class="${courseType === 'self' ? 'active-label' : ''}">
+                        <input type="radio" name="course_type_${idx}" value="self" ${courseType === 'self' ? 'checked' : ''}> Self-Paced Course
+                    </label>
+                    <label class="${courseType === 'semester' ? 'active-label' : ''}">
+                        <input type="radio" name="course_type_${idx}" value="semester" ${courseType === 'semester' ? 'checked' : ''}> Semester Live
+                    </label>
+                </div>
+
+                <!-- Self-Paced Content -->
+                <div class="course-type-content ${courseType === 'self' ? 'active' : ''}" data-type="self">
+                    <div class="form-group">
+                        <label style="font-size:0.85rem; color:#dac9f0;">📋 Course Topics</label>
+                        <small style="color: rgba(200, 170, 220, 0.5); display:block; margin-bottom:0.4rem;">Add topics with video and PDF materials for each</small>
+                        <div class="topics-container" data-course="${idx}">
+                            <div class="topic-section">
+                                <button type="button" class="remove-topic" title="Remove this topic">✕</button>
+                                <div class="topic-grid">
+                                    <div class="form-group">
+                                        <label style="font-size:0.7rem; opacity:0.6;">Topic Name <span class="required">*</span></label>
+                                        <input type="text" class="topic-name" name="topic_name_${idx}_0" placeholder="e.g. Introduction to Data Science" required>
+                                    </div>
+                                    <div class="form-group" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                        <div style="flex:1; min-width:120px;">
+                                            <label style="font-size:0.7rem; opacity:0.6;">Video <span class="required">*</span></label>
+                                            <div class="file-upload-area" style="padding:0.3rem 0.5rem;">
+                                                <input type="file" class="topic-video" name="topic_video_${idx}_0" accept="video/*" required>
+                                                <small>Upload video</small>
+                                            </div>
+                                        </div>
+                                        <div style="flex:1; min-width:120px;">
+                                            <label style="font-size:0.7rem; opacity:0.6;">PDF <span class="required">*</span></label>
+                                            <div class="file-upload-area" style="padding:0.3rem 0.5rem;">
+                                                <input type="file" class="topic-pdf" name="topic_pdf_${idx}_0" accept=".pdf" required>
+                                                <small>Upload PDF</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="add-topic-btn" data-course="${idx}">➕ Add Topic</button>
+                    </div>
+                </div>
+
+                <!-- Semester Live Content -->
+                <div class="course-type-content ${courseType === 'semester' ? 'active' : ''}" data-type="semester">
+                    <div class="form-group">
+                        <label style="font-size:0.8rem; opacity:0.7;">Upload Weekly Timetable <span class="required">*</span></label>
+                        <div class="file-upload-area">
+                            <input type="file" class="course-timetable" name="course_timetable_${idx}" accept=".pdf,.doc,.docx,.xls,.xlsx" required>
+                            <small>Upload timetable document (PDF, Word, Excel)</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // File upload display
+            block.querySelectorAll('.file-upload-area input[type="file"]').forEach(function(input) {
+                input.addEventListener('change', function() {
+                    var small = this.parentElement.querySelector('small');
+                    if (this.files.length > 0) {
+                        small.textContent = this.files[0].name;
+                        small.style.color = '#4ade80';
+                    } else {
+                        var originalText = this.accept.includes('video') ? 'Upload video' :
+                            this.accept.includes('pdf') ? 'Upload PDF' :
+                            'Upload timetable document (PDF, Word, Excel)';
+                        small.textContent = originalText;
+                        small.style.color = '#7a6a94';
+                    }
+                });
+            });
+
+            // Toggle functionality
+            var radios = block.querySelectorAll('input[type="radio"]');
+            radios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    var parentBlock = this.closest('.course-block');
+                    var contents = parentBlock.querySelectorAll('.course-type-content');
+                    var labels = parentBlock.querySelectorAll('.course-type-toggle label');
+                    contents.forEach(function(content) {
+                        content.classList.toggle('active', content.dataset.type === this.value);
+                    });
+                    labels.forEach(function(label) {
+                        label.classList.toggle('active-label', label.querySelector('input[type="radio"]') === this);
+                    });
+                });
+            });
+
+            // Add Topic
+            var addTopicBtn = block.querySelector('.add-topic-btn');
+            var topicsContainer = block.querySelector('.topics-container');
+            if (addTopicBtn && topicsContainer) {
+                addTopicBtn.addEventListener('click', function() {
+                    var newTopic = createTopicBlock();
+                    topicsContainer.appendChild(newTopic);
+                });
+            }
+
+            // Remove topic
+            block.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-topic')) {
+                    var topicSection = e.target.closest('.topic-section');
+                    var container = topicSection.closest('.topics-container');
+                    var topics = container.querySelectorAll('.topic-section');
+                    if (topics.length > 1) {
+                        topicSection.remove();
+                    } else {
+                        showToast('You need at least one topic.', true);
+                    }
+                }
+            });
+
+            block.querySelector('.remove-block').addEventListener('click', function() {
+                var blocks = coursesContainer.querySelectorAll('.course-block');
+                if (blocks.length > 1) {
+                    block.remove();
+                } else {
+                    showToast('You need at least one course.', true);
+                }
+            });
+
+            return block;
+        }
+
+        // Initialize with one default block
+        coursesContainer.appendChild(createCourseBlock(null));
+
+        // Add button listener
+        addCourseBtn.addEventListener('click', function() {
+            coursesContainer.appendChild(createCourseBlock(null));
+        });
+
+        // Helper to gather courses
+        function getCourses() {
+            var blocks = coursesContainer.querySelectorAll('.course-block');
+            var courses = [];
+            blocks.forEach(function(block) {
+                var name = block.querySelector('.course-name') ? block.querySelector('.course-name').value.trim() : '';
+                var price = block.querySelector('.course-price') ? block.querySelector('.course-price').value.trim() : '';
+                var semesters = block.querySelector('.course-semesters') ? block.querySelector('.course-semesters').value.trim() : '';
+                var certification = block.querySelector('.course-certification') ? block.querySelector('.course-certification').value.trim() : '';
+                var category = block.querySelector('.course-category') ? block.querySelector('.course-category').value : '';
+                var deliveryMode = block.querySelector('.course-delivery-mode') ? block.querySelector('.course-delivery-mode').value : '';
+                var admission = block.querySelector('.course-admission') ? block.querySelector('.course-admission').value : '';
+                var study = block.querySelector('.course-study') ? block.querySelector('.course-study').value : '';
+                var courseType = block.querySelector('input[type="radio"]:checked') ? block.querySelector('input[type="radio"]:checked').value : 'semester';
+
+                // Get timetable files
+                var timetableInput = block.querySelector('.course-timetable');
+                var timetableFiles = [];
+                if (timetableInput && timetableInput.files) {
+                    for (var i = 0; i < timetableInput.files.length; i++) {
+                        timetableFiles.push(timetableInput.files[i].name);
+                    }
+                }
+
+                // Get topics
+                var topics = [];
+                if (courseType === 'self') {
+                    var topicSections = block.querySelectorAll('.topic-section');
+                    topicSections.forEach(function(section) {
+                        var topicName = section.querySelector('.topic-name') ? section.querySelector('.topic-name').value.trim() : '';
+                        var videoInput = section.querySelector('.topic-video');
+                        var pdfInput = section.querySelector('.topic-pdf');
+                        var video = (videoInput && videoInput.files && videoInput.files.length > 0) ? videoInput.files[0].name : '';
+                        var pdf = (pdfInput && pdfInput.files && pdfInput.files.length > 0) ? pdfInput.files[0].name : '';
+                        if (topicName) {
+                            topics.push({ name: topicName, video: video, pdf: pdf });
+                        }
+                    });
+                }
+
+                if (name && price && semesters && category && deliveryMode && admission && study) {
+                    var courseData = {
+                        name: name,
+                        price: parseFloat(price) || 0,
+                        semesters: parseInt(semesters) || 1,
+                        certification: certification || 'Not specified',
+                        category: category,
+                        deliveryMode: deliveryMode,
+                        admission: admission,
+                        study: study,
+                        courseType: courseType
+                    };
+
+                    if (courseType === 'self') {
+                        courseData.topics = topics;
+                    } else {
+                        courseData.timetableFiles = timetableFiles;
+                    }
+
+                    courses.push(courseData);
+                }
+            });
+            return courses;
+        }
+
+        // ===== FORM SUBMIT =====
+        var form = document.getElementById('hostedCourseForm');
+        var feedback = document.getElementById('formFeedback');
+        var submitBtn = document.getElementById('submitFormBtn');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('🔄 Form submitted!');
+
+            var instName = document.getElementById('instName').value.trim();
+            var email = document.getElementById('instEmail').value.trim();
+            var aboutUs = document.getElementById('aboutUs').value.trim();
+            var achievements = document.getElementById('achievements').value.trim();
+            var consent = document.getElementById('consentCheck').checked;
+            var courses = getCourses();
+
+            console.log('📋 Form Data:', { instName, email, aboutUs, achievements, consent, courses });
+
+            // Validation
+            if (!instName) {
+                feedback.textContent = '⚠️ Institution name is required.';
+                feedback.style.color = '#f87171';
+                showToast('⚠️ Institution name is required.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Host Courses on EDULINK';
+                return;
+            }
+            if (!email) {
+                feedback.textContent = '⚠️ Email is required.';
+                feedback.style.color = '#f87171';
+                showToast('⚠️ Email is required.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Host Courses on EDULINK';
+                return;
+            }
+            if (!aboutUs) {
+                feedback.textContent = '⚠️ Please tell us about your institution.';
+                feedback.style.color = '#f87171';
+                showToast('⚠️ About Us is required.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Host Courses on EDULINK';
+                return;
+            }
+            if (!consent) {
+                feedback.textContent = '⚠️ You must agree to the 10% revenue share.';
+                feedback.style.color = '#f87171';
+                showToast('⚠️ You must agree to the 10% revenue share.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Host Courses on EDULINK';
+                return;
+            }
+            if (courses.length === 0) {
+                feedback.textContent = '⚠️ Please add at least one course.';
+                feedback.style.color = '#f87171';
+                showToast('⚠️ Please add at least one course.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Host Courses on EDULINK';
+                return;
+            }
+
+            // Check for incomplete courses
+            var incomplete = false;
+            var errorMsg = '';
+            courses.forEach(function(c, index) {
+                if (!c.name || !c.price || !c.semesters || !c.category || !c.deliveryMode || !c.admission || !c.study) {
+                    incomplete = true;
+                    errorMsg = 'Course ' + (index + 1) + ' has missing required fields.';
+                }
+                if (c.courseType === 'self') {
+                    if (!c.topics || c.topics.length === 0) {
+                        incomplete = true;
+                        errorMsg = 'Course ' + (index + 1) + ' needs at least one topic.';
+                    }
+                    c.topics.forEach(function(t) {
+                        if (!t.name || !t.video || !t.pdf) {
+                            incomplete = true;
+                            errorMsg = 'Topic in Course ' + (index + 1) + ' has missing required fields.';
+                        }
+                    });
+                }
+                if (c.courseType === 'semester' && c.timetableFiles.length === 0) {
+                    incomplete = true;
+                    errorMsg = 'Course ' + (index + 1) + ' needs a timetable file.';
+                }
+            });
+
+            if (incomplete) {
+                feedback.textContent = '⚠️ ' + errorMsg;
+                feedback.style.color = '#f87171';
+                showToast('⚠️ ' + errorMsg, true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📤 Host Courses on EDULINK';
+                return;
+            }
+
+            var formData = {
+                institution: instName,
+                email: email,
+                logo: logoInput.files[0] ? logoInput.files[0].name : 'No logo uploaded',
+                aboutUs: aboutUs,
+                achievements: achievements || 'Not provided',
+                consent: consent,
+                courses: courses
+            };
+
+            submitBtn.textContent = '⏳ Submitting...';
+            submitBtn.disabled = true;
+
+            console.log('📤 Sending to server:', JSON.stringify(formData));
+
+            fetch('/api/lanvaihosted', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(function(response) {
+                console.log('📥 Response status:', response.status);
+                return response.json();
+            })
+            .then(function(result) {
+                console.log('✅ Response data:', result);
+
+                if (result.success) {
+                    var summaryHtml = '';
+                    summaryHtml += '✅ <strong>Success!</strong> "' + instName + '" has been registered.<br>';
+                    summaryHtml += '<span style="font-size:0.85rem; opacity:0.7;">10% revenue share agreement confirmed.</span><br>';
+                    summaryHtml += '<span style="font-size:0.85rem; opacity:0.7; color:#4ade80;">✅ ' + (result.message || 'Data saved to database!') + '</span><br>';
+                    summaryHtml += '<span style="font-size:0.85rem; opacity:0.7;">Total courses: ' + courses.length + '</span><br>';
+                    summaryHtml += '<br><span style="font-size:0.85rem; opacity:0.7; color:#4ade80;">✅ Your courses will appear on the EDULINK platform soon.</span>';
+                    feedback.innerHTML = summaryHtml;
+                    feedback.style.color = '#a78fa';
+
+                    showToast('✅ "' + instName + '" registered successfully with ' + courses.length + ' courses!');
+
+                    // Reset form
+                    document.getElementById('instName').value = '';
+                    document.getElementById('instEmail').value = '';
+                    document.getElementById('aboutUs').value = '';
+                    document.getElementById('achievements').value = '';
+                    document.getElementById('consentCheck').checked = false;
+                    logoPreview.innerHTML = '📷 Logo';
+                    logoInput.value = '';
+                    coursesContainer.innerHTML = '';
+                    coursesContainer.appendChild(createCourseBlock(null));
+                    courseCounter = 0;
+
+                    submitBtn.textContent = '📤 Host Courses on EDULINK';
+                    submitBtn.disabled = false;
+                } else {
+                    feedback.innerHTML = '❌ <strong>Error:</strong> ' + (result.error || 'Unknown error');
+                    feedback.style.color = '#f87171';
+                    showToast('❌ Error: ' + (result.error || 'Unknown error'), true);
+                    submitBtn.textContent = '📤 Host Courses on EDULINK';
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch(function(error) {
+                console.error('❌ Fetch Error:', error);
+                feedback.innerHTML = '❌ <strong>Error:</strong> ' + (error.message || 'Failed to connect to server.');
+                feedback.style.color = '#f87171';
+                showToast('❌ Server error: ' + (error.message || 'Failed to connect'), true);
+                submitBtn.textContent = '📤 Host Courses on EDULINK';
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+
+    <script>
+    (function() {
+        var API_BASE = 'http://localhost:5000/api';
+        var visitorId = localStorage.getItem('visitor_id');
+        if (!visitorId) {
+            visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+            localStorage.setItem('visitor_id', visitorId);
+        }
+
+        // Track page view
+        function trackPageView() {
+            var data = {
+                pageUrl: window.location.pathname || '/',
+                pageTitle: document.title || 'Unknown Page',
+                referrerUrl: document.referrer || ''
+            };
+            
+            fetch(API_BASE + '/track/pageview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(function() {});
+        }
+
+        // Track clicks
+        function setupClickTracking() {
+            document.addEventListener('click', function(e) {
+                var target = e.target;
+                var data = {
+                    elementId: target.id || '',
+                    elementClass: target.className || '',
+                    elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                    pageUrl: window.location.pathname || '/'
+                };
+                
+                // Only track important clicks (links, buttons, etc.)
+                if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                    target.closest('a') || target.closest('button')) {
+                    fetch(API_BASE + '/track/click', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                }
+            });
+        }
+
+        // Track form submissions
+        function setupFormTracking() {
+            document.addEventListener('submit', function(e) {
+                var form = e.target;
+                var data = {
+                    formType: form.id || form.name || 'unknown',
+                    formData: {}
+                };
+                
+                // Collect form data
+                var inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    if (input.name) {
+                        data.formData[input.name] = input.value || '';
+                    }
+                });
+                
+                fetch(API_BASE + '/track/formsubmit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            });
+        }
+
+        // Initialize tracking
+        trackPageView();
+        setupClickTracking();
+        setupFormTracking();
+    })();
+</script>
+</body>
+
+</html>

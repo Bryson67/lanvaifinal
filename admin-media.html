@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai Admin - Media Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== DARK THEME ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            color: #f0ecf7;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(14, 10, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            height: 45px;
+        }
+
+        .brand-text {
+            color: #f2ecff;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .brand-text span {
+            color: #a87cdb;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Toast */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        /* Cards */
+        .admin-card {
+            background: rgba(40, 30, 65, 0.35);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: 0.25s;
+        }
+
+        .admin-card:hover {
+            border-color: rgba(160, 120, 200, 0.2);
+        }
+
+        .admin-card .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e8ddf5;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .admin-card .card-title i {
+            color: #a87cdb;
+        }
+
+        /* Form Controls */
+        .form-control,
+        .form-select {
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 10px;
+            color: #f0eaff;
+            padding: 0.6rem 1rem;
+            transition: 0.25s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+            color: #f0eaff;
+        }
+
+        .form-control::placeholder {
+            color: #7a6a94;
+        }
+
+        .form-label {
+            color: #b8aad0;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-select option {
+            background: #1b142b;
+            color: #f0eaff;
+        }
+
+        /* Image Upload Preview */
+        .image-preview-container {
+            position: relative;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .image-preview-container.show {
+            display: block;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 10px;
+            border: 2px solid rgba(160, 120, 200, 0.2);
+            object-fit: cover;
+        }
+
+        .remove-image-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .remove-image-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .image-upload-area {
+            border: 2px dashed rgba(160, 120, 200, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(12, 8, 24, 0.3);
+        }
+
+        .image-upload-area:hover {
+            border-color: #a87cdb;
+            background: rgba(40, 30, 65, 0.3);
+        }
+
+        .image-upload-area i {
+            font-size: 2rem;
+            color: #7a6a94;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-upload-area p {
+            color: #7a6a94;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .image-upload-area .file-name {
+            color: #b8aad0;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .btn-warning:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(40, 30, 65, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.15);
+            color: #b8aad0;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            transition: 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(60, 40, 90, 0.5);
+            color: #f0ecf7;
+        }
+
+        .btn-sm {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 1px solid rgba(160, 120, 200, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: #7a6a94;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px 30px 0 0;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #b8aad0;
+            background: rgba(40, 30, 65, 0.3);
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #f0ecf7;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(16, 185, 129, 0.2));
+            border-bottom: 2px solid #7c3aed;
+        }
+
+        .nav-tabs .nav-link i {
+            margin-right: 0.5rem;
+        }
+
+        /* Table */
+        .table {
+            color: #f0ecf7;
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            color: #b8aad0;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.1);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody td {
+            border-bottom: 1px solid rgba(160, 120, 200, 0.05);
+            vertical-align: middle;
+            color: #dac9f0;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(40, 30, 65, 0.3);
+        }
+
+        .badge-causing {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .badge-not-causing {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.1);
+        }
+
+        .badge-active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #4ade80;
+        }
+
+        .badge-inactive {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        .badge-type {
+            background: rgba(124, 58, 237, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(124, 58, 237, 0.15);
+        }
+
+        .badge-content-type {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+
+        .badge-content-type.marketing {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+
+        .badge-content-type.restructuring {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border-color: rgba(139, 92, 246, 0.15);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #7a6a94;
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .text-truncate {
+            max-width: 200px;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .thumbnail-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(160, 120, 200, 0.15);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.08);
+            color: #5e4d78;
+            font-size: 0.85rem;
+        }
+
+        .admin-login {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card i {
+            font-size: 60px;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        .login-card h2 {
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+
+        .login-card p {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #2563eb, #059669);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .count-badge {
+            background: rgba(124, 58, 237, 0.2);
+            color: #a78bfa;
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.8rem;
+            }
+            .btn-sm {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+            }
+            .image-preview {
+                max-width: 150px;
+                max-height: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- Admin Login Screen -->
+    <div id="adminLogin" class="admin-login">
+        <div class="login-card">
+            <i class="fas fa-shield-alt"></i>
+            <h2>Admin Access</h2>
+            <p>Enter your password to manage media content</p>
+            <input type="password" id="adminPassword" class="login-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') checkAdminLogin()">
+            <button class="login-btn" onclick="checkAdminLogin()">Access Dashboard →</button>
+            <div id="loginError" class="error-msg">Incorrect password! Access denied.</div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Content -->
+    <div id="adminContent" class="admin-content">
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="container">
+                <div class="row w-100 align-items-center">
+                    <div class="col-md-6">
+                        <a class="navbar-brand" href="index.html">
+                            <img src="/images/lanvai.png" alt="Lanvai Logo" class="brand-logo">
+                            <span class="brand-text">Lanvai <span>Media Admin</span></span>
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-danger btn-sm" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                        <a href="media.html" target="_blank" class="btn btn-primary btn-sm ms-2">
+                            <i class="fas fa-eye"></i> View Media Page
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-4">
+            <!-- Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="admin-card">
+                        <div class="card-title"><i class="fas fa-newspaper"></i> Total News</div>
+                        <h2 class="text-white" id="totalNews">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="admin-card">
+                        <div class="card-title"><i class="fas fa-lightbulb"></i> Total Insights</div>
+                        <h2 class="text-white" id="totalInsights">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="admin-card">
+                        <div class="card-title"><i class="fas fa-check-circle" style="color: #4ade80;"></i> Active</div>
+                        <h2 class="text-white" id="totalActive">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="admin-card">
+                        <div class="card-title"><i class="fas fa-clock" style="color: #fbbf24;"></i> Pending</div>
+                        <h2 class="text-white" id="totalPending">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs" id="mediaTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="news-tab" data-bs-toggle="tab" data-bs-target="#newsContent" type="button" role="tab">
+                        <i class="fas fa-newspaper"></i> News <span class="count-badge" id="newsCount">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="insights-tab" data-bs-toggle="tab" data-bs-target="#insightsContent" type="button" role="tab">
+                        <i class="fas fa-lightbulb"></i> Insights <span class="count-badge" id="insightsCount">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#addContent" type="button" role="tab">
+                        <i class="fas fa-plus-circle"></i> Add New
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- News Tab -->
+                <div class="tab-pane fade show active" id="newsContent" role="tabpanel">
+                    <div class="admin-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <div class="card-title mb-0"><i class="fas fa-list"></i> All News Articles</div>
+                            <div>
+                                <button class="btn btn-success btn-sm" onclick="refreshData()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Content Type</th>
+                                        <th>Date</th>
+                                        <th>Alert</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="newsTableBody">
+                                    <tr><td colspan="9" class="text-center text-muted">Loading news...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights Tab -->
+                <div class="tab-pane fade" id="insightsContent" role="tabpanel">
+                    <div class="admin-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <div class="card-title mb-0"><i class="fas fa-list"></i> All Insights</div>
+                            <div>
+                                <button class="btn btn-success btn-sm" onclick="refreshData()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Content Type</th>
+                                        <th>Type</th>
+                                        <th>Author</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="insightsTableBody">
+                                    <tr><td colspan="9" class="text-center text-muted">Loading insights...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Tab -->
+                <div class="tab-pane fade" id="addContent" role="tabpanel">
+                    <div class="admin-card">
+                        <div class="card-title"><i class="fas fa-plus-circle"></i> Add New Content</div>
+
+                        <!-- Add News Form -->
+                        <div class="mb-4">
+                            <h5 class="text-white mb-3"><i class="fas fa-newspaper"></i> Add News Article</h5>
+                            <form id="addNewsForm" onsubmit="addNews(event)" enctype="multipart/form-data">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Title *</label>
+                                        <input type="text" class="form-control" id="newsTitle" placeholder="Enter news title" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Category *</label>
+                                        <select class="form-select" id="newsCategory" required>
+                                            <option value="">Select Category</option>
+                                            <option value="E-commerce">E-commerce & Retail</option>
+                                            <option value="Technology">Technology & SaaS</option>
+                                            <option value="Healthcare">Healthcare & Wellness</option>
+                                            <option value="Real Estate">Real Estate</option>
+                                            <option value="Education">Education</option>
+                                            <option value="Marketing">Marketing & Advertising</option>
+                                            <option value="Restructuring">Restructuring & Strategy</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Date *</label>
+                                        <input type="date" class="form-control" id="newsDate" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Alert Type *</label>
+                                        <select class="form-select" id="newsAlert" required>
+                                            <option value="">Select Alert</option>
+                                            <option value="causing">⚠️ Causing Alarm</option>
+                                            <option value="not-causing">✅ Not Causing Alarm</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Content Type *</label>
+                                        <select class="form-select" id="newsContentType" required>
+                                            <option value="">Select Content Type</option>
+                                            <option value="Marketing">📊 Marketing</option>
+                                            <option value="Restructuring">🔄 Restructuring</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Source</label>
+                                        <input type="text" class="form-control" id="newsSource" placeholder="e.g., TechCrunch">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Image</label>
+                                        <div class="image-upload-area" id="newsImageArea" onclick="document.getElementById('newsImage').click()">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Click to upload an image</p>
+                                            <p class="file-name" id="newsImageName">No file selected</p>
+                                        </div>
+                                        <input type="file" id="newsImage" accept="image/*" style="display: none;" onchange="previewImage(event, 'newsImagePreview', 'newsImageName')">
+                                        <div class="image-preview-container" id="newsImagePreviewContainer">
+                                            <img class="image-preview" id="newsImagePreview" src="#" alt="Preview">
+                                            <button type="button" class="remove-image-btn" onclick="removeImage('newsImage', 'newsImagePreview', 'newsImageName', 'newsImagePreviewContainer')">×</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Description *</label>
+                                        <textarea class="form-control" id="newsDescription" rows="3" placeholder="Enter news description" required></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-save"></i> Save News
+                                        </button>
+                                        <button type="reset" class="btn btn-secondary ms-2">
+                                            <i class="fas fa-undo"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <hr style="border-color: rgba(160,120,200,0.1);">
+
+                        <!-- Add Insight Form -->
+                        <div>
+                            <h5 class="text-white mb-3"><i class="fas fa-lightbulb"></i> Add Deep Insight</h5>
+                            <form id="addInsightForm" onsubmit="addInsight(event)" enctype="multipart/form-data">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Title *</label>
+                                        <input type="text" class="form-control" id="insightTitle" placeholder="Enter insight title" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Category *</label>
+                                        <select class="form-select" id="insightCategory" required>
+                                            <option value="">Select Category</option>
+                                            <option value="E-commerce">E-commerce & Retail</option>
+                                            <option value="Technology">Technology & SaaS</option>
+                                            <option value="Healthcare">Healthcare & Wellness</option>
+                                            <option value="Real Estate">Real Estate</option>
+                                            <option value="Education">Education</option>
+                                            <option value="Marketing">Marketing & Advertising</option>
+                                            <option value="Restructuring">Restructuring & Strategy</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Type *</label>
+                                        <select class="form-select" id="insightType" required>
+                                            <option value="">Select Type</option>
+                                            <option value="Trend Analysis">Trend Analysis</option>
+                                            <option value="Market Research">Market Research</option>
+                                            <option value="Case Study">Case Study</option>
+                                            <option value="Expert Opinion">Expert Opinion</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Content Type *</label>
+                                        <select class="form-select" id="insightContentType" required>
+                                            <option value="">Select Content Type</option>
+                                            <option value="Marketing">📊 Marketing</option>
+                                            <option value="Restructuring">🔄 Restructuring</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Author</label>
+                                        <input type="text" class="form-control" id="insightAuthor" placeholder="Author name">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Image</label>
+                                        <div class="image-upload-area" id="insightImageArea" onclick="document.getElementById('insightImage').click()">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Click to upload an image</p>
+                                            <p class="file-name" id="insightImageName">No file selected</p>
+                                        </div>
+                                        <input type="file" id="insightImage" accept="image/*" style="display: none;" onchange="previewImage(event, 'insightImagePreview', 'insightImageName')">
+                                        <div class="image-preview-container" id="insightImagePreviewContainer">
+                                            <img class="image-preview" id="insightImagePreview" src="#" alt="Preview">
+                                            <button type="button" class="remove-image-btn" onclick="removeImage('insightImage', 'insightImagePreview', 'insightImageName', 'insightImagePreviewContainer')">×</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Description *</label>
+                                        <textarea class="form-control" id="insightDescription" rows="3" placeholder="Enter insight description" required></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Save Insight
+                                        </button>
+                                        <button type="reset" class="btn btn-secondary ms-2">
+                                            <i class="fas fa-undo"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Lanvai Marketing | Media Management Dashboard</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==============================================
+        // API BASE
+        // ==============================================
+        var API_BASE = '/api';
+        var ADMIN_PASSWORD = '12345678';
+
+        // ==============================================
+        // TOAST NOTIFICATION
+        // ==============================================
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.className = 'toast-notification';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ==============================================
+        // ADMIN LOGIN
+        // ==============================================
+        function checkAdminLogin() {
+            var password = document.getElementById('adminPassword').value;
+
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('media_admin_authenticated', 'true');
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                loadAllData();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginError').textContent = 'Incorrect password! Access denied.';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('media_admin_authenticated');
+            document.getElementById('adminLogin').style.display = 'flex';
+            document.getElementById('adminContent').style.display = 'none';
+            showToast('👋 Logged out successfully');
+        }
+
+        // Check if already authenticated
+        if (localStorage.getItem('media_admin_authenticated') === 'true') {
+            document.getElementById('adminLogin').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            loadAllData();
+        }
+
+        // Enter key for login
+        document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                checkAdminLogin();
+            }
+        });
+
+        // ==============================================
+        // IMAGE HANDLING FUNCTIONS
+        // ==============================================
+        function previewImage(event, previewId, fileNameId) {
+            var file = event.target.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var preview = document.getElementById(previewId);
+                preview.src = e.target.result;
+                var container = document.getElementById(previewId + 'Container');
+                container.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+
+            // Update file name
+            var fileNameElement = document.getElementById(fileNameId);
+            fileNameElement.textContent = file.name;
+
+            // Update the upload area text
+            var uploadArea = document.getElementById(previewId.replace('Preview', 'Area'));
+            if (uploadArea) {
+                uploadArea.querySelector('p').textContent = 'Image selected';
+            }
+        }
+
+        function removeImage(fileInputId, previewId, fileNameId, containerId) {
+            var fileInput = document.getElementById(fileInputId);
+            fileInput.value = '';
+
+            var preview = document.getElementById(previewId);
+            preview.src = '#';
+
+            var container = document.getElementById(containerId);
+            container.classList.remove('show');
+
+            var fileNameElement = document.getElementById(fileNameId);
+            fileNameElement.textContent = 'No file selected';
+
+            var uploadArea = document.getElementById(previewId.replace('Preview', 'Area'));
+            if (uploadArea) {
+                uploadArea.querySelector('p').textContent = 'Click to upload an image';
+            }
+        }
+
+        // ==============================================
+        // CONVERT IMAGE TO BASE64
+        // ==============================================
+        function getImageBase64(fileInputId) {
+            return new Promise(function(resolve, reject) {
+                var fileInput = document.getElementById(fileInputId);
+                if (!fileInput.files || !fileInput.files[0]) {
+                    resolve(null);
+                    return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    resolve(e.target.result);
+                };
+                reader.onerror = function(error) {
+                    reject(error);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            });
+        }
+
+        // ==============================================
+        // LOAD ALL DATA
+        // ==============================================
+        function loadAllData() {
+            loadNews();
+            loadInsights();
+        }
+
+        function refreshData() {
+            loadAllData();
+            showToast('🔄 Data refreshed!');
+        }
+
+        // ==============================================
+        // LOAD NEWS
+        // ==============================================
+        function loadNews() {
+            fetch(API_BASE + '/media/news', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    renderNewsTable(data.news || []);
+                    var activeCount = (data.news || []).filter(function(n) { return n.is_active; }).length;
+                    document.getElementById('totalNews').textContent = data.count || 0;
+                    document.getElementById('newsCount').textContent = data.count || 0;
+                    updateStats();
+                } else {
+                    showToast('❌ Failed to load news: ' + (data.error || 'Unknown error'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading news:', error);
+                showToast('❌ Failed to load news: ' + error.message, true);
+            });
+        }
+
+        // ==============================================
+        // RENDER NEWS TABLE
+        // ==============================================
+        function renderNewsTable(news) {
+            var tbody = document.getElementById('newsTableBody');
+
+            if (!news || news.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="9">
+                        <div class="empty-state">
+                            <i class="fas fa-newspaper"></i>
+                            <p>No news articles found</p>
+                        </div>
+                    </td></tr>
+                `;
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < news.length; i++) {
+                var item = news[i];
+                var alertClass = item.alert === 'causing' ? 'badge-causing' : 'badge-not-causing';
+                var alertText = item.alert === 'causing' ? '⚠️ Causing' : '✅ Not Causing';
+                var statusClass = item.is_active ? 'badge-active' : 'badge-inactive';
+                var statusText = item.is_active ? 'Active' : 'Inactive';
+                var dateStr = item.date ? new Date(item.date).toLocaleDateString() : 'N/A';
+                var imageHtml = item.image ? `<img src="${item.image}" class="thumbnail-img" alt="Thumbnail">` : `<div style="width:50px;height:50px;background:rgba(40,30,65,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#7a6a94;"><i class="fas fa-image"></i></div>`;
+
+                // Content type badge
+                var contentType = item.content_type || 'Marketing';
+                var contentTypeClass = contentType === 'Marketing' ? 'marketing' : 'restructuring';
+                var contentTypeIcon = contentType === 'Marketing' ? '📊' : '🔄';
+
+                html += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${imageHtml}</td>
+                        <td><span class="text-truncate" title="${item.title}">${item.title}</span></td>
+                        <td>${item.category || 'N/A'}</td>
+                        <td><span class="badge badge-content-type ${contentTypeClass}">${contentTypeIcon} ${contentType}</span></td>
+                        <td>${dateStr}</td>
+                        <td><span class="badge ${alertClass}">${alertText}</span></td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editNews(${item.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn ${item.is_active ? 'btn-danger' : 'btn-success'} btn-sm" onclick="toggleNewsStatus(${item.id}, ${item.is_active})" title="${item.is_active ? 'Deactivate' : 'Activate'}">
+                                <i class="fas ${item.is_active ? 'fa-times' : 'fa-check'}"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+            tbody.innerHTML = html;
+        }
+
+        // ==============================================
+        // LOAD INSIGHTS
+        // ==============================================
+        function loadInsights() {
+            fetch(API_BASE + '/media/insights', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    renderInsightsTable(data.insights || []);
+                    document.getElementById('totalInsights').textContent = data.count || 0;
+                    document.getElementById('insightsCount').textContent = data.count || 0;
+                    updateStats();
+                } else {
+                    showToast('❌ Failed to load insights: ' + (data.error || 'Unknown error'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading insights:', error);
+                showToast('❌ Failed to load insights: ' + error.message, true);
+            });
+        }
+
+        // ==============================================
+        // RENDER INSIGHTS TABLE
+        // ==============================================
+        function renderInsightsTable(insights) {
+            var tbody = document.getElementById('insightsTableBody');
+
+            if (!insights || insights.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="9">
+                        <div class="empty-state">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>No insights found</p>
+                        </div>
+                    </td></tr>
+                `;
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < insights.length; i++) {
+                var item = insights[i];
+                var statusClass = item.is_active ? 'badge-active' : 'badge-inactive';
+                var statusText = item.is_active ? 'Active' : 'Inactive';
+                var imageHtml = item.image ? `<img src="${item.image}" class="thumbnail-img" alt="Thumbnail">` : `<div style="width:50px;height:50px;background:rgba(40,30,65,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#7a6a94;"><i class="fas fa-image"></i></div>`;
+
+                // Content type badge
+                var contentType = item.content_type || 'Marketing';
+                var contentTypeClass = contentType === 'Marketing' ? 'marketing' : 'restructuring';
+                var contentTypeIcon = contentType === 'Marketing' ? '📊' : '🔄';
+
+                html += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${imageHtml}</td>
+                        <td><span class="text-truncate" title="${item.title}">${item.title}</span></td>
+                        <td>${item.category || 'N/A'}</td>
+                        <td><span class="badge badge-content-type ${contentTypeClass}">${contentTypeIcon} ${contentType}</span></td>
+                        <td><span class="badge badge-type">${item.type || 'N/A'}</span></td>
+                        <td>${item.author || 'N/A'}</td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editInsight(${item.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn ${item.is_active ? 'btn-danger' : 'btn-success'} btn-sm" onclick="toggleInsightStatus(${item.id}, ${item.is_active})" title="${item.is_active ? 'Deactivate' : 'Activate'}">
+                                <i class="fas ${item.is_active ? 'fa-times' : 'fa-check'}"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+            tbody.innerHTML = html;
+        }
+
+        // ==============================================
+        // UPDATE STATS
+        // ==============================================
+        function updateStats() {
+            var newsActive = document.querySelectorAll('#newsTableBody .badge-active').length;
+            var insightsActive = document.querySelectorAll('#insightsTableBody .badge-active').length;
+            var totalActive = newsActive + insightsActive;
+            document.getElementById('totalActive').textContent = totalActive;
+
+            var newsInactive = document.querySelectorAll('#newsTableBody .badge-inactive').length;
+            var insightsInactive = document.querySelectorAll('#insightsTableBody .badge-inactive').length;
+            var totalPending = newsInactive + insightsInactive;
+            document.getElementById('totalPending').textContent = totalPending;
+        }
+
+        // ==============================================
+        // ADD NEWS
+        // ==============================================
+        async function addNews(event) {
+            event.preventDefault();
+
+            var title = document.getElementById('newsTitle').value.trim();
+            var category = document.getElementById('newsCategory').value;
+            var date = document.getElementById('newsDate').value;
+            var alert = document.getElementById('newsAlert').value;
+            var description = document.getElementById('newsDescription').value.trim();
+            var source = document.getElementById('newsSource').value.trim();
+            var contentType = document.getElementById('newsContentType').value;
+
+            // Get image as base64
+            var imageBase64 = await getImageBase64('newsImage');
+
+            var data = {
+                title: title,
+                category: category,
+                date: date,
+                alert: alert,
+                description: description,
+                source: source,
+                content_type: contentType,
+                image: imageBase64
+            };
+
+            var btn = event.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            fetch(API_BASE + '/admin/media/news', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('✅ News article created successfully!');
+                    document.getElementById('addNewsForm').reset();
+                    // Reset image preview
+                    removeImage('newsImage', 'newsImagePreview', 'newsImageName', 'newsImagePreviewContainer');
+                    loadNews();
+                    // Switch to news tab
+                    document.querySelector('[data-bs-target="#newsContent"]').click();
+                } else {
+                    showToast('❌ Failed to create news: ' + (result.error || 'Unknown error'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error creating news:', error);
+                showToast('❌ Failed to create news: ' + error.message, true);
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Save News';
+            });
+        }
+
+        // ==============================================
+        // ADD INSIGHT
+        // ==============================================
+        async function addInsight(event) {
+            event.preventDefault();
+
+            var title = document.getElementById('insightTitle').value.trim();
+            var category = document.getElementById('insightCategory').value;
+            var type = document.getElementById('insightType').value;
+            var description = document.getElementById('insightDescription').value.trim();
+            var author = document.getElementById('insightAuthor').value.trim();
+            var contentType = document.getElementById('insightContentType').value;
+
+            // Get image as base64
+            var imageBase64 = await getImageBase64('insightImage');
+
+            var data = {
+                title: title,
+                category: category,
+                type: type,
+                description: description,
+                author: author,
+                content_type: contentType,
+                image: imageBase64
+            };
+
+            var btn = event.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            fetch(API_BASE + '/admin/media/insights', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('✅ Insight created successfully!');
+                    document.getElementById('addInsightForm').reset();
+                    // Reset image preview
+                    removeImage('insightImage', 'insightImagePreview', 'insightImageName', 'insightImagePreviewContainer');
+                    loadInsights();
+                    // Switch to insights tab
+                    document.querySelector('[data-bs-target="#insightsContent"]').click();
+                } else {
+                    showToast('❌ Failed to create insight: ' + (result.error || 'Unknown error'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error creating insight:', error);
+                showToast('❌ Failed to create insight: ' + error.message, true);
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Save Insight';
+            });
+        }
+
+        // ==============================================
+        // TOGGLE NEWS STATUS
+        // ==============================================
+        function toggleNewsStatus(id, currentStatus) {
+            var newStatus = !currentStatus;
+            var action = newStatus ? 'activate' : 'deactivate';
+
+            if (!confirm('Are you sure you want to ' + action + ' this news article?')) {
+                return;
+            }
+
+            var data = {
+                id: id,
+                is_active: newStatus
+            };
+
+            fetch(API_BASE + '/admin/media/news', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('✅ News ' + action + 'd successfully!');
+                    loadNews();
+                } else {
+                    showToast('❌ Failed to ' + action + ' news: ' + (result.error || 'Unknown error'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error toggling news:', error);
+                showToast('❌ Failed to ' + action + ' news: ' + error.message, true);
+            });
+        }
+
+        // ==============================================
+        // TOGGLE INSIGHT STATUS
+        // ==============================================
+        function toggleInsightStatus(id, currentStatus) {
+            var newStatus = !currentStatus;
+            var action = newStatus ? 'activate' : 'deactivate';
+
+            if (!confirm('Are you sure you want to ' + action + ' this insight?')) {
+                return;
+            }
+
+            var data = {
+                id: id,
+                is_active: newStatus
+            };
+
+            fetch(API_BASE + '/admin/media/insights', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('✅ Insight ' + action + 'd successfully!');
+                    loadInsights();
+                } else {
+                    showToast('❌ Failed to ' + action + ' insight: ' + (result.error || 'Unknown error'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error toggling insight:', error);
+                showToast('❌ Failed to ' + action + ' insight: ' + error.message, true);
+            });
+        }
+
+        // ==============================================
+        // EDIT FUNCTIONS (Placeholders)
+        // ==============================================
+        function editNews(id) {
+            showToast('📝 Edit functionality coming soon! ID: ' + id);
+        }
+
+        function editInsight(id) {
+            showToast('📝 Edit functionality coming soon! ID: ' + id);
+        }
+
+        // ==============================================
+        // AUTO REFRESH
+        // ==============================================
+        var refreshInterval = setInterval(function() {
+            if (document.getElementById('adminContent').style.display !== 'none') {
+                loadAllData();
+            }
+        }, 30000);
+
+        // ==============================================
+        // TRACKING
+        // ==============================================
+        (function() {
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var data = {
+                    pageUrl: window.location.pathname || '/',
+                    pageTitle: document.title || 'Unknown Page',
+                    referrerUrl: document.referrer || ''
+                };
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            }
+
+            trackPageView();
+        })();
+    </script>
+</body>
+
+</html>

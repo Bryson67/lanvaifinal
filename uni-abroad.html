@@ -1,0 +1,79 @@
+<!-- Tracking Script -->
+<script>
+    (function() {
+        var API_BASE = 'http://localhost:5000/api';
+        var visitorId = localStorage.getItem('visitor_id');
+        if (!visitorId) {
+            visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+            localStorage.setItem('visitor_id', visitorId);
+        }
+
+        // Track page view
+        function trackPageView() {
+            var data = {
+                pageUrl: window.location.pathname || '/',
+                pageTitle: document.title || 'Unknown Page',
+                referrerUrl: document.referrer || ''
+            };
+            
+            fetch(API_BASE + '/track/pageview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(function() {});
+        }
+
+        // Track clicks
+        function setupClickTracking() {
+            document.addEventListener('click', function(e) {
+                var target = e.target;
+                var data = {
+                    elementId: target.id || '',
+                    elementClass: target.className || '',
+                    elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                    pageUrl: window.location.pathname || '/'
+                };
+                
+                // Only track important clicks (links, buttons, etc.)
+                if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                    target.closest('a') || target.closest('button')) {
+                    fetch(API_BASE + '/track/click', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                }
+            });
+        }
+
+        // Track form submissions
+        function setupFormTracking() {
+            document.addEventListener('submit', function(e) {
+                var form = e.target;
+                var data = {
+                    formType: form.id || form.name || 'unknown',
+                    formData: {}
+                };
+                
+                // Collect form data
+                var inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    if (input.name) {
+                        data.formData[input.name] = input.value || '';
+                    }
+                });
+                
+                fetch(API_BASE + '/track/formsubmit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            });
+        }
+
+        // Initialize tracking
+        trackPageView();
+        setupClickTracking();
+        setupFormTracking();
+    })();
+</script>

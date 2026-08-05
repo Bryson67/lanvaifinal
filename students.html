@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai | Student Course Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            color: #f0ecf7;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .filter-group select optgroup {
+            background: #1b142b;
+            color: #b8aad0;
+            font-weight: 600;
+        }
+        .filter-group select optgroup option {
+            font-weight: 400;
+            padding-left: 0.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.15);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #f2ecff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .page-header h1 a {
+            color: #b69bdb;
+            text-decoration: none;
+            font-size: 1.8rem;
+            transition: 0.2s;
+        }
+        .page-header h1 a:hover { color: #d4bbf5; }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-actions .btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.25);
+            color: #cfbcfa;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-actions .btn:hover {
+            background: rgba(160, 110, 220, 0.25);
+            border-color: #b18be0;
+            color: white;
+        }
+
+        .search-section {
+            background: rgba(40, 30, 65, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-section .search-label {
+            font-size: 1rem;
+            color: #dac9f0;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.8rem 1.2rem;
+            background: rgba(12, 8, 24, 0.6);
+            border: 1px solid rgba(180, 150, 220, 0.2);
+            border-radius: 16px;
+            color: #f0eaff;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.25s;
+        }
+        .search-bar input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.2);
+        }
+        .search-bar input::placeholder {
+            color: #7a6a94;
+        }
+
+        .search-bar .search-btn {
+            background: rgba(130, 80, 190, 0.3);
+            border: 1px solid rgba(170, 130, 220, 0.25);
+            color: #cfbcfa;
+            padding: 0.8rem 2rem;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+        .search-bar .search-btn:hover {
+            background: rgba(160, 110, 220, 0.35);
+            border-color: #b18be0;
+            color: white;
+        }
+
+        .location-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.08);
+        }
+
+        .location-bar .location-label {
+            color: #b8aad0;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .location-bar .location-input {
+            flex: 1;
+            min-width: 180px;
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            color: #f0eaff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.25s;
+        }
+        .location-bar .location-input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+
+        .location-bar .get-location-btn {
+            background: rgba(60, 160, 220, 0.2);
+            border: 1px solid rgba(60, 160, 220, 0.25);
+            color: #8fcbff;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .location-bar .get-location-btn:hover {
+            background: rgba(60, 160, 220, 0.3);
+            border-color: #5bb0ff;
+            color: white;
+        }
+        .location-bar .get-location-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .location-status {
+            font-size: 0.75rem;
+            color: #8fcbff;
+        }
+
+        /* ===== MAIN GRID WITH SEPARATE SCROLLING ===== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid { 
+                grid-template-columns: 1fr; 
+            }
+        }
+
+        /* ===== FILTERS SIDEBAR - STICKY WITH ITS OWN SCROLL ===== */
+        .filters-sidebar {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: fit-content;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            position: sticky;
+            top: 1rem;
+            order: 2;
+        }
+
+        .filters-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .filters-sidebar::-webkit-scrollbar-track {
+            background: rgba(160, 120, 200, 0.05);
+            border-radius: 10px;
+        }
+        .filters-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(130, 80, 190, 0.3);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .filters-sidebar { 
+                order: 1; 
+                position: static;
+                max-height: none;
+                overflow-y: visible;
+            }
+            .results-section { order: 2; }
+        }
+
+        .filters-sidebar h2 {
+            font-size: 1.1rem;
+            color: #dac9f0;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #b8aad0;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            color: #f0eaff;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.25s;
+        }
+        .filter-group select:focus,
+        .filter-group input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+        .filter-group select option {
+            background: #1b142b;
+            color: #eae0f5;
+        }
+
+        .filter-group .range-inputs {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .filter-group .range-inputs input {
+            width: 45%;
+        }
+        .filter-group .range-inputs span {
+            color: #7a6a94;
+            font-size: 0.8rem;
+        }
+
+        /* ===== INSTITUTION SUGGESTIONS DROPDOWN ===== */
+        .institution-suggestions {
+            background: rgba(20, 14, 40, 0.95);
+            border: 1px solid rgba(160, 120, 200, 0.2);
+            border-radius: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            margin-top: 4px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 100;
+        }
+        .institution-suggestions.show {
+            display: block;
+        }
+        .institution-suggestions .suggestion-item {
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.05);
+            color: #e8ddf5;
+            font-size: 0.85rem;
+        }
+        .institution-suggestions .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .institution-suggestions .suggestion-item:hover {
+            background: rgba(130, 80, 190, 0.2);
+        }
+        .institution-suggestions .suggestion-item .inst-name {
+            font-weight: 500;
+            color: #dac9f0;
+        }
+        .institution-suggestions .suggestion-item .inst-branches {
+            font-size: 0.7rem;
+            color: #7a6a94;
+            margin-left: 0.5rem;
+        }
+        .institution-suggestions .suggestion-item .inst-branch-list {
+            font-size: 0.7rem;
+            color: #b08acf;
+            margin-top: 0.1rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(160, 120, 200, 0.15);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+        .institution-suggestions .suggestion-item .inst-branch-list .branch-tag {
+            background: rgba(130, 80, 190, 0.15);
+            padding: 0.05rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            color: #cfbcfa;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .institution-suggestions .suggestion-item .inst-branch-list .branch-tag:hover {
+            background: rgba(130, 80, 190, 0.3);
+        }
+        .institution-suggestions .no-results-suggest {
+            padding: 0.8rem;
+            text-align: center;
+            color: #7a6a94;
+            font-size: 0.85rem;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+        .filter-actions button {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .filter-actions .apply-btn {
+            background: rgba(130, 80, 190, 0.3);
+            color: #cfbcfa;
+            border: 1px solid rgba(170, 130, 220, 0.25);
+        }
+        .filter-actions .apply-btn:hover {
+            background: rgba(160, 110, 220, 0.35);
+        }
+        .filter-actions .reset-btn {
+            background: transparent;
+            color: #7a6a94;
+            border: 1px solid rgba(160, 120, 200, 0.1);
+        }
+        .filter-actions .reset-btn:hover {
+            border-color: rgba(160, 120, 200, 0.25);
+            color: #b8aad0;
+        }
+
+        /* ===== RESULTS SECTION - SEPARATE SCROLL ===== */
+        .results-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            order: 1;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .results-section::-webkit-scrollbar {
+            width: 4px;
+        }
+        .results-section::-webkit-scrollbar-track {
+            background: rgba(160, 120, 200, 0.05);
+            border-radius: 10px;
+        }
+        .results-section::-webkit-scrollbar-thumb {
+            background: rgba(74, 222, 128, 0.2);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .results-section {
+                max-height: none;
+                overflow-y: visible;
+                padding-right: 0;
+            }
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.08);
+            flex-shrink: 0;
+        }
+        .results-header .count {
+            color: #b8aad0;
+            font-size: 0.9rem;
+        }
+        .results-header .count strong {
+            color: #f0ecf7;
+        }
+        .results-header .sort-select {
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            padding: 0.4rem 0.8rem;
+            color: #f0eaff;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .results-header .sort-select option {
+            background: #1b142b;
+        }
+
+        /* ===== COURSE CARD ===== */
+        .course-card {
+            background: rgba(40, 30, 65, 0.35);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            transition: 0.25s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        .course-card:hover {
+            border-color: rgba(160, 120, 200, 0.35);
+            background: rgba(40, 30, 65, 0.55);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .course-card:active {
+            transform: scale(0.98);
+        }
+
+        .course-card .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .course-card .course-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e8ddf5;
+        }
+        .course-card .institution-name {
+            color: #b08acf;
+            font-size: 0.9rem;
+        }
+        .course-card .course-badge {
+            display: inline-block;
+            background: rgba(130, 80, 190, 0.2);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #cfbcfa;
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            white-space: nowrap;
+        }
+        .course-card .hosted-badge {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin-left: 0.3rem;
+        }
+        .course-card .hosted-badge.institution {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
+        .course-card .hosted-badge.lanvai {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.15);
+        }
+
+        .course-card .course-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.2rem;
+            font-size: 0.85rem;
+            color: #b8aad0;
+        }
+        .course-card .course-details span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .course-card .course-details .mode-tag {
+            background: rgba(60, 160, 220, 0.15);
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            color: #8fcbff;
+            font-size: 0.75rem;
+        }
+        .course-card .course-details .cluster-tag {
+            background: rgba(168, 124, 219, 0.12);
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            color: #b08acf;
+            font-size: 0.75rem;
+        }
+        .course-card .course-details .intake-tag {
+            background: rgba(74, 222, 128, 0.08);
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            color: #4ade80;
+            font-size: 0.75rem;
+        }
+        .course-card .course-details .pace-tag {
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        .course-card .course-details .pace-tag.self-paced {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+        .course-card .course-details .pace-tag.semester {
+            background: rgba(96, 165, 250, 0.15);
+            color: #60a5fa;
+        }
+
+        /* ===== PRICE & DURATION DISPLAY ===== */
+        .course-card .price-duration {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            font-size: 0.85rem;
+            color: #b8aad0;
+            padding: 0.4rem 0.8rem;
+            background: rgba(16, 185, 129, 0.04);
+            border-radius: 10px;
+            border: 1px solid rgba(16, 185, 129, 0.06);
+        }
+        .course-card .price-duration .price-tag {
+            color: #4ade80;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .course-card .price-duration .duration-tag {
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .course-card .price-duration .price-tag .currency {
+            font-size: 0.7rem;
+            color: #7a6a94;
+            font-weight: 400;
+        }
+
+        .course-card .course-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.2rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+        .course-card .course-footer .branch-location {
+            font-size: 0.8rem;
+            color: #7a6a94;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .course-card .course-footer .click-hint {
+            font-size: 0.7rem;
+            color: #5e4d78;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .nearby-section {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-top: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .nearby-section .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .nearby-section .section-header h3 {
+            font-size: 1.1rem;
+            color: #dac9f0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .nearby-section .section-header .nearby-count {
+            font-size: 0.8rem;
+            color: #7a6a94;
+        }
+
+        .nearby-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.8rem;
+        }
+
+        .nearby-item {
+            background: rgba(40, 30, 65, 0.3);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 14px;
+            padding: 0.8rem 1rem;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .nearby-item:hover {
+            border-color: rgba(160, 120, 200, 0.2);
+            background: rgba(40, 30, 65, 0.45);
+        }
+        .nearby-item .branch-name {
+            font-weight: 600;
+            color: #e8ddf5;
+            font-size: 0.95rem;
+        }
+        .nearby-item .branch-address {
+            font-size: 0.8rem;
+            color: #7a6a94;
+        }
+        .nearby-item .branch-distance {
+            font-size: 0.75rem;
+            color: #4ade80;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .nearby-item .branch-courses {
+            font-size: 0.75rem;
+            color: #b08acf;
+        }
+        .nearby-item .branch-courses-list {
+            font-size: 0.7rem;
+            color: #7a6a94;
+            margin-top: 0.1rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(160, 120, 200, 0.15);
+        }
+        .nearby-item .view-btn {
+            background: rgba(130, 80, 190, 0.15);
+            border: 1px solid rgba(170, 130, 220, 0.15);
+            color: #cfbcfa;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+            align-self: flex-start;
+        }
+        .nearby-item .view-btn:hover {
+            background: rgba(160, 110, 220, 0.2);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #7a6a94;
+        }
+        .no-results .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+        }
+        .chat-float .chat-toggle {
+            background: #5a3a8a;
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.2rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .chat-float .chat-toggle .badge {
+            background: #4ade80;
+            color: #0e0a1a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            margin-left: 0.3rem;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+            color: #7a6a94;
+        }
+        .loading-spinner i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-banner {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #6ee7b7;
+            font-size: 0.9rem;
+        }
+        .status-banner.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+        .status-banner .status-icon {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .page-header h1 { font-size: 1.5rem; }
+            .main-grid { grid-template-columns: 1fr; }
+            .filters-sidebar { position: static; max-height: none; overflow-y: visible; }
+            .results-section { max-height: none; overflow-y: visible; }
+            .nearby-grid { grid-template-columns: 1fr; }
+            .search-section { padding: 1rem; }
+            .search-bar input { min-width: 150px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>
+                <a href="courses.html">⬅️</a> 🎓 Course Search
+            </h1>
+            <div class="header-actions">
+               <a href="courses.html" class="btn">Home</a>
+            <a href="contact.html" class="btn">Contact us</a>
+            <a href="library.html" class="btn">Library</a>
+            <a href="institution.html" class="btn">Institution</a>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast" class="toast-notification"></div>
+
+        <!-- ===== SEARCH SECTION ===== -->
+        <div class="search-section">
+            <div class="search-label">🔍 Search for Courses</div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by course name, institution, or category...">
+                <button class="search-btn" id="searchBtn">🔍 Search</button>
+            </div>
+
+            <!-- Location Bar -->
+            <div class="location-bar">
+                <span class="location-label">📍 Your Location:</span>
+                <input type="text" class="location-input" id="locationInput" placeholder="Enter city, address, or use GPS">
+                <button class="get-location-btn" id="getLocationBtn">📍 Get My Location</button>
+                <span class="location-status" id="locationStatus"></span>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Results -->
+            <div class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <span class="count">Showing <strong id="resultCount">0</strong> courses</span>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="relevance">Sort by: Relevance</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name">Name: A to Z</option>
+                    </select>
+                </div>
+
+                <div id="statusBanner" class="status-banner" style="display:none;">
+                    <span class="status-icon"></span>
+                    <span class="status-text"></span>
+                </div>
+
+                <div id="courseResults">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner"></i>
+                        <p>Loading courses from database...</p>
+                    </div>
+                </div>
+
+                <div class="nearby-section" id="nearbySection">
+                    <div class="section-header">
+                        <h3>📍 Branches Near You Offering These Courses</h3>
+                        <span class="nearby-count" id="nearbyCount">Showing 0 branches</span>
+                    </div>
+                    <div class="nearby-grid" id="nearbyGrid">
+                        <!-- Nearby branch items will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <aside class="filters-sidebar" id="filtersSidebar">
+                <h2>🔍 Filters</h2>
+
+                <div class="filter-group">
+                    <label>Course Category</label>
+                    <select id="filterCategory">
+                        <option value="all">All Categories</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Business">Business</option>
+                        <option value="Design">Design</option>
+                        <option value="Programming">Programming</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Healthcare">Healthcare</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Study Mode</label>
+                    <select id="filterMode">
+                        <option value="all">All Modes</option>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+
+                <!-- ===== ENROLLMENT TYPE FILTER ===== -->
+                <div class="filter-group">
+                    <label>Enrollment Type</label>
+                    <select id="filterEnrollmentType">
+                        <option value="all">📋 All Enrollment Types</option>
+                        <optgroup label="📱 Online">
+                            <option value="onlineRollingFulltime">📱 Online Rolling Fulltime</option>
+                            <option value="onlineRollingParttime">📱 Online Rolling Parttime</option>
+                            <option value="onlineIntakeFulltime">📱 Online Intake Fulltime</option>
+                            <option value="onlineIntakeParttime">📱 Online Intake Parttime</option>
+                        </optgroup>
+                        <optgroup label="🏫 Physical">
+                            <option value="physicalRollingFulltime">🏫 Physical Rolling Fulltime</option>
+                            <option value="physicalRollingParttime">🏫 Physical Rolling Parttime</option>
+                            <option value="physicalIntakeFulltime">🏫 Physical Intake Fulltime</option>
+                            <option value="physicalIntakeParttime">🏫 Physical Intake Parttime</option>
+                        </optgroup>
+                        <optgroup label="🔄 Hybrid">
+                            <option value="hybridRollingFulltime">🔄 Hybrid Rolling Fulltime</option>
+                            <option value="hybridRollingParttime">🔄 Hybrid Rolling Parttime</option>
+                            <option value="hybridIntakeFulltime">🔄 Hybrid Intake Fulltime</option>
+                            <option value="hybridIntakeParttime">🔄 Hybrid Intake Parttime</option>
+                        </optgroup>
+                        <optgroup label="⚡ Quick Filters">
+                            <option value="online">🌐 All Online</option>
+                            <option value="physical">📍 All Physical</option>
+                            <option value="hybrid">🔄 All Hybrid</option>
+                            <option value="fulltime">⏰ All Full-time</option>
+                            <option value="parttime">⏳ All Part-time</option>
+                            <option value="rolling">📋 Rolling Admission</option>
+                            <option value="intake">📅 Fixed Intake</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Study Type</label>
+                    <select id="filterStudyType">
+                        <option value="all">All Types</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                    </select>
+                </div>
+
+                <!-- ===== LEARNING PACE FILTER (NEW) ===== -->
+                <div class="filter-group">
+                    <label>Learning Pace</label>
+                    <select id="filterPace">
+                        <option value="all">All Paces</option>
+                        <option value="self-paced">⏳ Self-Paced (Learn at your own speed)</option>
+                        <option value="semester-live">📅 Semester Live (Scheduled classes)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Price Range (USD/year)</label>
+                    <div class="range-inputs">
+                        <input type="number" id="filterMinPrice" placeholder="Min" min="0">
+                        <span>—</span>
+                        <input type="number" id="filterMaxPrice" placeholder="Max" min="0">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Intake Date</label>
+                    <select id="filterIntake">
+                        <option value="all">All Intakes</option>
+                        <option value="2025-01">January 2025</option>
+                        <option value="2025-05">May 2025</option>
+                        <option value="2025-09">September 2025</option>
+                        <option value="2026-01">January 2026</option>
+                        <option value="2026-05">May 2026</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Cluster Points</label>
+                    <div class="range-inputs">
+                        <input type="number" id="filterMinCluster" placeholder="Min" min="0" max="84">
+                        <span>—</span>
+                        <input type="number" id="filterMaxCluster" placeholder="Max" min="0" max="84">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Duration (Years)</label>
+                    <select id="filterDuration">
+                        <option value="all">All Durations</option>
+                        <option value="1">1 year</option>
+                        <option value="2">2 years</option>
+                        <option value="3">3 years</option>
+                        <option value="4">4 years</option>
+                        <option value="5">5+ years</option>
+                    </select>
+                </div>
+
+                <!-- ===== INSTITUTION NAME FILTER ===== -->
+                <div class="filter-group">
+                    <label>Institution Name</label>
+                    <input type="text" id="filterInstitution" placeholder="Type institution name..." autocomplete="off">
+                    <div class="institution-suggestions" id="institutionSuggestions"></div>
+                </div>
+
+                <!-- REMOVED: Branch filter section -->
+
+                <div class="filter-actions">
+                    <button class="apply-btn" id="applyFilters">Apply Filters</button>
+                    <button class="reset-btn" id="resetFilters">Reset</button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- ===== CHAT FLOATING ===== -->
+    <div class="chat-float">
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script>
+        // ==============================================
+        // STUDENTS PAGE - FETCH FROM BACKEND API
+        // ==============================================
+
+        var API_BASE = '/api';
+
+        // ===== TOAST =====
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ===== STATE =====
+        var allCourses = [];
+        var currentCourses = [];
+        var userLocation = null;
+        var userLocationName = '';
+        var branches = [];
+        var isLoading = false;
+        var institutionData = {};
+
+        // ===== DOM REFS =====
+        var resultsContainer = document.getElementById('courseResults');
+        var resultCount = document.getElementById('resultCount');
+        var nearbyGrid = document.getElementById('nearbyGrid');
+        var nearbyCount = document.getElementById('nearbyCount');
+        var locationInput = document.getElementById('locationInput');
+        var locationStatus = document.getElementById('locationStatus');
+        var getLocationBtn = document.getElementById('getLocationBtn');
+        var searchInput = document.getElementById('searchInput');
+        var searchBtn = document.getElementById('searchBtn');
+        var statusBanner = document.getElementById('statusBanner');
+
+        // ===== ENROLLMENT TYPE LABELS =====
+        var enrollmentLabels = {
+            'onlineRollingFulltime': '📱 Online Rolling Fulltime',
+            'onlineRollingParttime': '📱 Online Rolling Parttime',
+            'onlineIntakeFulltime': '📱 Online Intake Fulltime',
+            'onlineIntakeParttime': '📱 Online Intake Parttime',
+            'physicalRollingFulltime': '🏫 Physical Rolling Fulltime',
+            'physicalRollingParttime': '🏫 Physical Rolling Parttime',
+            'physicalIntakeFulltime': '🏫 Physical Intake Fulltime',
+            'physicalIntakeParttime': '🏫 Physical Intake Parttime',
+            'hybridRollingFulltime': '🔄 Hybrid Rolling Fulltime',
+            'hybridRollingParttime': '🔄 Hybrid Rolling Parttime',
+            'hybridIntakeFulltime': '🔄 Hybrid Intake Fulltime',
+            'hybridIntakeParttime': '🔄 Hybrid Intake Parttime'
+        };
+
+        // ===== BUILD INSTITUTION DATA =====
+        function buildInstitutionData(courses) {
+            institutionData = {};
+            courses.forEach(function(c) {
+                var instName = c.institution || 'Unknown Institution';
+                if (!institutionData[instName]) {
+                    institutionData[instName] = {
+                        name: instName,
+                        branches: {}
+                    };
+                }
+                if (c.branch && !institutionData[instName].branches[c.branch]) {
+                    institutionData[instName].branches[c.branch] = {
+                        name: c.branch,
+                        address: c.address || 'N/A',
+                        lat: c.lat || 0,
+                        lng: c.lng || 0
+                    };
+                }
+            });
+            console.log('📊 Institution data built:', Object.keys(institutionData).length, 'institutions');
+        }
+
+        // ===== FETCH COURSES FROM API =====
+        function fetchCourses() {
+            isLoading = true;
+            resultsContainer.innerHTML = `
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading courses from database...</p>
+                </div>
+            `;
+
+            fetch(API_BASE + '/courses', {
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('✅ Courses loaded:', data);
+                
+                if (data && data.courses && data.courses.length > 0) {
+                    allCourses = data.courses;
+                    currentCourses = [...allCourses];
+                    
+                    var institutionCount = allCourses.filter(function(c) { return c.hostedType === 'institution'; }).length;
+                    var lanvaiCount = allCourses.filter(function(c) { return c.hostedType === 'lanvai'; }).length;
+                    
+                    console.log('📊 Institution hosted:', institutionCount, 'Lanvai hosted:', lanvaiCount);
+                    
+                    buildInstitutionData(allCourses);
+                    
+                    renderCourses(currentCourses);
+                    updateNearbyBranches(currentCourses.map(function(c) { return c.id; }));
+                    
+                    var sourceMsg = data.source || 'database';
+                    showToast('✅ ' + allCourses.length + ' courses loaded (' + institutionCount + ' institution, ' + lanvaiCount + ' EDULINK)');
+                    
+                    showStatusBanner(true, 'Connected - ' + allCourses.length + ' courses available');
+                } else {
+                    allCourses = [];
+                    currentCourses = [];
+                    renderCourses([]);
+                    showToast('⚠️ No courses found in database.', true);
+                    showStatusBanner(false, 'No courses found in database');
+                }
+                isLoading = false;
+            })
+            .catch(function(error) {
+                console.error('❌ Error fetching courses:', error);
+                showToast('❌ Error loading courses: ' + error.message, true);
+                showStatusBanner(false, 'Error: ' + error.message);
+                isLoading = false;
+                loadFallbackCourses();
+            });
+        }
+
+        // ===== INSTITUTION SUGGESTIONS =====
+        var institutionInput = document.getElementById('filterInstitution');
+        var suggestionsContainer = document.getElementById('institutionSuggestions');
+
+        institutionInput.addEventListener('input', function() {
+            var searchTerm = this.value.trim().toLowerCase();
+            var suggestions = [];
+            
+            if (searchTerm) {
+                var instKeys = Object.keys(institutionData);
+                suggestions = instKeys.filter(function(name) {
+                    return name.toLowerCase().indexOf(searchTerm) !== -1;
+                });
+            }
+            
+            renderSuggestions(suggestions, searchTerm);
+        });
+
+        function renderSuggestions(suggestions, searchTerm) {
+            if (suggestions.length === 0 || !searchTerm) {
+                suggestionsContainer.classList.remove('show');
+                return;
+            }
+
+            var html = '';
+            suggestions.slice(0, 8).forEach(function(instName) {
+                var inst = institutionData[instName];
+                var branchNames = Object.keys(inst.branches);
+                
+                html += `
+                    <div class="suggestion-item" data-institution="${instName}">
+                        <div class="inst-name">🏛️ ${instName}</div>
+                        <div class="inst-branches">📌 ${branchNames.length} branch${branchNames.length > 1 ? 'es' : ''}</div>
+                    </div>
+                `;
+            });
+
+            if (suggestions.length > 8) {
+                html += `<div class="suggestion-item" style="text-align:center; color:#7a6a94; font-size:0.75rem;">
+                    + ${suggestions.length - 8} more institutions
+                </div>`;
+            }
+
+            suggestionsContainer.innerHTML = html;
+            suggestionsContainer.classList.add('show');
+
+            suggestionsContainer.querySelectorAll('.suggestion-item').forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    var instName = this.dataset.institution;
+                    if (instName) {
+                        institutionInput.value = instName;
+                        suggestionsContainer.classList.remove('show');
+                        applyFilters();
+                    }
+                });
+            });
+        }
+
+        // ===== SHOW STATUS BANNER =====
+        function showStatusBanner(isSuccess, message) {
+            statusBanner.style.display = 'flex';
+            statusBanner.className = 'status-banner' + (isSuccess ? '' : ' error');
+            statusBanner.querySelector('.status-icon').textContent = isSuccess ? '✅' : '❌';
+            statusBanner.querySelector('.status-text').textContent = message;
+            
+            if (!isSuccess) {
+                setTimeout(function() {
+                    statusBanner.style.display = 'none';
+                }, 10000);
+            }
+        }
+
+        // ===== FALLBACK COURSES =====
+        function loadFallbackCourses() {
+            var fallbackCourses = [
+                { 
+                    id: 1, 
+                    name: "Data Science & Analytics", 
+                    institution: "Lanvai Tech Academy", 
+                    category: "Data Science", 
+                    mode: "Online", 
+                    studyType: "Full-time", 
+                    price: 4500, 
+                    branch: "Nairobi Campus", 
+                    address: "Nairobi, Kenya", 
+                    lat: -1.2921, 
+                    lng: 36.8219, 
+                    intakeDate: "2025-05", 
+                    clusterPoints: 32, 
+                    duration: 2, 
+                    hostedType: "institution", 
+                    enrollmentType: "onlineRollingFulltime", 
+                    pace: "self-paced" 
+                },
+                { 
+                    id: 2, 
+                    name: "Full Stack Web Development", 
+                    institution: "CodeCraft Academy", 
+                    category: "Programming", 
+                    mode: "Hybrid", 
+                    studyType: "Full-time", 
+                    price: 3800, 
+                    branch: "Online", 
+                    address: "Remote", 
+                    lat: 0, 
+                    lng: 0, 
+                    intakeDate: "2025-01", 
+                    clusterPoints: 28, 
+                    duration: 1.5, 
+                    hostedType: "institution", 
+                    enrollmentType: "onlineIntakeFulltime", 
+                    pace: "semester-live" 
+                },
+                { 
+                    id: 3, 
+                    name: "Digital Marketing Mastery", 
+                    institution: "Nairobi Digital Institute", 
+                    category: "Marketing", 
+                    mode: "Offline", 
+                    studyType: "Part-time", 
+                    price: 2800, 
+                    branch: "Nairobi Campus", 
+                    address: "Nairobi, Kenya", 
+                    lat: -1.2833, 
+                    lng: 36.8167, 
+                    intakeDate: "2025-09", 
+                    clusterPoints: 24, 
+                    duration: 1, 
+                    hostedType: "institution", 
+                    enrollmentType: "physicalRollingParttime", 
+                    pace: "self-paced" 
+                },
+                { 
+                    id: 4, 
+                    name: "UI/UX Design Pro", 
+                    institution: "Innovation Hub Lagos", 
+                    category: "Design", 
+                    mode: "Online", 
+                    studyType: "Full-time", 
+                    price: 3200, 
+                    branch: "Online", 
+                    address: "Remote", 
+                    lat: 0, 
+                    lng: 0, 
+                    intakeDate: "2026-01", 
+                    clusterPoints: 30, 
+                    duration: 1.5, 
+                    hostedType: "institution", 
+                    enrollmentType: "onlineRollingFulltime", 
+                    pace: "semester-live" 
+                },
+                { 
+                    id: 5, 
+                    name: "Business Administration", 
+                    institution: "Crestview University", 
+                    category: "Business", 
+                    mode: "Hybrid", 
+                    studyType: "Full-time", 
+                    price: 5200, 
+                    branch: "Nairobi Campus", 
+                    address: "Nairobi, Kenya", 
+                    lat: -1.2763, 
+                    lng: 36.8210, 
+                    intakeDate: "2025-05", 
+                    clusterPoints: 35, 
+                    duration: 4, 
+                    hostedType: "institution", 
+                    enrollmentType: "hybridIntakeFulltime", 
+                    pace: "semester-live" 
+                },
+                { 
+                    id: 6, 
+                    name: "Cloud Computing & DevOps", 
+                    institution: "Lanvai Tech Academy", 
+                    category: "Technology", 
+                    mode: "Online", 
+                    studyType: "Full-time", 
+                    price: 4900, 
+                    branch: "Online", 
+                    address: "Remote", 
+                    lat: 0, 
+                    lng: 0, 
+                    intakeDate: "2025-09", 
+                    clusterPoints: 34, 
+                    duration: 1.5, 
+                    hostedType: "lanvai", 
+                    enrollmentType: "onlineRollingFulltime", 
+                    pace: "self-paced" 
+                },
+                { 
+                    id: 7, 
+                    name: "AI & Machine Learning", 
+                    institution: "Lanvai Tech Academy", 
+                    category: "Data Science", 
+                    mode: "Online", 
+                    studyType: "Full-time", 
+                    price: 5500, 
+                    branch: "Online", 
+                    address: "Remote", 
+                    lat: 0, 
+                    lng: 0, 
+                    intakeDate: "2026-01", 
+                    clusterPoints: 40, 
+                    duration: 2, 
+                    hostedType: "lanvai", 
+                    enrollmentType: "onlineIntakeFulltime", 
+                    pace: "semester-live" 
+                },
+                { 
+                    id: 8, 
+                    name: "Healthcare Management", 
+                    institution: "Crestview University", 
+                    category: "Healthcare", 
+                    mode: "Offline", 
+                    studyType: "Full-time", 
+                    price: 5500, 
+                    branch: "Nairobi Campus", 
+                    address: "Nairobi, Kenya", 
+                    lat: -1.2700, 
+                    lng: 36.8300, 
+                    intakeDate: "2025-09", 
+                    clusterPoints: 36, 
+                    duration: 4, 
+                    hostedType: "institution", 
+                    enrollmentType: "physicalIntakeFulltime", 
+                    pace: "semester-live" 
+                }
+            ];
+            
+            allCourses = fallbackCourses;
+            currentCourses = [...allCourses];
+            buildInstitutionData(allCourses);
+            renderCourses(currentCourses);
+            updateNearbyBranches(currentCourses.map(function(c) { return c.id; }));
+            showToast('⚠️ Using fallback courses (database unavailable)', true);
+            showStatusBanner(false, 'Using fallback data - ' + allCourses.length + ' courses loaded');
+        }
+
+        // ===== FETCH BRANCHES =====
+        function fetchBranches() {
+            fetch(API_BASE + '/branches', {
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data && data.branches) {
+                    branches = data.branches;
+                    console.log('✅ Branches loaded:', branches.length);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error fetching branches:', error);
+                branches = [
+                    { id: 1, name: "Nairobi Campus", address: "Nairobi, Kenya", lat: -1.2921, lng: 36.8219 },
+                    { id: 2, name: "Online Campus", address: "Remote Learning", lat: 0, lng: 0 },
+                    { id: 3, name: "Innovation Hub Lagos", address: "Lagos, Nigeria", lat: 6.5244, lng: 3.3792 }
+                ];
+            });
+        }
+
+        // ===== RENDER FUNCTIONS =====
+        function renderCourses(courses) {
+            if (!courses || courses.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <div class="icon">🔍</div>
+                        <p>No courses found matching your criteria.</p>
+                        <p style="font-size:0.85rem; margin-top:0.3rem;">Try adjusting your filters or search term.</p>
+                    </div>
+                `;
+                resultCount.textContent = '0';
+                return;
+            }
+
+            resultCount.textContent = courses.length;
+
+            var html = '';
+            for (var i = 0; i < courses.length; i++) {
+                var course = courses[i];
+                var hostedBadge = '';
+                if (course.hostedType === 'lanvai') {
+                    hostedBadge = '<span class="hosted-badge lanvai">🚀 EDULINK Hosted</span>';
+                } else if (course.hostedType === 'institution') {
+                    hostedBadge = '<span class="hosted-badge institution">🏛️ Institution Hosted</span>';
+                }
+
+                var enrollmentLabel = '';
+                if (course.enrollmentType && enrollmentLabels[course.enrollmentType]) {
+                    enrollmentLabel = enrollmentLabels[course.enrollmentType];
+                } else if (course.enrollmentType) {
+                    enrollmentLabel = course.enrollmentType;
+                }
+
+                // Learning Pace Badge
+                var paceLabel = '';
+                var paceClass = '';
+                if (course.pace === 'self-paced') {
+                    paceLabel = '⏳ Self-Paced';
+                    paceClass = 'self-paced';
+                } else if (course.pace === 'semester-live') {
+                    paceLabel = '📅 Semester Live';
+                    paceClass = 'semester';
+                }
+
+                // Format price
+                var priceDisplay = course.price ? 'KES ' + Number(course.price).toLocaleString() : 'Contact for price';
+                var priceClass = course.price ? 'price-tag' : 'price-tag';
+
+                // Format duration
+                var durationDisplay = course.duration ? course.duration + ' year' + (course.duration > 1 ? 's' : '') : 'N/A';
+
+                var detailUrl = 'coursedetail.html?id=' + course.id;
+
+                html += `
+                    <a href="${detailUrl}" class="course-card">
+                        <div class="course-header">
+                            <div>
+                                <div class="course-name">${course.name} ${hostedBadge}</div>
+                                <div class="institution-name">🏛️ ${course.institution || 'Unknown Institution'}</div>
+                            </div>
+                            <span class="course-badge">${course.category || 'General'}</span>
+                        </div>
+                        <div class="course-details">
+                            <span>📚 ${course.studyType || 'N/A'}</span>
+                            <span class="mode-tag">${course.mode || 'N/A'}</span>
+                            ${enrollmentLabel ? `<span class="mode-tag" style="background:rgba(168,124,219,0.12);color:#b08acf;">${enrollmentLabel}</span>` : ''}
+                            ${paceLabel ? `<span class="pace-tag ${paceClass}">${paceLabel}</span>` : ''}
+                            <span class="cluster-tag">📊 ${course.clusterPoints || 'N/A'} pts</span>
+                            <span class="intake-tag">📅 ${course.intakeDate || 'Flexible'}</span>
+                        </div>
+                        <!-- ===== PRICE & DURATION DISPLAY ===== -->
+                        <div class="price-duration">
+                            <span class="${priceClass}">
+                                <i class="fas fa-tag"></i> 
+                                ${priceDisplay}
+                                <span class="currency">/ year</span>
+                            </span>
+                            <span class="duration-tag">
+                                <i class="fas fa-clock"></i> 
+                                ${durationDisplay}
+                            </span>
+                            ${course.semesters ? `<span style="color:#7a6a94;display:flex;align-items:center;gap:0.3rem;"><i class="fas fa-book-open"></i> ${course.semesters} semester${course.semesters > 1 ? 's' : ''}</span>` : ''}
+                        </div>
+                        <div class="course-footer">
+                            <span class="branch-location">📍 ${course.address || 'Nairobi, Kenya'}</span>
+                            <span class="click-hint"><i>➜</i> Click to view details</span>
+                        </div>
+                    </a>
+                `;
+            }
+            resultsContainer.innerHTML = html;
+        }
+
+        function renderNearbyBranches(branchesData, location, filteredCourseIds) {
+            if (!branchesData || branchesData.length === 0 || !location) {
+                nearbyGrid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; color:#7a6a94; padding:1rem;">
+                        ${location ? 'No branches found near your location offering these courses.' : 'Enable location to see nearby branches.'}
+                    </div>
+                `;
+                nearbyCount.textContent = '0 branches';
+                return;
+            }
+
+            var branchesWithDistance = branchesData.map(function(branch) {
+                var dist = location ? calculateDistance(location.lat, location.lng, branch.lat, branch.lng) : null;
+                return {
+                    ...branch,
+                    distance: dist !== null ? dist.toFixed(1) : 'N/A'
+                };
+            });
+
+            if (branchesWithDistance.length === 0) {
+                nearbyGrid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; color:#7a6a94; padding:1rem;">
+                        No branches found near you.
+                    </div>
+                `;
+                nearbyCount.textContent = '0 branches';
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < Math.min(branchesWithDistance.length, 6); i++) {
+                var branch = branchesWithDistance[i];
+                html += `
+                    <div class="nearby-item">
+                        <div class="branch-name">${branch.name}</div>
+                        <div class="branch-address">📍 ${branch.address}</div>
+                        <div class="branch-distance">📏 ${branch.distance !== 'N/A' ? branch.distance + ' km' : 'Remote'}</div>
+                        <button class="view-btn" onclick="alert('View courses at ${branch.name}')">View Courses →</button>
+                    </div>
+                `;
+            }
+            nearbyGrid.innerHTML = html;
+            nearbyCount.textContent = branchesWithDistance.length + ' branches';
+        }
+
+        // ===== FILTER FUNCTION =====
+        function applyFilters() {
+            var searchTerm = searchInput.value.trim().toLowerCase();
+            var category = document.getElementById('filterCategory').value;
+            var mode = document.getElementById('filterMode').value;
+            var enrollmentType = document.getElementById('filterEnrollmentType').value;
+            var studyType = document.getElementById('filterStudyType').value;
+            var pace = document.getElementById('filterPace').value;
+            var minPrice = parseFloat(document.getElementById('filterMinPrice').value) || 0;
+            var maxPrice = parseFloat(document.getElementById('filterMaxPrice').value) || Infinity;
+            var intake = document.getElementById('filterIntake').value;
+            var minCluster = parseFloat(document.getElementById('filterMinCluster').value) || 0;
+            var maxCluster = parseFloat(document.getElementById('filterMaxCluster').value) || 84;
+            var duration = document.getElementById('filterDuration').value;
+            var institutionFilter = document.getElementById('filterInstitution').value.trim().toLowerCase();
+
+            var filtered = allCourses.filter(function(course) {
+                // Search term
+                if (searchTerm) {
+                    var match = course.name.toLowerCase().indexOf(searchTerm) !== -1 ||
+                                (course.institution && course.institution.toLowerCase().indexOf(searchTerm) !== -1) ||
+                                (course.category && course.category.toLowerCase().indexOf(searchTerm) !== -1);
+                    if (!match) return false;
+                }
+                if (category !== 'all' && course.category !== category) return false;
+                if (mode !== 'all' && course.mode !== mode) return false;
+                if (studyType !== 'all' && course.studyType !== studyType) return false;
+                
+                // Learning Pace filter
+                if (pace !== 'all' && course.pace !== pace) return false;
+                
+                if ((course.price || 0) < minPrice || (course.price || 0) > maxPrice) return false;
+                if (intake !== 'all' && course.intakeDate !== intake) return false;
+                var cluster = course.clusterPoints || 0;
+                if (cluster < minCluster || cluster > maxCluster) return false;
+                if (duration !== 'all') {
+                    var dur = parseFloat(duration);
+                    var courseDur = course.duration || 0;
+                    if (dur === 5 && courseDur < 5) return false;
+                    if (dur !== 5 && courseDur !== dur) return false;
+                }
+                
+                // Institution filter
+                if (institutionFilter) {
+                    var instMatch = course.institution && course.institution.toLowerCase().indexOf(institutionFilter) !== -1;
+                    if (!instMatch) return false;
+                }
+                
+                // Enrollment type filter
+                if (enrollmentType !== 'all') {
+                    var et = course.enrollmentType || '';
+                    var match = false;
+                    
+                    if (enrollmentType === et) {
+                        match = true;
+                    }
+                    else if (enrollmentType === 'online' && et.includes('online')) {
+                        match = true;
+                    }
+                    else if (enrollmentType === 'physical' && et.includes('physical')) {
+                        match = true;
+                    }
+                    else if (enrollmentType === 'hybrid' && et.includes('hybrid')) {
+                        match = true;
+                    }
+                    else if (enrollmentType === 'fulltime' && et.includes('fulltime')) {
+                        match = true;
+                    }
+                    else if (enrollmentType === 'parttime' && et.includes('parttime')) {
+                        match = true;
+                    }
+                    else if (enrollmentType === 'rolling' && et.includes('rolling')) {
+                        match = true;
+                    }
+                    else if (enrollmentType === 'intake' && et.includes('intake')) {
+                        match = true;
+                    }
+                    
+                    if (!match) return false;
+                }
+                return true;
+            });
+
+            var sortBy = document.getElementById('sortSelect').value;
+            if (sortBy === 'price-low') {
+                filtered.sort(function(a, b) { return (a.price || 0) - (b.price || 0); });
+            } else if (sortBy === 'price-high') {
+                filtered.sort(function(a, b) { return (b.price || 0) - (a.price || 0); });
+            } else if (sortBy === 'name') {
+                filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
+            }
+
+            currentCourses = filtered;
+            renderCourses(filtered);
+            var courseIds = filtered.map(function(c) { return c.id; });
+            updateNearbyBranches(courseIds);
+            
+            if (filtered.length === 0) {
+                showToast('⚠️ No courses match your filters.', true);
+            } else {
+                showToast('✅ Found ' + filtered.length + ' courses matching your criteria');
+            }
+        }
+
+        // ===== NEARBY BRANCHES =====
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            if (!lat1 || !lng1 || !lat2 || !lng2) return null;
+            var R = 6371;
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLng = (lng2 - lng1) * Math.PI / 180;
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLng/2) * Math.sin(dLng/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function updateNearbyBranches(filteredCourseIds) {
+            if (!userLocation || (userLocation.lat === 0 && userLocation.lng === 0)) {
+                renderNearbyBranches(branches, null, filteredCourseIds || []);
+                return;
+            }
+
+            renderNearbyBranches(branches, userLocation, filteredCourseIds || []);
+        }
+
+        // ===== LOCATION =====
+        function setLocation(lat, lng, name) {
+            name = name || '';
+            userLocation = { lat: lat, lng: lng };
+            userLocationName = name || lat.toFixed(4) + ', ' + lng.toFixed(4);
+            locationInput.value = userLocationName;
+            locationStatus.textContent = '✅ Location detected';
+            locationStatus.style.color = '#4ade80';
+            var currentIds = currentCourses.map(function(c) { return c.id; });
+            updateNearbyBranches(currentIds.length > 0 ? currentIds : null);
+        }
+
+        getLocationBtn.addEventListener('click', function() {
+            if (!navigator.geolocation) {
+                locationStatus.textContent = '❌ Geolocation not supported';
+                locationStatus.style.color = '#f87171';
+                return;
+            }
+
+            getLocationBtn.disabled = true;
+            getLocationBtn.textContent = '⏳ Getting...';
+            locationStatus.textContent = '📍 Fetching location...';
+            locationStatus.style.color = '#8fcbff';
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    setLocation(latitude, longitude);
+                    getLocationBtn.textContent = '📍 Get My Location';
+                    getLocationBtn.disabled = false;
+
+                    fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + latitude + '&lon=' + longitude + '&zoom=14&addressdetails=1')
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) {
+                            if (data && data.address) {
+                                var city = data.address.city || data.address.town || data.address.village || '';
+                                var country = data.address.country || '';
+                                var fullName = city ? city + ', ' + country : latitude.toFixed(4) + ', ' + longitude.toFixed(4);
+                                userLocationName = fullName;
+                                locationInput.value = fullName;
+                                locationStatus.textContent = '✅ ' + fullName;
+                            }
+                        })
+                        .catch(function() {});
+                },
+                function(error) {
+                    var msg = '❌ ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED: msg += 'Please allow location access.';
+                            break;
+                        case error.POSITION_UNAVAILABLE: msg += 'Location unavailable.';
+                            break;
+                        case error.TIMEOUT: msg += 'Request timed out.';
+                            break;
+                        default: msg += 'Unknown error.';
+                    }
+                    locationStatus.textContent = msg;
+                    locationStatus.style.color = '#f87171';
+                    getLocationBtn.textContent = '📍 Get My Location';
+                    getLocationBtn.disabled = false;
+                },
+                { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+            );
+        });
+
+        // Manual location input
+        locationInput.addEventListener('change', function() {
+            var val = this.value.trim().toLowerCase();
+            if (val.indexOf('nairobi') !== -1 || val.indexOf('kenya') !== -1) {
+                setLocation(-1.2921, 36.8219, 'Nairobi, Kenya');
+            } else if (val.indexOf('lagos') !== -1 || val.indexOf('nigeria') !== -1) {
+                setLocation(6.5244, 3.3792, 'Lagos, Nigeria');
+            } else if (val) {
+                userLocationName = this.value;
+                userLocation = { lat: -1.2921, lng: 36.8219 };
+                locationStatus.textContent = '📍 ' + this.value;
+                locationStatus.style.color = '#8fcbff';
+                var currentIds = currentCourses.map(function(c) { return c.id; });
+                updateNearbyBranches(currentIds.length > 0 ? currentIds : null);
+            }
+        });
+
+        // ===== SEARCH =====
+        function performSearch() {
+            applyFilters();
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch();
+            }
+        });
+
+        // ===== EVENT LISTENERS =====
+        document.getElementById('applyFilters').addEventListener('click', applyFilters);
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            document.getElementById('filterCategory').value = 'all';
+            document.getElementById('filterMode').value = 'all';
+            document.getElementById('filterEnrollmentType').value = 'all';
+            document.getElementById('filterStudyType').value = 'all';
+            document.getElementById('filterPace').value = 'all';
+            document.getElementById('filterMinPrice').value = '';
+            document.getElementById('filterMaxPrice').value = '';
+            document.getElementById('filterIntake').value = 'all';
+            document.getElementById('filterMinCluster').value = '';
+            document.getElementById('filterMaxCluster').value = '';
+            document.getElementById('filterDuration').value = 'all';
+            document.getElementById('filterInstitution').value = '';
+            document.getElementById('sortSelect').value = 'relevance';
+            searchInput.value = '';
+            applyFilters();
+            showToast('🔄 Filters reset successfully');
+        });
+
+        document.getElementById('sortSelect').addEventListener('change', applyFilters);
+
+        // ===== CHAT TOGGLE =====
+        document.getElementById('chatToggle').addEventListener('click', function() {
+            showToast('💬 Lanvai AI Assistant - Ask me about courses, institutions, and more!');
+        });
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Students page loading...');
+            
+            fetch('/api/health')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    console.log('✅ Server health check:', data);
+                    if (data.database === 'connected') {
+                        showToast('✅ Connected to MySQL database');
+                    }
+                })
+                .catch(function(err) {
+                    console.warn('⚠️ Health check failed, but continuing...');
+                });
+            
+            fetchBranches();
+            fetchCourses();
+            setLocation(-1.2921, 36.8219, 'Nairobi, Kenya');
+            
+            console.log('✅ Students page initialized');
+        });
+    </script>
+    <!-- Tracking Script -->
+    <script>
+        (function() {
+            var API_BASE = 'http://localhost:5000/api';
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var data = {
+                    pageUrl: window.location.pathname || '/',
+                    pageTitle: document.title || 'Unknown Page',
+                    referrerUrl: document.referrer || ''
+                };
+                
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            }
+
+            function setupClickTracking() {
+                document.addEventListener('click', function(e) {
+                    var target = e.target;
+                    var data = {
+                        elementId: target.id || '',
+                        elementClass: target.className || '',
+                        elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                        pageUrl: window.location.pathname || '/'
+                    };
+                    
+                    if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                        target.closest('a') || target.closest('button')) {
+                        fetch(API_BASE + '/track/click', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        }).catch(function() {});
+                    }
+                });
+            }
+
+            function setupFormTracking() {
+                document.addEventListener('submit', function(e) {
+                    var form = e.target;
+                    var data = {
+                        formType: form.id || form.name || 'unknown',
+                        formData: {}
+                    };
+                    
+                    var inputs = form.querySelectorAll('input, select, textarea');
+                    inputs.forEach(function(input) {
+                        if (input.name) {
+                            data.formData[input.name] = input.value || '';
+                        }
+                    });
+                    
+                    fetch(API_BASE + '/track/formsubmit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                });
+            }
+
+            trackPageView();
+            setupClickTracking();
+            setupFormTracking();
+        })();
+    </script>
+</body>
+
+</html>

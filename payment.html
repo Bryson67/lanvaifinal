@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULINK | Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            color: #f0ecf7;
+        }
+
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.15);
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #f2ecff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .page-header h1 a {
+            color: #b69bdb;
+            text-decoration: none;
+            font-size: 1.8rem;
+            transition: 0.2s;
+        }
+        .page-header h1 a:hover { color: #d4bbf5; }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-actions .btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.25);
+            color: #cfbcfa;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-actions .btn:hover {
+            background: rgba(160, 110, 220, 0.25);
+            border-color: #b18be0;
+            color: white;
+        }
+
+        .payment-card {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .payment-summary {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .payment-summary .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .payment-summary .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .payment-summary .summary-row .label {
+            color: #b8aad0;
+        }
+
+        .payment-summary .summary-row .value {
+            color: #f0ecf7;
+            font-weight: 600;
+        }
+
+        .payment-summary .summary-row .value.total {
+            color: #4ade80;
+            font-size: 1.4rem;
+        }
+
+        .payment-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 700px) {
+            .payment-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .payment-methods {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .payment-methods h3 {
+            color: #dac9f0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .method-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(160, 120, 200, 0.08);
+            border-radius: 12px;
+            margin-bottom: 0.6rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .method-option:hover {
+            border-color: rgba(160, 120, 200, 0.2);
+            background: rgba(40, 30, 65, 0.3);
+        }
+
+        .method-option.active {
+            border-color: #7d56b5;
+            background: rgba(125, 86, 181, 0.1);
+        }
+
+        .method-option input[type="radio"] {
+            accent-color: #7d56b5;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .method-option .method-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .method-option .method-name {
+            color: #e8ddf5;
+            font-weight: 500;
+        }
+
+        .method-option .method-desc {
+            color: #7a6a94;
+            font-size: 0.8rem;
+        }
+
+        .payment-details {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .payment-details h3 {
+            color: #dac9f0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #b8aad0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            border-radius: 12px;
+            background: rgba(12, 8, 24, 0.3);
+            color: #f0ecf7;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #7d56b5;
+            box-shadow: 0 0 0 3px rgba(125, 86, 181, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: #5a4a74;
+        }
+
+        .form-group select option {
+            background: #1a142b;
+            color: #f0ecf7;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        @media (max-width: 500px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0e0a1a;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .pay-btn.mpesa {
+            background: linear-gradient(145deg, #4ade80, #22a65e);
+        }
+
+        .pay-btn.mpesa:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .pay-btn.card {
+            background: linear-gradient(145deg, #60a5fa, #3b82f6);
+            color: white;
+        }
+
+        .pay-btn.card:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(96, 165, 250, 0.3);
+        }
+
+        .pay-btn.bank {
+            background: linear-gradient(145deg, #f472b6, #ec4899);
+            color: white;
+        }
+
+        .pay-btn.bank:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(244, 114, 182, 0.3);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #7a6a94;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .secure-badge i {
+            color: #4ade80;
+        }
+
+        .guest-notice {
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.15);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #4ade80;
+            font-size: 0.9rem;
+        }
+
+        .guest-notice i {
+            font-size: 1.2rem;
+        }
+
+        .guest-notice a {
+            color: #8fcbff;
+            text-decoration: none;
+        }
+
+        .guest-notice a:hover {
+            text-decoration: underline;
+        }
+
+        .simulation-badge {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+
+        .simulation-badge i {
+            font-size: 1.2rem;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+            color: #7a6a94;
+        }
+        .loading-spinner i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .back-link {
+            color: #7a6a94;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .back-link:hover {
+            color: #cfbcfa;
+        }
+
+        /* Chat styles */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(125, 86, 181, 0.4);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(125, 86, 181, 0.5);
+        }
+
+        .chat-toggle .badge {
+            background: #4ade80;
+            color: #0e0a1a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            max-width: 90vw;
+            background: rgba(22, 18, 38, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: chatSlideUp 0.3s ease;
+        }
+
+        .chat-window.open {
+            display: block;
+        }
+
+        @keyframes chatSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(40, 30, 65, 0.5);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.08);
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            color: #f0ecf7;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #b08acf;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        .chat-close:hover {
+            color: #f58aae;
+            background: rgba(245, 138, 174, 0.1);
+        }
+
+        .chat-messages {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-messages .msg {
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg.bot {
+            background: rgba(40, 30, 65, 0.5);
+            color: #e8ddf5;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-messages .msg.user {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+            background: rgba(12, 8, 24, 0.3);
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            background: rgba(12, 8, 24, 0.5);
+            color: #f0eaff;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .chat-footer input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+
+        .chat-footer .send-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 70px;
+                right: -10px;
+                border-radius: 20px 20px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Toast -->
+        <div id="toast" class="toast-notification"></div>
+
+        <!-- Header -->
+        <div class="page-header">
+            <h1>
+                <a href="javascript:history.back()">⬅️</a> 💳 Checkout
+            </h1>
+            <div class="header-actions">
+                <a href="students.html" class="btn">🔍 Browse Courses</a>
+                <a href="auth.html" class="btn">🔑 Sign In</a>
+            </div>
+        </div>
+
+        <!-- Payment Content -->
+        <div id="paymentContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner"></i>
+                <p>Loading payment details...</p>
+            </div>
+        </div>
+
+        <a href="students.html" class="back-link">← Back to Course Search</a>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>EDULINK Support</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Need help with your payment? I'm here to assist!</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Type your question...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">Support</span></button>
+    </div>
+
+    <script>
+        // ==============================================
+        // PAYMENT HANDLING - GUEST CHECKOUT
+        // ==============================================
+
+        // Get the base URL dynamically
+        var BASE_URL = window.location.origin;
+        var API_BASE = BASE_URL + '/api';
+
+        console.log('🌐 Base URL:', BASE_URL);
+        console.log('🔗 API Base:', API_BASE);
+
+        // ===== GET URL PARAMETERS =====
+        function getUrlParams() {
+            var params = new URLSearchParams(window.location.search);
+            return {
+                courseId: params.get('course_id'),
+                courseName: params.get('course_name'),
+                amount: params.get('amount'),
+                currency: params.get('currency') || 'KES'
+            };
+        }
+
+        // ===== TOAST =====
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ===== LOAD PAYMENT DETAILS =====
+        function loadPaymentDetails() {
+            var container = document.getElementById('paymentContainer');
+            var params = getUrlParams();
+
+            if (!params.courseId || !params.amount) {
+                container.innerHTML = `
+                    <div class="payment-card" style="padding:3rem; text-align:center;">
+                        <div style="font-size:3rem; margin-bottom:1rem;">❌</div>
+                        <h2 style="color:#f0ecf7;">Invalid Payment Request</h2>
+                        <p style="color:#7a6a94;">No course selected. Please go back and select a course.</p>
+                        <a href="students.html" class="back-link" style="margin-top:1rem;">← Back to Courses</a>
+                    </div>
+                `;
+                return;
+            }
+
+            var courseName = params.courseName ? decodeURIComponent(params.courseName) : 'Course Enrollment';
+            var amount = parseInt(params.amount) || 0;
+            var currency = params.currency || 'KES';
+
+            // Check if running on localtunnel or ngrok
+            var isTunnel = BASE_URL.includes('loca.lt') || BASE_URL.includes('ngrok.io') || BASE_URL.includes('trycloudflare.com');
+
+            container.innerHTML = `
+                <div class="payment-card">
+                    <div class="guest-notice">
+                        <i class="fas fa-user"></i>
+                        <span>You're checking out as a guest. <a href="auth.html">Sign in</a> to save your payment details for future purchases.</span>
+                    </div>
+
+                    ${isTunnel ? `
+                    <div class="simulation-badge">
+                        <i class="fas fa-flask"></i>
+                        <span>🔬 Testing Mode: Payments will be processed in simulation mode. No real charges will be made.</span>
+                    </div>
+                    ` : ''}
+
+                    <div class="payment-summary">
+                        <h3 style="color:#dac9f0; margin-bottom:1rem;">📋 Order Summary</h3>
+                        <div class="summary-row">
+                            <span class="label">Course</span>
+                            <span class="value">${courseName}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="label">Course ID</span>
+                            <span class="value">#${params.courseId}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="label">Amount</span>
+                            <span class="value total">${currency} ${amount.toLocaleString('en-KE')}</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-section">
+                        <!-- Payment Methods -->
+                        <div class="payment-methods">
+                            <h3>💳 Payment Methods</h3>
+                            
+                            <div class="method-option active" onclick="selectMethod('mpesa')">
+                                <input type="radio" name="payment_method" value="mpesa" checked>
+                                <span class="method-icon">📱</span>
+                                <div>
+                                    <div class="method-name">M-Pesa</div>
+                                    <div class="method-desc">Pay using M-Pesa STK Push</div>
+                                </div>
+                            </div>
+
+                            <div class="method-option" onclick="selectMethod('card')">
+                                <input type="radio" name="payment_method" value="card">
+                                <span class="method-icon">💳</span>
+                                <div>
+                                    <div class="method-name">Card Payment</div>
+                                    <div class="method-desc">Visa, Mastercard, American Express</div>
+                                </div>
+                            </div>
+
+                            <div class="method-option" onclick="selectMethod('bank')">
+                                <input type="radio" name="payment_method" value="bank">
+                                <span class="method-icon">🏦</span>
+                                <div>
+                                    <div class="method-name">Bank Transfer</div>
+                                    <div class="method-desc">Direct bank transfer</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Details -->
+                        <div class="payment-details">
+                            <h3>📝 Payment Details</h3>
+                            
+                            <!-- Guest Info -->
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="fullName" placeholder="Enter your full name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="email" placeholder="Enter your email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="phone" placeholder="e.g., 0712345678" required>
+                            </div>
+
+                            <!-- M-Pesa Details (shown by default) -->
+                            <div id="mpesaDetails">
+                                <div class="form-group">
+                                    <label>M-Pesa Number</label>
+                                    <input type="tel" id="mpesaNumber" placeholder="e.g., 0712345678" required>
+                                    <small style="color:#7a6a94; display:block; margin-top:0.3rem;">You will receive a prompt on your phone to enter your PIN</small>
+                                </div>
+                            </div>
+
+                            <!-- Card Details (hidden by default) -->
+                            <div id="cardDetails" style="display:none;">
+                                <div class="form-group">
+                                    <label>Card Number</label>
+                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Expiry Month</label>
+                                        <select id="expiryMonth">
+                                            <option value="">MM</option>
+                                            <option value="01">01</option><option value="02">02</option>
+                                            <option value="03">03</option><option value="04">04</option>
+                                            <option value="05">05</option><option value="06">06</option>
+                                            <option value="07">07</option><option value="08">08</option>
+                                            <option value="09">09</option><option value="10">10</option>
+                                            <option value="11">11</option><option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Expiry Year</label>
+                                        <select id="expiryYear">
+                                            <option value="">YY</option>
+                                            <option value="25">2025</option>
+                                            <option value="26">2026</option>
+                                            <option value="27">2027</option>
+                                            <option value="28">2028</option>
+                                            <option value="29">2029</option>
+                                            <option value="30">2030</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>CVV</label>
+                                    <input type="password" id="cvv" placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+
+                            <!-- Bank Transfer Details (hidden by default) -->
+                            <div id="bankDetails" style="display:none;">
+                                <div class="form-group">
+                                    <label>Bank Name</label>
+                                    <input type="text" id="bankName" placeholder="e.g., KCB Bank">
+                                </div>
+                                <div class="form-group">
+                                    <label>Account Number</label>
+                                    <input type="text" id="accountNumber" placeholder="Enter your account number">
+                                </div>
+                            </div>
+
+                            <button class="pay-btn mpesa" id="payBtn" onclick="processPayment()">
+                                <i class="fas fa-check-circle"></i> Pay Now
+                            </button>
+
+                            <div class="secure-badge">
+                                <i class="fas fa-lock"></i>
+                                <span>Secure payment processed via IntaSend</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ===== SELECT PAYMENT METHOD =====
+        function selectMethod(method) {
+            // Update radio buttons
+            document.querySelectorAll('.method-option').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.method-option input[type="radio"]').forEach(function(el) {
+                if (el.value === method) {
+                    el.checked = true;
+                    el.closest('.method-option').classList.add('active');
+                }
+            });
+
+            // Show/hide payment details
+            var mpesaDetails = document.getElementById('mpesaDetails');
+            var cardDetails = document.getElementById('cardDetails');
+            var bankDetails = document.getElementById('bankDetails');
+            var payBtn = document.getElementById('payBtn');
+
+            if (method === 'mpesa') {
+                mpesaDetails.style.display = 'block';
+                cardDetails.style.display = 'none';
+                bankDetails.style.display = 'none';
+                payBtn.className = 'pay-btn mpesa';
+                payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay with M-Pesa';
+            } else if (method === 'card') {
+                mpesaDetails.style.display = 'none';
+                cardDetails.style.display = 'block';
+                bankDetails.style.display = 'none';
+                payBtn.className = 'pay-btn card';
+                payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay with Card';
+            } else if (method === 'bank') {
+                mpesaDetails.style.display = 'none';
+                cardDetails.style.display = 'none';
+                bankDetails.style.display = 'block';
+                payBtn.className = 'pay-btn bank';
+                payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay with Bank Transfer';
+            }
+        }
+
+        // ===== PROCESS PAYMENT =====
+        function processPayment() {
+            var payBtn = document.getElementById('payBtn');
+            payBtn.disabled = true;
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            var params = getUrlParams();
+            var fullName = document.getElementById('fullName').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+
+            // Validate required fields
+            if (!fullName || !email || !phone) {
+                showToast('⚠️ Please fill in all required fields', true);
+                payBtn.disabled = false;
+                payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay Now';
+                return;
+            }
+
+            // Get selected payment method
+            var method = document.querySelector('input[name="payment_method"]:checked');
+            if (!method) {
+                showToast('⚠️ Please select a payment method', true);
+                payBtn.disabled = false;
+                payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay Now';
+                return;
+            }
+
+            var paymentMethod = method.value;
+            var amount = parseInt(params.amount) || 0;
+
+            // Validate phone for M-Pesa
+            if (paymentMethod === 'mpesa') {
+                var mpesaNumber = document.getElementById('mpesaNumber').value.trim();
+                if (!mpesaNumber) {
+                    showToast('⚠️ Please enter your M-Pesa number', true);
+                    payBtn.disabled = false;
+                    payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay Now';
+                    return;
+                }
+                var phoneNumber = mpesaNumber;
+            } else {
+                var phoneNumber = phone;
+            }
+
+            // Build payment data with base URL
+            var paymentData = {
+                amount: amount,
+                phone: phoneNumber,
+                email: email,
+                fullName: fullName,
+                courseId: params.courseId,
+                courseName: params.courseName ? decodeURIComponent(params.courseName) : 'Course Enrollment',
+                description: 'Course enrollment: ' + (params.courseName ? decodeURIComponent(params.courseName) : 'Course'),
+                paymentMethod: paymentMethod,
+                base_url: BASE_URL,
+                redirect_url: BASE_URL + '/payment-success.html',
+                webhook_url: BASE_URL + '/api/payment/intasend-webhook'
+            };
+
+            // Card specific data
+            if (paymentMethod === 'card') {
+                var cardNumber = document.getElementById('cardNumber').value.trim().replace(/\s/g, '');
+                var expiryMonth = document.getElementById('expiryMonth').value;
+                var expiryYear = document.getElementById('expiryYear').value;
+                var cvv = document.getElementById('cvv').value.trim();
+
+                if (!cardNumber || !expiryMonth || !expiryYear || !cvv) {
+                    showToast('⚠️ Please fill in all card details', true);
+                    payBtn.disabled = false;
+                    payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay Now';
+                    return;
+                }
+
+                paymentData.cardNumber = cardNumber;
+                paymentData.expiryMonth = expiryMonth;
+                paymentData.expiryYear = expiryYear;
+                paymentData.cvv = cvv;
+            }
+
+            // Bank specific data
+            if (paymentMethod === 'bank') {
+                var bankName = document.getElementById('bankName').value.trim();
+                var accountNumber = document.getElementById('accountNumber').value.trim();
+
+                if (!bankName || !accountNumber) {
+                    showToast('⚠️ Please fill in all bank details', true);
+                    payBtn.disabled = false;
+                    payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay Now';
+                    return;
+                }
+
+                paymentData.bankName = bankName;
+                paymentData.accountNumber = accountNumber;
+            }
+
+            console.log('📤 Payment Data:', paymentData);
+
+            // Determine endpoint
+            var endpoint = '';
+            if (paymentMethod === 'mpesa') {
+                endpoint = '/payment/mpesa';
+            } else if (paymentMethod === 'card') {
+                endpoint = '/payment/card';
+            } else if (paymentMethod === 'bank') {
+                endpoint = '/payment/bank';
+            }
+
+            // Send payment to backend
+            fetch(API_BASE + endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paymentData)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Payment failed');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                console.log('📥 Payment Response:', result);
+                
+                if (result.success) {
+                    if (result.is_simulation) {
+                        showToast('✅ Payment processed in simulation mode! (No real charge)', false);
+                        showToast('💡 For live payments, deploy to a production server.', false);
+                    } else {
+                        showToast('✅ Payment successful!');
+                    }
+                    
+                    // Redirect to confirmation page
+                    setTimeout(function() {
+                        window.location.href = 'payment-success.html?payment_id=' + (result.payment_id || '');
+                    }, 1500);
+                } else {
+                    showToast('❌ Payment failed: ' + (result.error || 'Unknown error'), true);
+                    payBtn.disabled = false;
+                    payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay Now';
+                }
+            })
+            .catch(function(error) {
+                console.error('❌ Payment error:', error);
+                showToast('❌ Payment error: ' + error.message, true);
+                payBtn.disabled = false;
+                payBtn.innerHTML = '<i class="fas fa-check-circle"></i> Pay Now';
+            });
+        }
+
+        // ===== CHAT FUNCTIONALITY =====
+        (function() {
+            var W = document.getElementById('chatWindow');
+            var M = document.getElementById('chatMessages');
+            var I = document.getElementById('chatInput');
+            var S = document.getElementById('sendBtn');
+
+            document.getElementById('chatToggle').addEventListener('click', function() {
+                var isOpen = W.style.display === 'block';
+                W.style.display = isOpen ? 'none' : 'block';
+                if (!isOpen) I.focus();
+            });
+
+            document.getElementById('chatClose').addEventListener('click', function() {
+                W.style.display = 'none';
+            });
+
+            function addMsg(t, c) {
+                var d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            function send() {
+                var t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                setTimeout(function() {
+                    addMsg('🤖 Thanks for your message! A support agent will get back to you shortly.', 'bot');
+                }, 500);
+            }
+
+            S.onclick = send;
+            I.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+        })();
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPaymentDetails();
+            
+            // Log environment info
+            console.log('🌐 Environment:');
+            console.log('  Base URL:', BASE_URL);
+            console.log('  Is Tunnel:', BASE_URL.includes('loca.lt') || BASE_URL.includes('ngrok.io'));
+            console.log('  API Base:', API_BASE);
+        });
+    </script>
+
+    <!-- Tracking -->
+    <script>
+        (function() {
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var BASE_URL = window.location.origin;
+                var API_BASE = BASE_URL + '/api';
+                
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pageUrl: window.location.pathname || '/',
+                        pageTitle: document.title || 'Payment Page',
+                        referrerUrl: document.referrer || ''
+                    })
+                }).catch(function() {});
+            }
+
+            trackPageView();
+        })();
+    </script>
+</body>
+</html>

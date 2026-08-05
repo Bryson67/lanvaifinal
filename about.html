@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai - About Us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #d4e6f1 0%, #b8d9e8 25%, #a8d5c8 50%, #b8c9e8 75%, #c5d5e6 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 0 0 50px 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar-custom {
+            background: linear-gradient(90deg, #1e40af, #2563eb, #059669, #10b981);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-custom .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: transparent;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .navbar-brand:hover .logo-icon {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #bfdbfe, #a7f3d0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .brand-tagline {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a .icon {
+            font-size: 1rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+
+        .dropdown-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(30, 58, 95, 0.95);
+            backdrop-filter: blur(10px);
+            min-width: 220px;
+            border-radius: 16px;
+            padding: 8px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 100;
+        }
+
+        .dropdown-content a {
+            color: rgba(255, 255, 255, 0.85);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            border-radius: 0;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== ABOUT HERO ===== */
+        .about-hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 32px;
+            max-width: 1100px;
+            margin: 2rem auto;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .about-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3a5f, #2563eb, #059669);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-hero p {
+            color: #475569;
+            font-size: 1.15rem;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ===== MISSION & VISION ===== */
+        .mission-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .mission-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 30px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mission-card .icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .mission-card h3 {
+            color: #1e3a5f;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .mission-card p {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ===== WHY CHOOSE US ===== */
+        .why-choose-us {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .why-choose-us h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 2rem;
+        }
+
+        .why-choose-us h2 span {
+            background: linear-gradient(135deg, #2563eb, #059669);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .why-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem 1.5rem;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .why-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 30px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        .why-item .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .why-item h4 {
+            color: #1e3a5f;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .why-item p {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ===== VALUES ===== */
+        .values-section {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .values-section h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 2rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .value-item {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 1.8rem 1.2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 24px -8px rgba(0, 0, 0, 0.08);
+        }
+
+        .value-item .icon {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .value-item h4 {
+            color: #1e3a5f;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .value-item p {
+            color: #64748b;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* ===== STATS ===== */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.8rem 1rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 24px -8px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-item .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563eb, #059669);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-item .label {
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.2rem;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(5, 150, 105, 0.08));
+            border-radius: 32px;
+            max-width: 900px;
+            margin: 2rem auto;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-section p {
+            color: #64748b;
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 0.8rem 2.5rem;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #2563eb, #059669);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            color: #cbd5e1;
+            margin-top: 60px;
+            padding: 30px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .navbar-custom .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 4px;
+            }
+
+            .nav-links a,
+            .dropdown-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .dropdown-content {
+                left: 50%;
+                transform: translateX(-50%);
+                min-width: 200px;
+            }
+
+            .about-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .about-hero p {
+                font-size: 1rem;
+            }
+
+            .mission-section {
+                grid-template-columns: 1fr;
+            }
+
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .cta-section h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        ::selection {
+            background: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar-custom">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">
+                <span class="logo-icon"><img src="/images/lanvai.png" alt="Lanvai Logo"></span>
+                <div>
+                    <span class="brand-text">Lanvai</span>
+                    <span class="brand-tagline">Your Business Growth Partner</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="index.html"><span class="icon">🏠</span> Home</a>
+                <a href="about.html" class="active"><span class="icon">ℹ️</span> About Us</a>
+                <a href="team.html"><span class="icon">👥</span> Our Team</a>
+                <a href="contactus.html"><span class="icon">📞</span> Contact Us</a>
+                <div class="dropdown">
+                    <button class="dropdown-btn"><span class="icon">🌐</span> PartnerWebsites ▾</button>
+                    <div class="dropdown-content">
+                        <a href="courses.html" target="_blank"><span class="icon">📚</span> EduLink Courses</a>
+                        <li><a class="dropdown-item" href="https://bryson67.github.io/Brystech-website/" target="_blank"><span class="icon">📚</span>BRYSTECH</a></li>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== ABOUT HERO ===== -->
+    <div class="about-hero">
+        <h1>About Lanvai</h1>
+       <p>
+        Lanvai is a research-driven business intelligence company
+        empowering businesses through strategic expertise, market
+        intelligence, business media, and innovative advertising solutions.
+    </p>
+    </div>
+
+    <!-- ===== MISSION & VISION ===== -->
+    <div class="mission-section">
+        <div class="mission-card">
+            <span class="icon">🎯</span>
+            <h3>Our Mission</h3>
+          <p>
+            To help businesses make better decisions through research,
+            strategic intelligence, and practical execution.
+        </p>
+        </div>
+        <div class="mission-card">
+            <span class="icon">👁️</span>
+            <h3>Our Vision</h3>
+            <p>
+            To become Africa's most trusted business intelligence and
+            strategy company, empowering organizations to grow with
+            confidence through better understanding.
+        </p>
+        </div>
+        <div class="mission-card">
+            <span class="icon">💎</span>
+            <h3>Our Values</h3>
+            <p>
+                Innovation, Integrity, Accessibility, Excellence, and Collaboration. These values guide everything we do at Lanvai, from product development to customer service.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== WHY CHOOSE US ===== -->
+     <section class="container my-5">
+        <div class="text-center mb-4">
+            <span style="background:rgba(139,92,246,0.12); color:#5b21b6; padding:0.3rem 1.4rem; border-radius:60px; font-weight:600; font-size:2rem;" class="display-4 fw-bold">Why Choose Lanvai</span>
+            <h2 style="font-weight:700; font-size:2.2rem; margin:0.8rem 0 0.5rem;">Every Great Strategy Begins With Understanding</h2>
+            <p   style="color:#1e293b; max-width:700px; margin:0 auto 0.5rem; font-size:1.3rem; font-weight:800; border-radius: 20px; background-color:greenyellow;">Businesses operate in different industries, serve different customers, and face different challenges. That is why no two businesses should ever receive the same strategy.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="why-card h-100 p-4" style="background:#ffffff; border-radius:32px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.08); border:1px solid rgba(139,92,246,0.06); transition:all 0.3s;">
+                    <span style="display:inline-block; background:#e0e7ff; color:#4338ca; padding:0.2rem 1rem; border-radius:40px; font-weight:800; font-size:1.5rem; letter-spacing:0.3px; margin-bottom:0.8rem;">Marketing</span>
+                    <h3 style="font-weight:700; font-size:1.4rem; margin:0 0 0.8rem;">Marketing Built On Strategy, Not Assumptions</h3>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Many businesses do not struggle because they lack marketing. They struggle because they lack clarity.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Too often, businesses invest in campaigns before anyone takes the time to understand their industry, customers, competitors, or the real challenges limiting growth.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">At Lanvai, marketing begins with research. We study markets, customer behaviour, competitive positioning, and business objectives before recommending any strategy.</p>
+                    <div style="background:#f8fafc; border-left:4px solid #8b5cf6; padding:0.8rem 1.2rem; border-radius:16px; margin-top:1rem; font-size:0.9rem;">
+                        <strong style="color:#1e3a5f;">Businesses don't need more activity—they need clarity and strategies that create measurable growth.</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="why-card h-100 p-4" style="background:#ffffff; border-radius:32px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.08); border:1px solid rgba(139,92,246,0.06); transition:all 0.3s;">
+                    <span style="display:inline-block; background:#e0e7ff; color:#4338ca; padding:0.2rem 1rem; border-radius:40px; font-weight:800; font-size:1.5rem; letter-spacing:0.3px; margin-bottom:0.8rem;">Business Restructuring</span>
+                    <h3 style="font-weight:700; font-size:1.4rem; margin:0 0 0.8rem;">Structures That Work In Practice</h3>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Many businesses do not struggle because they lack opportunities. They struggle because they lack the structure required to turn those opportunities into sustainable growth.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Too often, restructuring focuses on reports and charts before understanding how the business truly operates.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">At Lanvai, restructuring begins with understanding. We take time to understand people, operations, systems, culture, and workflows before recommending change.</p>
+                    <div style="background:#f8fafc; border-left:4px solid #8b5cf6; padding:0.8rem 1.2rem; border-radius:16px; margin-top:1rem; font-size:0.9rem;">
+                        <strong style="color:#1e3a5f;">Businesses don't need more reports—they need structures that work.</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== VALUES ===== -->
+        <section class="container my-5">
+        <div style="background:linear-gradient(145deg, #0f0c29, #1a1040); border-radius:48px; padding:3rem 2.5rem; color:#e0d4ff;">
+            <div style="text-align:center; margin-bottom:2.5rem;">
+                <span style="background:rgba(139,92,246,0.2); color:#c4b5fd; padding:0.3rem 1.4rem; border-radius:60px; font-weight:600; font-size:0.85rem;">What We Stand For</span>
+                <h2 style="font-weight:700; font-size:2.4rem; margin:0.5rem 0 0.8rem; color:#ffffff;">Our Principles</h2>
+                <p style="color:#b8a5d4; max-width:600px; margin:0 auto; font-size:1.05rem;">Every decision, every strategy, and every solution is guided by a simple philosophy: understand first, then act with purpose.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">01</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Research</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Every recommendation begins with evidence, not assumptions. Informed decisions create stronger businesses.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">02</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Understanding</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">We take time to understand businesses, industries, customers, and challenges before proposing solutions.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">03</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Strategy</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Every action should have a clear purpose, measurable direction, and contribute to long-term success.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">04</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Clarity</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Complex business challenges deserve simple, practical, and actionable solutions that businesses can implement.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">05</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Impact</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Success is measured by meaningful business outcomes, sustainable growth, and lasting value—not activity alone.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <div class="stats-section">
+        <div class="stat-item">
+            <div class="number">50+</div>
+            <div class="label">Businesses supported</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">50+</div>
+            <div class="label">industries reseached</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">100+</div>
+            <div class="label">marketing sights published</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">95%</div>
+            <div class="label">client satisfaction</div>
+        </div>
+    </div>
+
+    <!-- ===== CTA SECTION ===== -->
+    <div class="cta-section">
+        <h2>Ready to Get Started?</h2>
+        <p>Join thousands businesses already using Lanvai to achieve their goals.</p>
+        <a href="contactus.html" class="cta-btn">Get in Touch →</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Lanvai Marketing | Smart Solutions for Smart Businesses</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tracking Script -->
+<script>
+    (function() {
+        var API_BASE = 'http://localhost:5000/api';
+        var visitorId = localStorage.getItem('visitor_id');
+        if (!visitorId) {
+            visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+            localStorage.setItem('visitor_id', visitorId);
+        }
+
+        // Track page view
+        function trackPageView() {
+            var data = {
+                pageUrl: window.location.pathname || '/',
+                pageTitle: document.title || 'Unknown Page',
+                referrerUrl: document.referrer || ''
+            };
+            
+            fetch(API_BASE + '/track/pageview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(function() {});
+        }
+
+        // Track clicks
+        function setupClickTracking() {
+            document.addEventListener('click', function(e) {
+                var target = e.target;
+                var data = {
+                    elementId: target.id || '',
+                    elementClass: target.className || '',
+                    elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                    pageUrl: window.location.pathname || '/'
+                };
+                
+                // Only track important clicks (links, buttons, etc.)
+                if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                    target.closest('a') || target.closest('button')) {
+                    fetch(API_BASE + '/track/click', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                }
+            });
+        }
+
+        // Track form submissions
+        function setupFormTracking() {
+            document.addEventListener('submit', function(e) {
+                var form = e.target;
+                var data = {
+                    formType: form.id || form.name || 'unknown',
+                    formData: {}
+                };
+                
+                // Collect form data
+                var inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    if (input.name) {
+                        data.formData[input.name] = input.value || '';
+                    }
+                });
+                
+                fetch(API_BASE + '/track/formsubmit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            });
+        }
+
+        // Initialize tracking
+        trackPageView();
+        setupClickTracking();
+        setupFormTracking();
+    })();
+</script>
+</body>
+
+</html>

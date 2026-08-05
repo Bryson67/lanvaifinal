@@ -1,0 +1,2545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai Media - News & Insights</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ===== NAVBAR STYLES ===== */
+    .navbar-custom {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 2px solid #fbbf24;
+        padding: 0.8rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .navbar-custom .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    .navbar-custom .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    /* ===== LOGO ===== */
+    .navbar-custom .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        padding: 0;
+    }
+
+    .navbar-custom .logo-icon {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        min-height: 50px;
+        max-width: 50px;
+        max-height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: rgba(251, 191, 36, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    .navbar-custom .logo-icon img {
+        width: 100%;
+        height: 100%;
+        max-width: 50px;
+        max-height: 50px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .navbar-custom .navbar-brand:hover .logo-icon {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+    }
+
+    .navbar-custom .brand-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a142b;
+        line-height: 1.2;
+    }
+
+    .navbar-custom .brand-text span {
+        color: #d97706;
+    }
+
+    .navbar-custom .brand-tagline {
+        font-size: 0.7rem;
+        color: #6b5d4a;
+        display: block;
+        margin-top: -2px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+    }
+
+    /* ===== NAV LINKS ===== */
+    .navbar-custom .nav-links {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .navbar-custom .nav-btn {
+        background: rgba(251, 191, 36, 0.08);
+        border: 1px solid rgba(251, 191, 36, 0.15);
+        color: #4b3d2b;
+        padding: 0.5rem 1.2rem;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: 0.25s;
+        font-weight: 500;
+        font-size: 0.9rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .navbar-custom .nav-btn:hover {
+        background: rgba(251, 191, 36, 0.2);
+        border-color: #fbbf24;
+        color: #1a142b;
+    }
+
+    .navbar-custom .nav-btn.active {
+        background: #fbbf24;
+        border-color: #fbbf24;
+        color: #1a142b;
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+    }
+
+    /* ===== FILTER PANEL STYLES ===== */
+    .filter-panel {
+        display: none;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-panel.active-panel {
+        display: block;
+    }
+
+    .filter-group {
+        margin-bottom: 0.8rem;
+    }
+
+    .filter-group label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #4b3d2b;
+        margin-bottom: 0.3rem;
+    }
+
+    .filter-group label i {
+        margin-right: 6px;
+        color: #d97706;
+    }
+
+    .filter-select,
+    .date-input,
+    .keyword-input {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: white;
+        font-size: 0.9rem;
+        color: #1a142b;
+        transition: 0.2s;
+    }
+
+    .filter-select:focus,
+    .date-input:focus,
+    .keyword-input:focus {
+        border-color: #fbbf24;
+        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+        outline: none;
+    }
+
+    .keyword-input {
+        padding-left: 2.5rem;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: 0.8rem center;
+        background-size: 1rem;
+    }
+
+    .keyword-input-wrapper {
+        position: relative;
+    }
+
+    .keyword-input-wrapper .clear-keyword {
+        position: absolute;
+        right: 0.8rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.2rem 0.4rem;
+        display: none;
+        border-radius: 50%;
+        transition: 0.2s;
+    }
+
+    .keyword-input-wrapper .clear-keyword:hover {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    .keyword-input-wrapper .clear-keyword.visible {
+        display: block;
+    }
+
+    .btn-filter {
+        padding: 0.5rem 1.5rem;
+        border-radius: 30px;
+        border: none;
+        background: linear-gradient(145deg, #fbbf24, #f59e0b);
+        color: #1a142b;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.25s;
+        margin-left: 0.5rem;
+    }
+
+    .btn-filter:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+    }
+
+    .btn-filter.btn-reset {
+        background: #e5e7eb;
+        color: #4b3d2b;
+    }
+
+    .btn-filter.btn-reset:hover {
+        background: #d1d5db;
+        box-shadow: none;
+        transform: scale(1.02);
+    }
+
+    .text-end {
+        margin-top: 0.5rem;
+    }
+
+    /* ===== CONTENT SECTIONS ===== */
+    .content-section {
+        display: none;
+    }
+
+    .content-section.active-content {
+        display: block;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a142b;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .section-title i {
+        color: #fbbf24;
+    }
+
+    /* ===== CARD ITEMS ===== */
+    .card-item {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f3f4f6;
+        transition: 0.3s;
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    .card-item:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .card-item .card-image {
+        flex-shrink: 0;
+        width: 200px;
+        height: 150px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .card-item .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.3s;
+        display: block;
+    }
+
+    .card-item .card-image img:hover {
+        transform: scale(1.05);
+    }
+
+    .card-item .card-image .image-placeholder {
+        font-size: 3rem;
+        color: #9ca3af;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .card-item .card-image .image-placeholder i {
+        font-size: 2.5rem;
+        color: #d1d5db;
+    }
+
+    .card-item .card-image .image-placeholder small {
+        font-size: 0.65rem;
+        color: #9ca3af;
+    }
+
+    .card-item .card-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .card-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1a142b;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .card-title .highlight {
+        background: rgba(251, 191, 36, 0.3);
+        padding: 0 0.2rem;
+        border-radius: 3px;
+    }
+
+    .card-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .badge-causing {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .badge-not-causing {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    .card-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 0.8rem;
+    }
+
+    .card-meta i {
+        margin-right: 4px;
+        color: #d97706;
+    }
+
+    .card-description {
+        color: #4b3d2b;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .card-description .highlight {
+        background: rgba(251, 191, 36, 0.3);
+        padding: 0 0.2rem;
+        border-radius: 3px;
+    }
+
+    .card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        align-items: center;
+    }
+
+    .btn-read {
+        background: rgba(251, 191, 36, 0.1);
+        border: none;
+        color: #d97706;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .btn-read:hover {
+        background: #fbbf24;
+        color: #1a142b;
+    }
+
+    .btn-youtube {
+        background: #ff0000;
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 0.85rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        animation: pulseYoutube 2s infinite;
+    }
+
+    .btn-youtube:hover {
+        background: #cc0000;
+        transform: scale(1.05);
+        color: white;
+    }
+
+    @keyframes pulseYoutube {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(255, 0, 0, 0); }
+    }
+
+    /* ===== LOADING & EMPTY STATES ===== */
+    .loading-spinner {
+        text-align: center;
+        padding: 3rem 0;
+        color: #6b7280;
+    }
+
+    .loading-spinner i {
+        font-size: 2.5rem;
+        animation: spin 1s linear infinite;
+        color: #fbbf24;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 0;
+        color: #6b7280;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h4 {
+        color: #1a142b;
+        margin-bottom: 0.3rem;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 2rem;
+        border-top: 1px solid #f3f4f6;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    /* ===== CHAT STYLES ===== */
+    .chat-float {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.8rem;
+    }
+
+    .chat-toggle {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        border: none;
+        box-shadow: 0 8px 32px rgba(251, 191, 36, 0.5);
+        color: #1a142b;
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulseGlow 2s infinite alternate;
+        position: relative;
+    }
+
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 8px 32px rgba(251, 191, 36, 0.4); }
+        100% { box-shadow: 0 12px 48px rgba(251, 191, 36, 0.7); }
+    }
+
+    .chat-toggle:hover {
+        transform: scale(1.08) rotate(-5deg);
+        box-shadow: 0 12px 48px rgba(251, 191, 36, 0.7);
+    }
+
+    .chat-toggle .badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 0.55rem;
+        font-weight: 700;
+        padding: 0.2rem 0.5rem;
+        border-radius: 30px;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    }
+
+    .chat-window {
+        background: rgba(15, 12, 41, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 1.8rem;
+        width: 380px;
+        max-width: 92vw;
+        height: 520px;
+        max-height: 75vh;
+        display: none;
+        flex-direction: column;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+        overflow: hidden;
+        animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideUp {
+        0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .chat-window.open {
+        display: flex;
+    }
+
+    .chat-header {
+        padding: 0.8rem 1.2rem;
+        background: rgba(139, 92, 246, 0.1);
+        border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+    }
+
+    .chat-header h3 {
+        color: #e0d4ff;
+        font-size: 1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+    }
+
+    .chat-header h3 .online-dot {
+        width: 8px;
+        height: 8px;
+        background: #22c55e;
+        border-radius: 50%;
+        display: inline-block;
+        animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+
+    .chat-close {
+        background: none;
+        border: none;
+        color: #8a6e9e;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: 0.2s;
+        padding: 0 0.3rem;
+        line-height: 1;
+    }
+
+    .chat-close:hover {
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 1rem 1.2rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .chat-messages .msg {
+        max-width: 88%;
+        padding: 0.6rem 1rem;
+        border-radius: 1rem;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        animation: msgIn 0.3s ease;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    @keyframes msgIn {
+        0% { opacity: 0; transform: translateY(10px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .chat-messages .msg.bot {
+        background: rgba(139, 92, 246, 0.15);
+        color: #c4b5fd;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+    }
+
+    .chat-messages .msg.user {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #1a142b;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+    }
+
+    .chat-messages .msg.system {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fef3c7;
+        align-self: center;
+        text-align: center;
+        font-size: 0.78rem;
+        border: 1px solid rgba(251, 191, 36, 0.15);
+        border-radius: 2rem;
+        padding: 0.4rem 1rem;
+        max-width: 95%;
+    }
+
+    .chat-footer {
+        padding: 0.6rem 1rem 0.8rem;
+        border-top: 1px solid rgba(139, 92, 246, 0.1);
+        display: flex;
+        gap: 0.5rem;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+        background: rgba(15, 12, 41, 0.5);
+    }
+
+    .chat-footer input {
+        flex: 1;
+        padding: 0.6rem 1rem;
+        border-radius: 40px;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: #e0d4ff;
+        font-size: 0.9rem;
+        outline: none;
+        min-width: 100px;
+        transition: 0.2s;
+    }
+
+    .chat-footer input::placeholder {
+        color: rgba(200, 180, 220, 0.4);
+    }
+
+    .chat-footer input:focus {
+        border-color: #fbbf24;
+        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .chat-footer .send-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 40px;
+        border: none;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #1a142b;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 0.9rem;
+    }
+
+    .chat-footer .send-btn:hover {
+        transform: scale(1.04);
+        box-shadow: 0 4px 16px rgba(251, 191, 36, 0.4);
+    }
+
+    .chat-footer .send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .auth-overlay {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        gap: 0.8rem;
+        flex: 1;
+        text-align: center;
+    }
+
+    .auth-overlay.show {
+        display: flex;
+    }
+
+    .auth-overlay .auth-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .auth-overlay h4 {
+        color: #e0d4ff;
+        font-size: 1.1rem;
+    }
+
+    .auth-overlay p {
+        color: #8a6e9e;
+        font-size: 0.9rem;
+        max-width: 260px;
+    }
+
+    .auth-btns {
+        display: flex;
+        gap: 0.6rem;
+        margin-top: 0.3rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .auth-btns button {
+        padding: 0.5rem 1.5rem;
+        border-radius: 60px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 0.9rem;
+    }
+
+    .auth-btns .login-btn {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #1a142b;
+    }
+
+    .auth-btns .login-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(251, 191, 36, 0.4);
+    }
+
+    .auth-btns .register-btn {
+        background: rgba(139, 92, 246, 0.15);
+        color: #c4b5fd;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .auth-btns .register-btn:hover {
+        background: rgba(139, 92, 246, 0.25);
+        transform: scale(1.05);
+    }
+
+    .quick-replies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        padding: 0.3rem 0.8rem 0.6rem;
+        border-top: 1px solid rgba(139, 92, 246, 0.05);
+        justify-content: center;
+        background: rgba(15, 12, 41, 0.3);
+    }
+
+    .quick-replies button {
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.12);
+        color: #c4b5fd;
+        padding: 0.25rem 0.7rem;
+        border-radius: 30px;
+        font-size: 0.65rem;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: inherit;
+    }
+
+    .quick-replies button:hover {
+        background: rgba(139, 92, 246, 0.2);
+        border-color: #fbbf24;
+        color: #fff;
+    }
+
+    @media (max-width: 768px) {
+        .chat-window {
+            width: 95vw;
+            height: 65vh;
+            border-radius: 1.5rem;
+        }
+        .chat-float {
+            bottom: 0.8rem;
+            right: 0.8rem;
+        }
+        .chat-toggle {
+            width: 55px;
+            height: 55px;
+            font-size: 1.5rem;
+        }
+        
+        .card-item {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .card-item .card-image {
+            width: 100%;
+            height: 200px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .chat-footer {
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .chat-footer .send-btn {
+            width: 100%;
+            justify-content: center;
+        }
+        .auth-btns {
+            flex-direction: column;
+            width: 100%;
+        }
+        .auth-btns button {
+            width: 100%;
+        }
+        .quick-replies {
+            gap: 0.2rem;
+            padding: 0.2rem 0.5rem 0.4rem;
+        }
+        .quick-replies button {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.5rem;
+        }
+        
+        .card-item .card-image {
+            height: 150px;
+        }
+    }
+
+    /* ===== KEYWORD HIGHLIGHT IN SEARCH RESULTS ===== */
+    .search-summary {
+        background: rgba(251, 191, 36, 0.08);
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        display: none;
+        border-left: 3px solid #fbbf24;
+        font-size: 0.9rem;
+        color: #4b3d2b;
+    }
+
+    .search-summary.visible {
+        display: block;
+    }
+
+    .search-summary strong {
+        color: #d97706;
+    }
+
+    .search-summary .clear-search {
+        background: none;
+        border: none;
+        color: #ef4444;
+        cursor: pointer;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        text-decoration: underline;
+        font-size: 0.85rem;
+    }
+
+    .search-summary .clear-search:hover {
+        color: #dc2626;
+    }
+
+    /* ===== YOUTUBE ALERT BANNER ===== */
+    .youtube-alert-banner {
+        display: none;
+        background: linear-gradient(135deg, #ff0000, #cc0000);
+        color: white;
+        padding: 0.8rem 1.2rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        animation: slideDown 0.5s ease;
+    }
+
+    .youtube-alert-banner.visible {
+        display: flex;
+    }
+
+    @keyframes slideDown {
+        0% { opacity: 0; transform: translateY(-10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .youtube-alert-banner .alert-icon {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .youtube-alert-banner .alert-text {
+        flex: 1;
+        font-weight: 500;
+    }
+
+    .youtube-alert-banner .alert-text strong {
+        text-decoration: underline;
+    }
+
+    .youtube-alert-banner .alert-close {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .youtube-alert-banner .alert-close:hover {
+        background: rgba(255,255,255,0.3);
+    }
+</style>
+
+<!-- Navbar -->
+<div class="navbar-custom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <a class="navbar-brand" href="index.html">
+                    <span class="logo-icon">
+                        <img src="/images/lanvai.png" alt="Lanvai Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23fbbf24%22/%3E%3Ctext x=%2230%22 y=%2268%22 font-size=%2248%22 font-weight=%22bold%22 fill=%22%231a142b%22%3EL%3C/text%3E%3C/svg%3E'">
+                    </span>
+                    <div>
+                        <span class="brand-text">Lanvai <span>Media</span></span>
+                        <span class="brand-tagline">Your Information Hub</span>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-9">
+                <div class="nav-links">
+                    <div class="nav-btn active" data-section="news">
+                        <i class="fas fa-newspaper"></i> News
+                    </div>
+                    <div class="nav-btn" data-section="insights">
+                        <i class="fas fa-lightbulb"></i> Deep Insights
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <!-- YouTube Alert Banner -->
+    <div class="youtube-alert-banner" id="youtubeAlertBanner">
+        <div class="alert-icon">
+            <i class="fab fa-youtube"></i>
+            <span>⚠️</span>
+        </div>
+        <div class="alert-text">
+            <strong>Causing Alarm</strong> articles have full video coverage on our YouTube channel. 
+            Click the <i class="fab fa-youtube" style="color: #ff0000;"></i> button below each article for complete information.
+        </div>
+        <button class="alert-close" id="closeYoutubeAlert">✕</button>
+    </div>
+
+    <!-- Filter Panel - News -->
+    <div id="newsFilter" class="filter-panel active-panel">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-calendar"></i> Filter by Date</label>
+                    <input type="date" id="newsDate" class="date-input">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-chart-line"></i> Category</label>
+                    <select id="newsCategory" class="filter-select">
+                        <option value="all">All Categories</option>
+                        <option value="E-commerce">🛍️ E-commerce & Retail</option>
+                        <option value="Technology">💻 Technology & SaaS</option>
+                        <option value="Healthcare">🏥 Healthcare & Wellness</option>
+                        <option value="Real Estate">🏠 Real Estate</option>
+                        <option value="Education">📚 Education</option>
+                        <option value="Marketing">📊 Marketing & Advertising</option>
+                        <option value="Restructuring">🔄 Restructuring & Strategy</option>
+                        <option value="Agriculture">🌾 Agriculture & Farming</option>
+                        <option value="Media">🎦 Media & Advertising</option>
+                        <option value="Logistic">🚛 Logistic & Transportation</option>
+                        <option value="Energy">💡 Energy & Utilities</option>
+                        <option value="Manufacturing">🏭 Manufacturing Industries</option>
+                        <option value="Retail">🛍️ Retail & Supermarkets</option>
+                        <option value="Hospitality">🍽️ Hospitality & Tourism</option>
+                        <option value="Construction">🏗️ Construction & Engineering</option>
+                        <option value="Legal">⚖️ Legal Services</option>
+                        <option value="Nonprofit">🤝 Nonprofit & NGO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-exclamation-triangle"></i> Alert Type</label>
+                    <select id="newsAlert" class="filter-select">
+                        <option value="all">All</option>
+                        <option value="causing">Causing Alarm</option>
+                        <option value="not-causing">Not Causing Alarm</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-tag"></i> Content Type</label>
+                    <select id="newsContentType" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Restructuring">Restructuring</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <div class="filter-group">
+                    <label><i class="fas fa-search"></i> Keyword Search</label>
+                    <div class="keyword-input-wrapper">
+                        <input type="text" id="newsKeyword" class="keyword-input" placeholder="Search by keyword... (e.g., AI, marketing, growth)">
+                        <button class="clear-keyword" id="newsClearKeyword" title="Clear search">✕</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <div class="filter-group w-100">
+                    <div class="text-end">
+                        <button class="btn-filter" id="applyNewsBtn"><i class="fas fa-search"></i> Apply Filters</button>
+                        <button class="btn-filter btn-reset" id="resetNewsBtn"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="search-summary" id="newsSearchSummary">
+            <i class="fas fa-search"></i> Showing results for: <strong id="newsSearchTerm"></strong>
+            <button class="clear-search" id="newsClearSearch">✕ Clear</button>
+        </div>
+    </div>
+
+    <!-- Filter Panel - Deep Insights -->
+    <div id="insightsFilter" class="filter-panel">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-chart-line"></i> Category</label>
+                    <select id="insightsCategory" class="filter-select">
+                        <option value="all">All Categories</option>
+                        <option value="E-commerce">🛍️ E-commerce & Retail</option>
+                        <option value="Technology">💻 Technology & SaaS</option>
+                        <option value="Healthcare">🏥 Healthcare & Wellness</option>
+                        <option value="Real Estate">🏠 Real Estate</option>
+                        <option value="Education">📚 Education</option>
+                        <option value="Marketing">📊 Marketing & Advertising</option>
+                        <option value="Restructuring">🔄 Restructuring & Strategy</option>
+                        <option value="Agriculture">🌾 Agriculture & Farming</option>
+                        <option value="Media">🎦 Media & Advertising</option>
+                        <option value="Logistic">🚛 Logistic & Transportation</option>
+                        <option value="Energy">💡 Energy & Utilities</option>
+                        <option value="Manufacturing">🏭 Manufacturing Industries</option>
+                        <option value="Retail">🛍️ Retail & Supermarkets</option>
+                        <option value="Hospitality">🍽️ Hospitality & Tourism</option>
+                        <option value="Construction">🏗️ Construction & Engineering</option>
+                        <option value="Legal">⚖️ Legal Services</option>
+                        <option value="Nonprofit">🤝 Nonprofit & NGO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-chart-bar"></i> Insight Type</label>
+                    <select id="insightsType" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="Trend Analysis">Trend Analysis</option>
+                        <option value="Market Research">Market Research</option>
+                        <option value="Case Study">Case Study</option>
+                        <option value="Expert Opinion">Expert Opinion</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-tag"></i> Content Type</label>
+                    <select id="insightsContentType" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Restructuring">Restructuring</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="filter-group">
+                    <label><i class="fas fa-search"></i> Keyword Search</label>
+                    <div class="keyword-input-wrapper">
+                        <input type="text" id="insightsKeyword" class="keyword-input" placeholder="Search by keyword... (e.g., AI, marketing, growth)">
+                        <button class="clear-keyword" id="insightsClearKeyword" title="Clear search">✕</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <div class="text-end">
+                    <button class="btn-filter" id="applyInsightsBtn"><i class="fas fa-search"></i> Apply Filters</button>
+                    <button class="btn-filter btn-reset" id="resetInsightsBtn"><i class="fas fa-undo"></i> Reset</button>
+                </div>
+            </div>
+        </div>
+        <div class="search-summary" id="insightsSearchSummary">
+            <i class="fas fa-search"></i> Showing results for: <strong id="insightsSearchTerm"></strong>
+            <button class="clear-search" id="insightsClearSearch">✕ Clear</button>
+        </div>
+    </div>
+
+    <!-- News Section -->
+    <div id="newsSection" class="content-section active-content">
+        <h3 class="section-title"><i class="fas fa-newspaper"></i> Latest News</h3>
+        <div id="newsContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner"></i>
+                <p>Loading news...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deep Insights Section -->
+    <div id="insightsSection" class="content-section">
+        <h3 class="section-title"><i class="fas fa-lightbulb"></i> Deep Insights</h3>
+        <div id="insightsContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner"></i>
+                <p>Loading insights...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Lanvai Marketing | Smart Solutions for Smart Businesses</p>
+</footer>
+
+<!-- ===== FLOATING CHAT BUTTON ===== -->
+<div class="chat-float">
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h3><span class="online-dot"></span>Lanvai Assistant</h3>
+            <button class="chat-close" id="chatClose">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg bot">👋 Welcome to Lanvai! I have complete knowledge about our entire website - Courses, Institution Registration, Library, Ad Exchange, Media, Experts, and more. What would you like to know?</div>
+        </div>
+        <div class="quick-replies">
+            <button data-q="What is Lanvai?">🏠 About</button>
+            <button data-q="How do I find courses?">🎓 Courses</button>
+            <button data-q="Register institution">🏛️ Institution</button>
+            <button data-q="Library services">📖 Library</button>
+            <button data-q="Ad Exchange">💰 Ads</button>
+            <button data-q="Media services">📺 Media</button>
+            <button data-q="Expert consultation">👔 Experts</button>
+        </div>
+        <div class="auth-overlay" id="authOverlay">
+            <div class="auth-icon">🔒</div>
+            <h4>Connect to a Live Person</h4>
+            <p>Please login or register to chat with a live agent.</p>
+            <div class="auth-btns">
+                <button class="login-btn" id="loginBtn">🔑 Login</button>
+                <button class="register-btn" id="registerBtn">📝 Register</button>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="Ask me anything...">
+            <button class="send-btn" id="sendBtn">Send</button>
+        </div>
+    </div>
+    <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+</div>
+
+<script>
+    // ==============================================
+    // CATEGORY DATA (for reference only)
+    // ==============================================
+    var CATEGORIES = [
+        { value: 'E-commerce', label: 'E-commerce & Retail', icon: '🛍️' },
+        { value: 'Technology', label: 'Technology & SaaS', icon: '💻' },
+        { value: 'Healthcare', label: 'Healthcare & Wellness', icon: '🏥' },
+        { value: 'Real Estate', label: 'Real Estate', icon: '🏠' },
+        { value: 'Education', label: 'Education', icon: '📚' },
+        { value: 'Marketing', label: 'Marketing & Advertising', icon: '📊' },
+        { value: 'Restructuring', label: 'Restructuring & Strategy', icon: '🔄' },
+        { value: 'Agriculture', label: 'Agriculture & Farming', icon: '🌾' },
+        { value: 'Media', label: 'Media & Advertising', icon: '🎦' },
+        { value: 'Logistic', label: 'Logistic & Transportation', icon: '🚛' },
+        { value: 'Energy', label: 'Energy & Utilities', icon: '💡' },
+        { value: 'Manufacturing', label: 'Manufacturing Industries', icon: '🏭' },
+        { value: 'Retail', label: 'Retail & Supermarkets', icon: '🛍️' },
+        { value: 'Hospitality', label: 'Hospitality & Tourism', icon: '🍽️' },
+        { value: 'Construction', label: 'Construction & Engineering', icon: '🏗️' },
+        { value: 'Legal', label: 'Legal Services', icon: '⚖️' },
+        { value: 'Nonprofit', label: 'Nonprofit & NGO', icon: '🤝' }
+    ];
+
+    // ==============================================
+    // KEYWORD SEARCH HANDLERS
+    // ==============================================
+    function setupKeywordSearch(inputId, clearBtnId, summaryId, termId, clearSearchId, applyFilterFn) {
+        var input = document.getElementById(inputId);
+        var clearBtn = document.getElementById(clearBtnId);
+        var summary = document.getElementById(summaryId);
+        var term = document.getElementById(termId);
+        var clearSearch = document.getElementById(clearSearchId);
+
+        if (!input) return;
+
+        // Show/hide clear button based on input value
+        input.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                clearBtn.classList.add('visible');
+            } else {
+                clearBtn.classList.remove('visible');
+                hideSummary();
+            }
+        });
+
+        // Clear keyword button
+        clearBtn.addEventListener('click', function() {
+            input.value = '';
+            this.classList.remove('visible');
+            hideSummary();
+            if (applyFilterFn) applyFilterFn();
+        });
+
+        // Clear search summary button
+        if (clearSearch) {
+            clearSearch.addEventListener('click', function() {
+                input.value = '';
+                clearBtn.classList.remove('visible');
+                hideSummary();
+                if (applyFilterFn) applyFilterFn();
+            });
+        }
+
+        // Enter key triggers search
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (applyFilterFn) applyFilterFn();
+            }
+        });
+
+        function hideSummary() {
+            if (summary) summary.classList.remove('visible');
+        }
+
+        // Function to show summary with the search term
+        window.showKeywordSummary = function(section, keyword) {
+            var summaryEl = document.getElementById(section + 'SearchSummary');
+            var termEl = document.getElementById(section + 'SearchTerm');
+            if (summaryEl && termEl && keyword && keyword.trim().length > 0) {
+                termEl.textContent = '"' + keyword.trim() + '"';
+                summaryEl.classList.add('visible');
+            } else if (summaryEl) {
+                summaryEl.classList.remove('visible');
+            }
+        };
+    }
+
+    // ==============================================
+    // CHAT FUNCTIONALITY
+    // ==============================================
+    (function() {
+        const W = document.getElementById('chatWindow'),
+            T = document.getElementById('chatToggle'),
+            C = document.getElementById('chatClose'),
+            M = document.getElementById('chatMessages'),
+            I = document.getElementById('chatInput'),
+            S = document.getElementById('sendBtn'),
+            A = document.getElementById('authOverlay'),
+            Q = document.querySelectorAll('.quick-replies button');
+        let open = !1,
+            auth = !1,
+            person = !1;
+
+        const KB = {
+            'lanvai about platform company': `🏫 **About Lanvai**
+
+Lanvai is a comprehensive educational and business platform that connects students with learning opportunities and businesses with marketing solutions.
+
+**Our Core Services:**
+
+1️⃣ **Students 🎓** - Search and enroll in courses from various institutions
+2️⃣ **Institution Registration 🏛️** - Schools and training centers can register and list courses
+3️⃣ **Hosted Courses 🚀** - Bootcamps and small institutions host courses (90/10 revenue share)
+4️⃣ **Digital Library 📖** - Read, buy, and sell books
+5️⃣ **Ad Exchange 💰** - Premium advertising placements
+6️⃣ **Media 📺** - News and insights platform
+7️⃣ **Experts 👔** - Business consultation services
+
+**Our Mission:** Making quality education and business solutions accessible to everyone.`,
+
+                'students page search courses enroll find': `🎓 **Students Page - Course Search**
+
+**How to Find Courses:**
+1. Go to the Students page from the navigation
+2. Type your desired course in the search bar
+3. Click Search or press Enter
+4. View institutions offering that course
+5. Click "Enroll now" to start enrollment
+
+**Available Institutions:**
+• Lanvai Tech Academy - Data Science, AI, Full Stack, UI/UX
+• Nairobi Digital Institute - Digital Marketing, Graphic Design, Web Dev
+• Crestview University - Business Admin, Economics, Data Analytics
+• Innovation Hub Lagos - Product Design, Mobile Dev, Cloud Computing
+• Global School of Design - Fashion Design, Interior Design, Animation
+• CodeCraft Academy - Python, JavaScript, React, Node.js, DevOps
+• Eco Business School - Sustainability, Green Finance, ESG
+
+**Course Categories:** Technology, Business, Design, Programming, Marketing, Data Science
+
+**Enrollment Process:** Click "Enroll now" → Institution contacts you → Complete registration`,
+
+                'institution registration form register': `🏛️ **Institution Registration - Complete Guide**
+
+Register your institution to list courses on Lanvai.
+
+**Form Fields:**
+
+📋 **Institution Details:**
+• Institution Name (required)
+• Branches/Campuses (required) - Add multiple locations
+• Institution Logo (upload image)
+
+📍 **Address:**
+• Manual Address - Street, P.O. Box
+• Automatic Address - GPS or Google Maps link
+
+📧 **Contact:**
+• Email (required)
+• Website
+• Social Handles (add multiple)
+
+📚 **Courses:**
+• Courses Offered (comma separated)
+• Course Mode - Online, Offline, Hybrid
+• Intake Date
+• Study Type - Full-time, Part-time, Both
+
+📊 **Course Specifications:**
+• Cluster Points (optional, 0-84)
+• Period (years) - required
+• Cost Per Year (USD) - required
+• Category - Degree, Diploma, Certificate, Professional, Short Course
+• Branch Offering
+
+📜 **Verification Documents:**
+• Registration Certificate (PDF, JPG, PNG, DOC) - required
+• Registration Number - required
+• Issuing Body - required (e.g., TVET Authority)
+• Year of Registration
+
+**After Submission:** Review takes 2-5 business days. Upon approval, courses appear in student searches.`,
+
+                'institution hosted courses registration': `🏛️ **Institution Hosted Courses Registration**
+
+This is for institutions that want to host their courses on Lanvai's platform.
+
+**Form Fields:**
+
+📋 **Institution Details:**
+• Institution Name (required)
+• Branches/Campuses (required)
+• Institution Logo
+
+📍 **Address:**
+• Manual Address
+• Automatic Address (GPS/Map)
+
+📧 **Contact:**
+• Email (required)
+• Website
+• Social Handles
+
+📚 **Course Details:**
+• Courses Offered (comma separated)
+• Mode - Online, Offline, Hybrid
+• Intake Date
+• Study Type - Full-time, Part-time, Both
+
+📊 **Course Specifications:**
+• Cluster Points (optional)
+• Period (years) - required
+• Cost Per Year (USD) - required
+• Category - Degree, Diploma, Certificate, Professional, Short Course
+• Branch Offering
+
+**Verification:** Upload certificate, registration number, issuing body, and year.
+
+**Revenue Share:** Institutions keep 100% of tuition fees.`,
+
+                'lanvai hosted courses bootcamp registration': `🚀 **Lanvai Hosted Courses**
+
+For bootcamps and small institutions to host courses on Lanvai.
+
+**Why Host on Lanvai?**
+• Reach thousands of active students
+• No upfront costs
+• Marketing handled by Lanvai
+• Keep 90% of revenue
+
+**Registration Fields:**
+• Institution/Bootcamp Name (required)
+• Email (required)
+• Institution Logo
+• About Us (required)
+• Achievements
+• 10% Revenue Share Consent (required)
+
+**Course Information (per course):**
+• Course Name (required)
+• Price in USD (required)
+• Duration/Semesters (required)
+• Certification Body
+• Course Mode - Online, Offline, Hybrid
+• Study Type - Full-time, Part-time, Both
+
+**Add multiple courses** using the "Add Another Course" button.
+
+**Revenue Share:** 10% to Lanvai, 90% to you!`,
+
+                'library read free buy sell books': `📖 **Lanvai Digital Library**
+
+**1️⃣ Read Free Content 📚**
+20+ categories at no cost:
+• Novels, Short Stories, Poems
+• Tongue Twisters, Classic Literature
+• Adventure, Fantasy, Science Fiction
+• Detective, Children's Books
+• Historical, Philosophy, Drama
+• Essays, Biography, Fairytales
+• Religion, Romance, Mystery
+• Professional Literature
+
+**2️⃣ Buy Written Content 🛒**
+Featured Books:
+• The Alchemist - Adventure ($12.99)
+• Dune - Science Fiction ($18.50)
+• Pride and Prejudice - Classic ($9.99)
+• Sherlock Holmes - Detective ($14.20)
+• Harry Potter - Fantasy ($22.00)
+• The Hobbit - Adventure ($11.40)
+• 1984 - Science Fiction ($10.99)
+• Little Women - Classic ($8.75)
+
+**3️⃣ Sell Your Written Content ✍️**
+• You must be the author
+• 10% revenue share to Lanvai
+• You keep 90% of all sales
+
+**Sell Form Fields:**
+Title, Author, Book Category (eBook/Physical), Price, Year Published, Genre, Other Books, Phone Number`,
+
+                'ad exchange premium advertising ads': `💰 **Lanvai Ad Exchange**
+
+Premium advertising placements across our network.
+
+**Available Ads:**
+
+🔥 **Premium Homepage Banner** - $2,500/month (50,000+ impressions)
+📊 **Sidebar Banner** - $800/month (20,000+ impressions)
+📰 **In-Content Native Ad** - $1,200/month (35,000+ impressions)
+📧 **Newsletter Sponsorship** - $600/month (15,000+ impressions)
+🎬 **Video Pre-roll Ad** - $3,000/month (40,000+ impressions)
+📌 **Category Page Banner** - $500/month (10,000+ impressions)
+✍️ **Sponsored Article** - $1,800/month (25,000+ impressions)
+⭐ **Weekly Spotlight** - $400/month (15,000+ impressions)
+
+**Filter by:** Category, Price Range, Sort by (Price Low/High, Impressions)
+
+**Cart System:** Add ads to cart, view total, proceed to checkout.`,
+
+                'media news insights articles': `📺 **Lanvai Media - News & Insights**
+
+**Latest News:**
+1. **Digital Marketing Trends 2024** - Technology | Not Causing Alarm
+2. **E-commerce Boom in Africa** - E-commerce | ⚠️ Causing Alarm
+3. **Healthcare Tech Revolution** - Healthcare | Not Causing Alarm
+4. **Real Estate Market Update** - Real Estate | ⚠️ Causing Alarm
+5. **EdTech Growth Statistics** - Education | Not Causing Alarm
+6. **AI in Marketing** - Technology | ⚠️ Causing Alarm
+
+**Deep Insights:**
+1. **Future of Digital Commerce** - E-commerce | Trend Analysis
+2. **Tech Industry Disruption** - Technology | Market Research
+3. **Healthcare Digital Transformation** - Healthcare | Case Study
+4. **Real Estate Investment Strategies** - Real Estate | Expert Opinion
+5. **Educational Technology Trends** - Education | Trend Analysis
+
+**Filter Options:**
+• By Date
+• By Business Category (E-commerce, Technology, Healthcare, Real Estate, Education)
+• By Alert Type (Causing Alarm / Not Causing Alarm)
+• By Insight Type (Trend Analysis, Market Research, Case Study, Expert Opinion)
+• By Content Type (Marketing / Restructuring)`,
+
+                'expert consultation business services strategies': `👔 **Experts - Business Services**
+
+**Two Main Services:**
+
+**1. SERVICES** - Comprehensive business services tailored to your industry
+**2. STRATEGIES** - Business restructuring and growth systems
+
+**Business Categories:**
+• 🛍️ E-commerce • 💻 Technology • 🏦 Financial • 🏠 Real Estate
+• 📚 Education • 🌾 Agriculture • 🎦 Media • 🚛 Logistic
+• 💡 Energy • 🏭 Manufacturing • 🛍️ Retail • 🏥 Healthcare
+• 🍽️ Hospitality • 🏗️ Construction • ⚖️ Legal • 🤝 Nonprofit
+
+**Services Per Category:** SEO & Marketing, Lead Generation, Branding, Automation, Analytics
+
+**Restructuring Solutions:** Business Process Reengineering, Cost Optimization, Digital Transformation, Merger Integration, Organizational Restructuring, Financial Turnaround, Operational Excellence, Cultural Transformation, Strategic Repositioning`,
+
+                'courses available lanvai courses': `📚 **Lanvai Courses**
+
+**Available Courses:**
+Data Science, AI & Machine Learning, Full Stack Development, UI/UX Design, Digital Marketing, Graphic Design, Web Development, Cybersecurity, Business Administration, Economics, Data Analytics, Project Management, Product Design, Mobile Development, Cloud Computing, Blockchain, Python Programming, JavaScript, React, Node.js, DevOps, Sustainability, Green Finance, ESG, Corporate Strategy
+
+**How to Access:**
+• Click "Students" button to search and enroll
+• Click "Institution" for institution registration
+• Click "Library" for reading and selling books`,
+
+                'contact support email phone location': `📧 **Contact Us**
+
+**Visit Us:** Thika Road Wendani, Nairobi, Kenya
+
+**Call Us:** +254 794914597 | +254 758887164
+
+**Email Us:** Lanvai254@lanvai.com | support@lanvai.com
+
+**FAQs:**
+• Response time: Within 24 hours
+• Free consultation: 30-minute initial consultation
+• Payment methods: Bank transfers, M-Pesa, Credit Cards, PayPal
+• Custom packages available
+• Satisfaction guarantee`,
+
+                'navigation pages homepage students institution library hosted media experts ad exchange': `🗺️ **Complete Website Navigation**
+
+🏠 **Homepage** (index.html) - Platform overview and features
+🎓 **Students** (students.html) - Search and enroll in courses
+🏛️ **Institution** (institution.html) - Register your institution
+📖 **Library** (library.html) - Read, buy, and sell books
+🚀 **Hosted Courses** - Institution hosted and Lanvai hosted courses
+💰 **Ad Exchange** (adexchange.html) - Premium advertising placements
+📺 **Media** (media.html) - News and insights platform
+👔 **Experts** (experts.html) - Business consultation services
+📚 **Courses** (courses.html) - Browse available courses
+📧 **Contact Us** (contact.html) - Get in touch with us`,
+
+                'pricing cost fees revenue share money': `💰 **Pricing & Revenue Share**
+
+**Students:** Course Search - FREE | Library Reading - FREE | Course Enrollment - Varies by institution
+
+**Institutions:** Institution Registration - FREE | Course Listings - FREE | Student Matching - FREE
+
+**Hosted Courses (Lanvai Hosted):** Registration - FREE | Revenue Share - 10% to Lanvai, 90% to you
+
+**Book Sellers:** Listing - FREE | Revenue Share - 10% to Lanvai, 90% to you
+
+**Ad Exchange:** Premium Homepage Banner - $2,500/month | Sidebar Banner - $800/month | Native Ad - $1,200/month | Newsletter Sponsorship - $600/month | Video Pre-roll - $3,000/month | Category Page Banner - $500/month | Sponsored Article - $1,800/month | Weekly Spotlight - $400/month`,
+
+                'support help assistance': `🆘 **Support & Assistance**
+
+**How to Get Help:**
+
+1️⃣ **AI Chat Assistant** (24/7) - That's me! Ask anything.
+2️⃣ **Live Support Agent** - Type "talk to a person" or "connect to agent" (login required)
+3️⃣ **Email Support** - support@lanvai.com (Response within 24-48 hours)
+4️⃣ **Phone Support** - +254 794914597
+
+**Support Hours:** Monday - Friday, 8:00 AM - 6:00 PM EAT`,
+
+                'verification certification accreditation': `📜 **Institution Verification**
+
+**Verification Process:**
+
+1️⃣ **Document Upload** - Registration/Accreditation Certificate (PDF, JPG, PNG, DOC)
+2️⃣ **Registration Details** - Registration Number, Issuing Body/Authority, Year of Registration
+3️⃣ **Manual Review** - Takes 2-5 business days
+
+**Why Verification Matters:** Ensures legitimate institutions, Protects students, Builds trust, Maintains quality standards`
+        };
+
+        function findAnswer(q) {
+            q = q.toLowerCase();
+            if (q.includes('person') || q.includes('agent') || q.includes('live') || (q.includes('support') && q.includes(
+                'talk')))
+                return 'person';
+
+            for (let [keys, val] of Object.entries(KB)) {
+                let k = keys.split(' ');
+                for (let word of k) {
+                    if (q.includes(word) || word.includes(q.split(' ')[0]))
+                        return val;
+                }
+            }
+
+            const courses = ['data science', 'programming', 'design', 'marketing', 'development', 'ai', 'machine learning',
+                'business', 'analytics', 'cybersecurity', 'cloud', 'blockchain', 'python', 'javascript', 'react', 'node',
+                'devops', 'full stack', 'ui/ux', 'graphic', 'web', 'mobile', 'sustainability', 'finance', 'esg',
+                'strategy'
+            ];
+            for (let c of courses) {
+                if (q.includes(c)) {
+                    return `📚 **${c.charAt(0).toUpperCase()+c.slice(1)} Courses** available! Go to Students page and search "${c}" to see institutions offering this course.`;
+                }
+            }
+
+            return `I have complete knowledge about the entire Lanvai website!
+
+**Pages I Know About:**
+🏠 **Homepage** - Platform overview
+🎓 **Students** - Course search and enrollment
+🏛️ **Institution** - Registration guide
+📖 **Library** - Read, buy, and sell books
+🚀 **Hosted Courses** - Institution hosted and Lanvai hosted
+💰 **Ad Exchange** - Premium advertising placements
+📺 **Media** - News and insights
+👔 **Experts** - Business consultation services
+📚 **Courses** - Available courses
+📧 **Contact Us** - Get in touch
+
+**Try Asking About:**
+• "What is Lanvai?" - Complete platform overview
+• "How do I find courses?" - Student search guide
+• "Register institution" - Institution registration
+• "Library services" - All library features
+• "Ad Exchange" - Premium ad placements
+• "Media services" - News and insights
+• "Expert consultation" - Business services
+• "Contact support" - Get help
+• "Pricing" - Costs and revenue sharing
+
+Type "talk to a person" to connect with a live support agent!`;
+        }
+
+        function send() {
+            let t = I.value.trim();
+            if (!t) return;
+            addMsg(t, 'user');
+            I.value = '';
+            let r = findAnswer(t);
+            if (r === 'person') {
+                if (auth) {
+                    addMsg('🟢 Connecting to agent...', 'system');
+                    setTimeout(() => {
+                        addMsg('👤 Agent: How can I help you with Lanvai today?', 'bot');
+                        person = !0;
+                        A.classList.remove('show');
+                    }, 1200);
+                } else {
+                    A.classList.add('show');
+                    I.disabled = S.disabled = !0;
+                    addMsg('🔐 Please login or register to connect with a live person.', 'system');
+                }
+                return;
+            }
+            setTimeout(() => addMsg(r, 'bot'), 300 + Math.random() * 500);
+        }
+
+        function addMsg(t, c) {
+            let d = document.createElement('div');
+            d.className = 'msg ' + c;
+            d.textContent = t;
+            M.appendChild(d);
+            M.scrollTop = M.scrollHeight;
+        }
+
+        T.onclick = () => {
+            open = !open;
+            W.classList.toggle('open', open);
+            if (open) I.focus();
+        };
+        C.onclick = () => {
+            open = !1;
+            W.classList.remove('open');
+        };
+        document.onkeydown = e => {
+            if (e.key === 'Escape' && open) {
+                open = !1;
+                W.classList.remove('open');
+            }
+        };
+        S.onclick = send;
+        I.onkeydown = e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                send();
+            }
+        };
+        Q.forEach(b => b.onclick = () => {
+            I.value = b.dataset.q;
+            send();
+        });
+        document.getElementById('loginBtn').onclick = () => {
+            auth = !0;
+            A.classList.remove('show');
+            I.disabled = S.disabled = !1;
+            addMsg('✅ Logged in! You can now connect to a live person.', 'system');
+        };
+        document.getElementById('registerBtn').onclick = () => {
+            auth = !0;
+            A.classList.remove('show');
+            I.disabled = S.disabled = !1;
+            addMsg('✅ Registered! You can now connect to a live person.', 'system');
+        };
+        I.disabled = S.disabled = !1;
+        setTimeout(() => addMsg('💡 Tip: Ask about any page - "Students", "Institution", "Library", "Ad Exchange", "Media", "Experts", "Courses", or "Contact Us"!',
+            'system'), 1200);
+    })();
+
+    // ==============================================
+    // COOKIE MANAGEMENT
+    // ==============================================
+
+    function setCookie(name, value, days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + date.toUTCString() + "; path=/; SameSite=Lax";
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.indexOf(nameEQ) === 0) {
+                return decodeURIComponent(cookie.substring(nameEQ.length));
+            }
+        }
+        return null;
+    }
+
+    var cookieConsent = getCookie('cookie_consent');
+    var trackingEnabled = (cookieConsent === 'all');
+
+    if (!trackingEnabled) {
+        var localStorageConsent = localStorage.getItem('cookie_consent');
+        if (localStorageConsent === 'all') {
+            trackingEnabled = true;
+            setCookie('cookie_consent', 'all', 365);
+        }
+    }
+
+    var userId = getCookie('user_id');
+    if (!userId && trackingEnabled) {
+        userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        setCookie('user_id', userId, 365);
+    } else if (!userId) {
+        userId = 'guest_' + Math.random().toString(36).substr(2, 6);
+    }
+
+    function logUserAction(type, details) {
+        if (!trackingEnabled) return;
+
+        var action = {
+            timestamp: new Date().toISOString(),
+            time: new Date().toLocaleTimeString(),
+            date: new Date().toLocaleDateString(),
+            type: type,
+            page: 'media.html',
+            details: details || '',
+            userId: userId
+        };
+
+        var storedActions = localStorage.getItem('lanvai_analytics');
+        var actions = storedActions ? JSON.parse(storedActions) : [];
+        actions.unshift(action);
+        if (actions.length > 500) actions = actions.slice(0, 500);
+        localStorage.setItem('lanvai_analytics', JSON.stringify(actions));
+    }
+
+    function saveActiveTab(section) {
+        if (trackingEnabled) {
+            setCookie('media_active_tab', section, 30);
+        }
+    }
+
+    function saveFilterPreferences() {
+        if (trackingEnabled !== true) return;
+
+        var activeBtn = document.querySelector('.nav-btn.active');
+        var activeSection = activeBtn ? activeBtn.dataset.section : 'news';
+        var filters = {};
+
+        if (activeSection === 'news') {
+            var newsCat = document.getElementById('newsCategory');
+            var newsAlert = document.getElementById('newsAlert');
+            var newsDate = document.getElementById('newsDate');
+            var newsContentType = document.getElementById('newsContentType');
+            var newsKeyword = document.getElementById('newsKeyword');
+            filters = {
+                newsCategory: newsCat ? newsCat.value : 'all',
+                newsAlert: newsAlert ? newsAlert.value : 'all',
+                newsDate: newsDate ? newsDate.value : '',
+                newsContentType: newsContentType ? newsContentType.value : 'all',
+                newsKeyword: newsKeyword ? newsKeyword.value : ''
+            };
+        } else if (activeSection === 'insights') {
+            var insightsCat = document.getElementById('insightsCategory');
+            var insightsType = document.getElementById('insightsType');
+            var insightsContentType = document.getElementById('insightsContentType');
+            var insightsKeyword = document.getElementById('insightsKeyword');
+            filters = {
+                insightsCategory: insightsCat ? insightsCat.value : 'all',
+                insightsType: insightsType ? insightsType.value : 'all',
+                insightsContentType: insightsContentType ? insightsContentType.value : 'all',
+                insightsKeyword: insightsKeyword ? insightsKeyword.value : ''
+            };
+        }
+
+        setCookie('media_filters', JSON.stringify(filters), 30);
+    }
+
+    function loadSavedPreferences() {
+        if (trackingEnabled !== true) return;
+
+        var savedTab = getCookie('media_active_tab');
+        if (savedTab && (savedTab === 'news' || savedTab === 'insights')) {
+            var targetBtn = document.querySelector('.nav-btn[data-section="' + savedTab + '"]');
+            if (targetBtn && !targetBtn.classList.contains('active')) {
+                document.querySelectorAll('.nav-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                targetBtn.classList.add('active');
+
+                document.querySelectorAll('.filter-panel').forEach(function(p) {
+                    p.classList.remove('active-panel');
+                });
+                document.querySelectorAll('.content-section').forEach(function(c) {
+                    c.classList.remove('active-content');
+                });
+
+                var filterPanel = document.getElementById(savedTab + 'Filter');
+                var contentSection = document.getElementById(savedTab + 'Section');
+                if (filterPanel) filterPanel.classList.add('active-panel');
+                if (contentSection) contentSection.classList.add('active-content');
+
+                if (savedTab === 'news') fetchNews();
+                if (savedTab === 'insights') fetchInsights();
+            }
+        }
+
+        var savedFilters = getCookie('media_filters');
+        if (savedFilters) {
+            try {
+                var filters = JSON.parse(savedFilters);
+                for (var key in filters) {
+                    var element = document.getElementById(key);
+                    if (element && filters[key]) {
+                        element.value = filters[key];
+                    }
+                }
+                var activeBtn = document.querySelector('.nav-btn.active');
+                var activeSection = activeBtn ? activeBtn.dataset.section : 'news';
+                if (activeSection === 'news') applyNewsFilter();
+                if (activeSection === 'insights') applyInsightsFilter();
+            } catch (e) {}
+        }
+    }
+
+    // ==============================================
+    // API BASE
+    // ==============================================
+    var API_BASE = '/api';
+
+    // ==============================================
+    // FETCH NEWS FROM DATABASE
+    // ==============================================
+    function fetchNews(filters) {
+        filters = filters || {};
+        var query = [];
+        if (filters.category && filters.category !== 'all') query.push('category=' + encodeURIComponent(filters.category));
+        if (filters.alert && filters.alert !== 'all') query.push('alert=' + encodeURIComponent(filters.alert));
+        if (filters.date) query.push('date=' + encodeURIComponent(filters.date));
+        if (filters.contentType && filters.contentType !== 'all') query.push('content_type=' + encodeURIComponent(filters.contentType));
+        if (filters.keyword && filters.keyword.trim().length > 0) query.push('keyword=' + encodeURIComponent(filters.keyword.trim()));
+
+        var url = API_BASE + '/media/news';
+        if (query.length > 0) url += '?' + query.join('&');
+
+        var container = document.getElementById('newsContainer');
+        container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading news...</p></div>';
+
+        fetch(url, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success) {
+                renderNews(data.news || [], filters.keyword);
+            } else {
+                renderNews([], filters.keyword);
+            }
+        })
+        .catch(function(error) {
+            console.error('Error fetching news:', error);
+            renderNews([], filters.keyword);
+        });
+    }
+
+    // ==============================================
+    // FETCH INSIGHTS FROM DATABASE
+    // ==============================================
+    function fetchInsights(filters) {
+        filters = filters || {};
+        var query = [];
+        if (filters.category && filters.category !== 'all') query.push('category=' + encodeURIComponent(filters.category));
+        if (filters.type && filters.type !== 'all') query.push('type=' + encodeURIComponent(filters.type));
+        if (filters.contentType && filters.contentType !== 'all') query.push('content_type=' + encodeURIComponent(filters.contentType));
+        if (filters.keyword && filters.keyword.trim().length > 0) query.push('keyword=' + encodeURIComponent(filters.keyword.trim()));
+
+        var url = API_BASE + '/media/insights';
+        if (query.length > 0) url += '?' + query.join('&');
+
+        var container = document.getElementById('insightsContainer');
+        container.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading insights...</p></div>';
+
+        fetch(url, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success) {
+                renderInsights(data.insights || [], filters.keyword);
+            } else {
+                renderInsights([], filters.keyword);
+            }
+        })
+        .catch(function(error) {
+            console.error('Error fetching insights:', error);
+            renderInsights([], filters.keyword);
+        });
+    }
+
+    // ==============================================
+    // HIGHLIGHT TEXT HELPER
+    // ==============================================
+    function highlightText(text, keyword) {
+        if (!keyword || !keyword.trim() || keyword.trim().length === 0) return text;
+        var words = keyword.trim().split(/\s+/);
+        var result = text;
+        for (var i = 0; i < words.length; i++) {
+            var word = words[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            var regex = new RegExp('(' + word + ')', 'gi');
+            result = result.replace(regex, '<span class="highlight">$1</span>');
+        }
+        return result;
+    }
+
+    // ==============================================
+    // GET IMAGE URL - FIXED to properly fetch from database like article page
+    // ==============================================
+    function getImageUrl(item) {
+        // Log the item to debug - same as article page
+        console.log('Getting image for:', item.id, item.title, 'image_url:', item.image);
+        
+        // Check if there's an image in the database (field is 'image' not 'image_url')
+        if (item.image && item.image !== 'null' && item.image !== '' && item.image !== 'undefined') {
+            // If it's a full URL starting with http:// or https://
+            if (item.image.startsWith('http://') || item.image.startsWith('https://')) {
+                return item.image;
+            }
+            // If it's a relative path starting with /
+            if (item.image.startsWith('/')) {
+                return item.image;
+            }
+            // If it's a path starting with uploads/
+            if (item.image.startsWith('uploads/')) {
+                return '/' + item.image;
+            }
+            // If it's a path starting with images/
+            if (item.image.startsWith('images/')) {
+                return '/' + item.image;
+            }
+            // Otherwise, assume it's a filename in the uploads folder
+            return '/uploads/' + item.image;
+        }
+        
+        // If no image in database, use category-based SVG placeholder (no external URLs)
+        console.log('No image found for:', item.id, 'using placeholder');
+        return getCategoryPlaceholder(item.category);
+    }
+
+    // ==============================================
+    // CATEGORY PLACEHOLDER - using inline SVG (no external requests)
+    // ==============================================
+    function getCategoryPlaceholder(category) {
+        var colors = {
+            'E-commerce': '3b82f6',
+            'Technology': '8b5cf6',
+            'Healthcare': '10b981',
+            'Real Estate': 'f59e0b',
+            'Education': '6366f1',
+            'Marketing': 'ec4899',
+            'Restructuring': '8b5cf6',
+            'Agriculture': '22c55e',
+            'Media': '06b6d4',
+            'Logistic': 'f97316',
+            'Energy': 'f59e0b',
+            'Manufacturing': '3b82f6',
+            'Retail': 'ec4899',
+            'Hospitality': '8b5cf6',
+            'Construction': 'f59e0b',
+            'Legal': '6366f1',
+            'Nonprofit': '22c55e'
+        };
+        
+        var icons = {
+            'E-commerce': '🛍️',
+            'Technology': '💻',
+            'Healthcare': '🏥',
+            'Real Estate': '🏠',
+            'Education': '📚',
+            'Marketing': '📊',
+            'Restructuring': '🔄',
+            'Agriculture': '🌾',
+            'Media': '🎦',
+            'Logistic': '🚛',
+            'Energy': '💡',
+            'Manufacturing': '🏭',
+            'Retail': '🛍️',
+            'Hospitality': '🍽️',
+            'Construction': '🏗️',
+            'Legal': '⚖️',
+            'Nonprofit': '🤝'
+        };
+        
+        var color = colors[category] || 'd1d5db';
+        var icon = icons[category] || '📰';
+        var label = category || 'News';
+        
+        // Return a data URI with SVG - no external requests needed
+        var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="150" viewBox="0 0 200 150">
+            <rect width="200" height="150" fill="#${color}" opacity="0.15"/>
+            <rect width="200" height="150" fill="none" stroke="#${color}" stroke-width="2" rx="8"/>
+            <text x="100" y="75" font-size="48" text-anchor="middle" font-family="Arial" fill="#${color}">${icon}</text>
+            <text x="100" y="110" font-size="14" text-anchor="middle" font-family="Arial" fill="#6b7280">${label}</text>
+        </svg>`;
+        
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    // ==============================================
+    // GET YOUTUBE URL
+    // ==============================================
+    function getYoutubeUrl(item) {
+        if (item.youtube_url && item.youtube_url.trim() !== '') {
+            return item.youtube_url;
+        }
+        return 'https://www.youtube.com/@LanvaiMedia';
+    }
+
+    // ==============================================
+    // RENDER NEWS
+    // ==============================================
+    function renderNews(newsData, keyword) {
+        var container = document.getElementById('newsContainer');
+
+        if (!newsData || newsData.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h4>No news found</h4>
+                    <p>Try adjusting your filters or search terms</p>
+                </div>
+            `;
+            return;
+        }
+
+        var html = '';
+        for (var i = 0; i < newsData.length; i++) {
+            var news = newsData[i];
+            var badgeClass = news.alert === 'causing' ? 'badge-causing' : 'badge-not-causing';
+            var badgeText = news.alert === 'causing' ? '⚠️ Causing Alarm' : '✅ Not Causing Alarm';
+            var dateStr = news.date ? new Date(news.date).toLocaleDateString() : 'N/A';
+            var safeTitle = news.title ? news.title.replace(/'/g, "\\'") : '';
+            
+            var highlightedTitle = highlightText(news.title || 'Untitled', keyword);
+            var highlightedDesc = highlightText(news.description || 'No description available', keyword);
+
+            // Content type badge
+            var contentTypeBadge = '';
+            if (news.content_type === 'Marketing') {
+                contentTypeBadge = '<span class="card-badge" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;">📊 Marketing</span>';
+            } else if (news.content_type === 'Restructuring') {
+                contentTypeBadge = '<span class="card-badge" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;">🔄 Restructuring</span>';
+            }
+
+            var imageUrl = getImageUrl(news);
+            var youtubeUrl = getYoutubeUrl(news);
+            var isCausing = news.alert === 'causing';
+
+            var youtubeButton = '';
+            if (isCausing) {
+                youtubeButton = `
+                    <a href="${youtubeUrl}" target="_blank" class="btn-youtube" title="Watch full coverage on YouTube">
+                        <i class="fab fa-youtube"></i> Watch Full Coverage
+                    </a>
+                `;
+            }
+
+            html += `
+                <div class="card-item">
+                    <div class="card-image">
+                        <img src="${imageUrl}" alt="${news.title || 'News image'}" 
+                             onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><i class=\\'fas fa-newspaper\\'></i><small>No Image</small></div>'"
+                             loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">
+                            ${highlightedTitle}
+                            ${contentTypeBadge}
+                            <span class="card-badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <div class="card-meta">
+                            <span><i class="fas fa-chart-line"></i> ${news.category || 'N/A'}</span>
+                            <span><i class="fas fa-calendar"></i> ${dateStr}</span>
+                            ${news.source ? `<span><i class="fas fa-newspaper"></i> ${news.source}</span>` : ''}
+                        </div>
+                        <div class="card-description">${highlightedDesc}</div>
+                        <div class="card-actions">
+                            <button class="btn-read" data-id="${news.id}" data-article="${safeTitle}">
+                                Read Full Article →
+                            </button>
+                            ${youtubeButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        attachNewsButtons();
+    }
+
+    function attachNewsButtons() {
+        var buttons = document.querySelectorAll('#newsContainer .btn-read');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', function(e) {
+                var id = this.getAttribute('data-id');
+                var title = this.getAttribute('data-article');
+                logUserAction('read_article', title);
+                window.location.href = 'article.html?id=' + id + '&type=news';
+            });
+        }
+    }
+
+    // ==============================================
+    // RENDER INSIGHTS
+    // ==============================================
+    function renderInsights(insightsData, keyword) {
+        var container = document.getElementById('insightsContainer');
+
+        if (!insightsData || insightsData.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h4>No insights found</h4>
+                    <p>Try adjusting your filters or search terms</p>
+                </div>
+            `;
+            return;
+        }
+
+        var html = '';
+        for (var i = 0; i < insightsData.length; i++) {
+            var insight = insightsData[i];
+            var safeTitle = insight.title ? insight.title.replace(/'/g, "\\'") : '';
+            
+            var highlightedTitle = highlightText(insight.title || 'Untitled', keyword);
+            var highlightedDesc = highlightText(insight.description || 'No description available', keyword);
+
+            var contentTypeBadge = '';
+            if (insight.content_type === 'Marketing') {
+                contentTypeBadge = '<span class="card-badge" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;">📊 Marketing</span>';
+            } else if (insight.content_type === 'Restructuring') {
+                contentTypeBadge = '<span class="card-badge" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;">🔄 Restructuring</span>';
+            }
+
+            var imageUrl = getImageUrl(insight);
+            var youtubeUrl = getYoutubeUrl(insight);
+            var isCausing = insight.alert === 'causing';
+
+            var youtubeButton = `
+                <a href="${youtubeUrl}" target="_blank" class="btn-youtube" title="Watch full video on YouTube">
+                    <i class="fab fa-youtube"></i> Watch on YouTube
+                </a>
+            `;
+
+            html += `
+                <div class="card-item">
+                    <div class="card-image">
+                        <img src="${imageUrl}" alt="${insight.title || 'Insight image'}" 
+                             onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><i class=\\'fas fa-lightbulb\\'></i><small>No Image</small></div>'"
+                             loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">
+                            ${highlightedTitle}
+                            ${contentTypeBadge}
+                            ${isCausing ? '<span class="card-badge badge-causing">⚠️ Causing Alarm</span>' : '<span class="card-badge badge-not-causing">✅ Not Causing Alarm</span>'}
+                            <span class="card-badge" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white;">${insight.type || 'N/A'}</span>
+                        </div>
+                        <div class="card-meta">
+                            <span><i class="fas fa-chart-line"></i> ${insight.category || 'N/A'}</span>
+                            ${insight.author ? `<span><i class="fas fa-user"></i> ${insight.author}</span>` : ''}
+                        </div>
+                        <div class="card-description">${highlightedDesc}</div>
+                        <div class="card-actions">
+                            <button class="btn-read" data-id="${insight.id}" data-insight="${safeTitle}">
+                                Read Full Insight →
+                            </button>
+                            ${youtubeButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        attachInsightsButtons();
+    }
+
+    function attachInsightsButtons() {
+        var buttons = document.querySelectorAll('#insightsContainer .btn-read');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', function(e) {
+                var id = this.getAttribute('data-id');
+                var title = this.getAttribute('data-insight');
+                logUserAction('read_insight', title);
+                window.location.href = 'article.html?id=' + id + '&type=insights';
+            });
+        }
+    }
+
+    // ==============================================
+    // FILTER FUNCTIONS
+    // ==============================================
+    function applyNewsFilter() {
+        var date = document.getElementById('newsDate').value;
+        var category = document.getElementById('newsCategory').value;
+        var alert = document.getElementById('newsAlert').value;
+        var contentType = document.getElementById('newsContentType').value;
+        var keyword = document.getElementById('newsKeyword').value;
+
+        var filters = {};
+        if (date) filters.date = date;
+        if (category && category !== 'all') filters.category = category;
+        if (alert && alert !== 'all') filters.alert = alert;
+        if (contentType && contentType !== 'all') filters.contentType = contentType;
+        if (keyword && keyword.trim().length > 0) filters.keyword = keyword.trim();
+
+        fetchNews(filters);
+        saveFilterPreferences();
+        
+        if (keyword && keyword.trim().length > 0) {
+            window.showKeywordSummary('news', keyword.trim());
+        } else {
+            var summary = document.getElementById('newsSearchSummary');
+            if (summary) summary.classList.remove('visible');
+        }
+        
+        logUserAction('apply_filter', 'News filter - Category: ' + category + ', Alert: ' + alert + ', Content Type: ' + contentType + ', Keyword: ' + keyword);
+    }
+
+    function resetNewsFilter() {
+        document.getElementById('newsDate').value = '';
+        document.getElementById('newsCategory').value = 'all';
+        document.getElementById('newsAlert').value = 'all';
+        document.getElementById('newsContentType').value = 'all';
+        document.getElementById('newsKeyword').value = '';
+        document.getElementById('newsClearKeyword').classList.remove('visible');
+        
+        var summary = document.getElementById('newsSearchSummary');
+        if (summary) summary.classList.remove('visible');
+
+        fetchNews({});
+        saveFilterPreferences();
+        logUserAction('reset_filter', 'News filters reset');
+    }
+
+    function applyInsightsFilter() {
+        var category = document.getElementById('insightsCategory').value;
+        var type = document.getElementById('insightsType').value;
+        var contentType = document.getElementById('insightsContentType').value;
+        var keyword = document.getElementById('insightsKeyword').value;
+
+        var filters = {};
+        if (category && category !== 'all') filters.category = category;
+        if (type && type !== 'all') filters.type = type;
+        if (contentType && contentType !== 'all') filters.contentType = contentType;
+        if (keyword && keyword.trim().length > 0) filters.keyword = keyword.trim();
+
+        fetchInsights(filters);
+        saveFilterPreferences();
+        
+        if (keyword && keyword.trim().length > 0) {
+            window.showKeywordSummary('insights', keyword.trim());
+        } else {
+            var summary = document.getElementById('insightsSearchSummary');
+            if (summary) summary.classList.remove('visible');
+        }
+        
+        logUserAction('apply_filter', 'Insights filter - Category: ' + category + ', Type: ' + type + ', Content Type: ' + contentType + ', Keyword: ' + keyword);
+    }
+
+    function resetInsightsFilter() {
+        document.getElementById('insightsCategory').value = 'all';
+        document.getElementById('insightsType').value = 'all';
+        document.getElementById('insightsContentType').value = 'all';
+        document.getElementById('insightsKeyword').value = '';
+        document.getElementById('insightsClearKeyword').classList.remove('visible');
+        
+        var summary = document.getElementById('insightsSearchSummary');
+        if (summary) summary.classList.remove('visible');
+
+        fetchInsights({});
+        saveFilterPreferences();
+        logUserAction('reset_filter', 'Insights filters reset');
+    }
+
+    window.applyNewsFilter = applyNewsFilter;
+    window.resetNewsFilter = resetNewsFilter;
+    window.applyInsightsFilter = applyInsightsFilter;
+    window.resetInsightsFilter = resetInsightsFilter;
+
+    // ==============================================
+    // NAVIGATION SETUP
+    // ==============================================
+    function setupNavigation() {
+        var navBtns = document.querySelectorAll('.nav-btn');
+        for (var i = 0; i < navBtns.length; i++) {
+            navBtns[i].addEventListener('click', function(e) {
+                var section = this.dataset.section;
+                currentSection = section;
+
+                document.querySelectorAll('.nav-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                document.querySelectorAll('.filter-panel').forEach(function(p) {
+                    p.classList.remove('active-panel');
+                });
+                document.querySelectorAll('.content-section').forEach(function(c) {
+                    c.classList.remove('active-content');
+                });
+
+                var filterPanel = document.getElementById(section + 'Filter');
+                var contentSection = document.getElementById(section + 'Section');
+                if (filterPanel) filterPanel.classList.add('active-panel');
+                if (contentSection) contentSection.classList.add('active-content');
+
+                saveActiveTab(section);
+                logUserAction('tab_switch', 'Switched to ' + section);
+
+                if (section === 'news') fetchNews({});
+                if (section === 'insights') fetchInsights({});
+            });
+        }
+    }
+
+    // ==============================================
+    // AUTO-SAVE FILTERS
+    // ==============================================
+    function setupAutoSaveFilters() {
+        var filterInputs = document.querySelectorAll('.filter-select, .date-input, .keyword-input');
+        for (var i = 0; i < filterInputs.length; i++) {
+            filterInputs[i].addEventListener('change', saveFilterPreferences);
+        }
+    }
+
+    // ==============================================
+    // PAGE VIEW TRACKING
+    // ==============================================
+    function trackPageView() {
+        logUserAction('page_view', 'Media page loaded');
+
+        var startTime = Date.now();
+        window.addEventListener('beforeunload', function() {
+            var timeSpent = Math.floor((Date.now() - startTime) / 1000);
+            logUserAction('session_end', 'Spent ' + timeSpent + ' seconds on Media page');
+        });
+    }
+
+    // ==============================================
+    // SYNC COOKIE FROM LOCALSTORAGE
+    // ==============================================
+    function syncCookieFromLocalStorage() {
+        var storedConsent = localStorage.getItem('cookie_consent');
+        if (storedConsent && !getCookie('cookie_consent')) {
+            setCookie('cookie_consent', storedConsent, 365);
+        }
+    }
+
+    // ==============================================
+    // YOUTUBE ALERT BANNER
+    // ==============================================
+    function setupYoutubeBanner() {
+        var banner = document.getElementById('youtubeAlertBanner');
+        var closeBtn = document.getElementById('closeYoutubeAlert');
+        
+        if (localStorage.getItem('youtube_banner_dismissed') === 'true') {
+            banner.classList.remove('visible');
+            return;
+        }
+        
+        setTimeout(function() {
+            banner.classList.add('visible');
+        }, 1500);
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                banner.classList.remove('visible');
+                localStorage.setItem('youtube_banner_dismissed', 'true');
+            });
+        }
+    }
+
+    // ==============================================
+    // INITIALIZE
+    // ==============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        syncCookieFromLocalStorage();
+
+        var freshConsent = getCookie('cookie_consent');
+        if (freshConsent === 'all') {
+            trackingEnabled = true;
+        }
+
+        setupNavigation();
+        fetchNews({});
+        fetchInsights({});
+        setupAutoSaveFilters();
+        loadSavedPreferences();
+        trackPageView();
+        setupYoutubeBanner();
+
+        setupKeywordSearch('newsKeyword', 'newsClearKeyword', 'newsSearchSummary', 'newsSearchTerm', 'newsClearSearch', applyNewsFilter);
+        setupKeywordSearch('insightsKeyword', 'insightsClearKeyword', 'insightsSearchSummary', 'insightsSearchTerm', 'insightsClearSearch', applyInsightsFilter);
+
+        document.getElementById('applyNewsBtn').addEventListener('click', applyNewsFilter);
+        document.getElementById('resetNewsBtn').addEventListener('click', resetNewsFilter);
+        document.getElementById('applyInsightsBtn').addEventListener('click', applyInsightsFilter);
+        document.getElementById('resetInsightsBtn').addEventListener('click', resetInsightsFilter);
+    });
+</script>
+
+</body>
+
+</html>

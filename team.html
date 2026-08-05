@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai - Our Team</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #d4e6f1 0%, #b8d9e8 25%, #a8d5c8 50%, #b8c9e8 75%, #c5d5e6 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 0 0 50px 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar-custom {
+            background: linear-gradient(90deg, #1e40af, #2563eb, #059669, #10b981);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-custom .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: transparent;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .navbar-brand:hover .logo-icon {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #bfdbfe, #a7f3d0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .brand-tagline {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links a .icon {
+            font-size: 1rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+
+        .dropdown-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(30, 58, 95, 0.95);
+            backdrop-filter: blur(10px);
+            min-width: 220px;
+            border-radius: 16px;
+            padding: 8px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 100;
+        }
+
+        .dropdown-content a {
+            color: rgba(255, 255, 255, 0.85);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            border-radius: 0;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TEAM HERO ===== */
+        .team-hero {
+            text-align: center;
+            padding: 3.5rem 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 32px;
+            max-width: 1100px;
+            margin: 2rem auto;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .team-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e3a5f, #2563eb, #059669);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-hero p {
+            color: #475569;
+            font-size: 1.05rem;
+            max-width: 750px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ===== TEAM GRID ===== */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.92);
+            padding: 2rem 1.8rem;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6, #059669, #10b981);
+        }
+
+        .team-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 30px -8px rgba(0, 0, 0, 0.12);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+            position: relative;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar.ceo {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+        }
+
+        .avatar.tech {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+
+        .avatar.media {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            background: #22c55e;
+            border-radius: 50%;
+            border: 3px solid white;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+            }
+        }
+
+        .team-card h3 {
+            color: #1e3a5f;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .team-card .role {
+            display: inline-block;
+            background: linear-gradient(90deg, #2563eb, #059669);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 1.2rem;
+            border-radius: 30px;
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .team-card .bio {
+            color: #64748b;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.08);
+            color: #2563eb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, #2563eb, #059669);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+        }
+
+        /* ===== JOIN SECTION ===== */
+        .join-section {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 32px;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .join-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+
+        .join-section p {
+            color: #64748b;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto 1rem;
+        }
+
+        .join-btn {
+            display: inline-block;
+            padding: 0.7rem 2.5rem;
+            border-radius: 60px;
+            background: linear-gradient(90deg, #2563eb, #059669);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        .join-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            color: #cbd5e1;
+            margin-top: 60px;
+            padding: 30px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .navbar-custom .container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 4px;
+            }
+
+            .nav-links a,
+            .dropdown-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .dropdown-content {
+                left: 50%;
+                transform: translateX(-50%);
+                min-width: 200px;
+            }
+
+            .team-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .team-hero p {
+                font-size: 0.95rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+
+            .team-card {
+                padding: 1.5rem;
+            }
+
+            .avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 1.8rem;
+            }
+
+            .join-section h2 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .team-hero {
+                padding: 2rem 1.2rem;
+                margin: 1rem auto;
+            }
+
+            .social-links a {
+                width: 36px;
+                height: 36px;
+                font-size: 0.95rem;
+            }
+        }
+
+        ::selection {
+            background: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar-custom">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">
+                <span class="logo-icon"><img src="/images/lanvai.png" alt="Lanvai Logo"></span>
+                <div>
+                    <span class="brand-text">Lanvai</span>
+                    <span class="brand-tagline">Your Business Growth Partner</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="index.html"><span class="icon">🏠</span> Home</a>
+                <a href="about.html"><span class="icon">ℹ️</span> About Us</a>
+                <a href="team.html" class="active"><span class="icon">👥</span> Our Team</a>
+                <a href="contactus.html"><span class="icon">📞</span> Contact Us</a>
+                <div class="dropdown">
+                    <button class="dropdown-btn"><span class="icon">🌐</span> PartnerWebsites ▾</button>
+                    <div class="dropdown-content">
+                        <a href="courses.html" target="_blank"><span class="icon">📚</span> EduLink Courses</a>
+                        <li><a class="dropdown-item" href="https://bryson67.github.io/Brystech-website/" target="_blank"><span class="icon">📚</span>BRYSTECH</a></li>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== TEAM HERO ===== -->
+    <div class="team-hero">
+        <h1>Our Leadership Team</h1>
+        <p>
+            Meet the passionate individuals driving Lanvai's mission to transform education and business across Africa. Our diverse team brings together expertise in technology, education, media, and business strategy.
+        </p>
+    </div>
+
+    <!-- ===== TEAM GRID ===== -->
+    <div class="team-grid">
+
+        <!-- CEO - Muhuri George -->
+        <div class="team-card">
+            <div class="avatar ceo">
+                MG
+                <span class="status-dot"></span>
+            </div>
+            <h3>Muhuri George</h3>
+            <span class="role">Chief Executive Officer</span>
+         <p class="bio">
+
+
+ is the Founder and Visionary behind Lanvai, a company built on the belief that sustainable growth begins with understanding.
+
+Driven by a passion for research, business strategy, and innovation, he founded Lanvai to help organizations navigate change, identify opportunities, and make better decisions in an increasingly complex world.
+
+His vision is to build a company that goes beyond traditional marketing by combining business intelligence, strategic thinking, restructuring expertise, and audience-driven solutions. Through Lanvai Media, he champions the idea that knowledge is a competitive advantage and that businesses that understand change are better positioned to lead it.
+
+Under his leadership, Lanvai continues to pursue a simple mission:
+
+**To transform insight into strategy, strategy into execution, and execution into sustainable growth.**
+            </p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+
+        <!-- Head of Tech - Bryson Waswa -->
+        <div class="team-card">
+            <div class="avatar tech">
+                BW
+                <span class="status-dot"></span>
+            </div>
+            <h3>Bryson Waswa</h3>
+            <span class="role">Head of Technology</span>
+           <p class="bio">
+
+
+serves as Head of Technology at Lanvai, leading the company's technology strategy, digital innovation, and technical solutions.
+
+He oversees the development of the platforms, systems, and technologies that support Lanvai's media, advertising, and business operations while helping clients leverage technology to improve efficiency, scalability, and growth.
+
+Working closely with businesses across different industries, Bryson helps identify technological opportunities, solve operational challenges, and implement solutions that align with each organization's unique goals and circumstances.
+
+His leadership ensures that technology is not viewed merely as a tool, but as a strategic asset that enables businesses to adapt, compete, and grow in an increasingly digital world.
+
+**At Lanvai, technology is not just about building systems—it is about creating solutions that move businesses forward.**
+            </p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+
+        <!-- Editor / Media Personnel -->
+        <div class="team-card">
+            <div class="avatar media">
+                EP
+                <span class="status-dot"></span>
+            </div>
+            <h3>Nicholas Mutuku</h3>
+            <span class="role">Editor &amp; Media Director</span>
+                <p class="bio">
+
+               
+Serves as Creative Director at Lanvai, leading the development of visual communication, brand identity, creative design, and multimedia production.
+
+He transforms strategic ideas into compelling visual experiences that communicate clearly, build trust, and strengthen how businesses are perceived in the market.
+
+Working closely with the research, strategy, and marketing teams, he oversees the creation of brand identities, corporate presentations, marketing materials, digital content, advertising creatives, video production, motion graphics, and visual storytelling that align with each client's objectives.
+
+His expertise spans graphic design, branding, video production, creative strategy, user experience, and visual communication, ensuring every creative asset is purposeful, consistent, and strategically aligned.
+
+He believes great design is not simply about appearance—it is about communicating ideas, building credibility, and inspiring action.
+
+**At Lanvai, he transforms strategy into visual experiences that build brands, communicate value, and create lasting impact.**
+
+            </p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+
+         <div class="team-card">
+            <div class="avatar media">
+                JK
+                <span class="status-dot"></span>
+            </div>
+            <h3>Josephat Kinyanjui</h3>
+            
+            <span class="role">Head of Research & Intelligence</span>  
+</span>
+            <p class="bio">
+
+
+
+Serves as Head of Research & Intelligence at Lanvai, leading the research that drives every strategy, recommendation, and business solution developed across the organization.
+
+He oversees the continuous analysis of industries, markets, economic trends, government policies, consumer behaviour, emerging technologies, competitive landscapes, and business performance to uncover the insights that help businesses make better decisions.
+
+Working alongside the strategy, media, and marketing teams, he ensures every recommendation is supported by evidence, practical analysis, and a deep understanding of the environments in which businesses operate.
+
+His expertise spans market research, competitive intelligence, strategic analysis, industry research, business intelligence, and opportunity identification, helping organizations navigate uncertainty with confidence.
+
+He believes that the quality of every business decision depends on the quality of the understanding behind it.
+
+**At Lanvai, he transforms information into intelligence, intelligence into strategy, and strategy into sustainable business growth.**
+
+
+            </p>
+         
+        </div>
+           <div class="team-card">
+              <div class="avatar media">
+                GT
+                <span class="status-dot"></span>
+            </div>
+            <h3>Gathee Thuo</h3>
+            
+            <span class="role">Head of Media & Business Intelligence</span>
+</span>
+            <p class="bio">
+
+
+
+
+
+Serves as Head of Media & Business Intelligence at Lanvai, leading the production of research-driven content that helps businesses, investors, entrepreneurs, and decision-makers understand the forces shaping industries and markets.
+
+He oversees the identification, analysis, and communication of business developments, market trends, policy changes, economic shifts, corporate strategy, innovation, and emerging opportunities, transforming complex information into practical business intelligence.
+
+Working closely with the research and strategy teams, he ensures every publication provides context, clarity, and actionable insight rather than simply reporting events.
+
+His expertise spans business journalism, market intelligence, strategic communication, corporate analysis, economic research, and executive content development.
+
+He believes the value of information lies not in knowing what happened, but in understanding why it matters.
+
+**At Lanvai, he transforms business intelligence into meaningful insights that help organizations anticipate change, make informed decisions, and stay ahead of the market.**
+
+
+
+            </p>
+         
+        </div>
+
+    </div>
+
+    <!-- ===== JOIN SECTION ===== -->
+    <div class="join-section">
+        <h2>Join Our Growing Team</h2>
+        <p>
+            We're always looking for talented, passionate individuals to join the Lanvai family. If you're excited about education technology and making a difference, we'd love to hear from you.
+        </p>
+        <a href="contactus.html" class="join-btn">Get in Touch →</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Lanvai Marketing | Smart Solutions for Smart Businesses</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tracking Script -->
+<script>
+    (function() {
+        var API_BASE = 'http://localhost:5000/api';
+        var visitorId = localStorage.getItem('visitor_id');
+        if (!visitorId) {
+            visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+            localStorage.setItem('visitor_id', visitorId);
+        }
+
+        // Track page view
+        function trackPageView() {
+            var data = {
+                pageUrl: window.location.pathname || '/',
+                pageTitle: document.title || 'Unknown Page',
+                referrerUrl: document.referrer || ''
+            };
+            
+            fetch(API_BASE + '/track/pageview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(function() {});
+        }
+
+        // Track clicks
+        function setupClickTracking() {
+            document.addEventListener('click', function(e) {
+                var target = e.target;
+                var data = {
+                    elementId: target.id || '',
+                    elementClass: target.className || '',
+                    elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                    pageUrl: window.location.pathname || '/'
+                };
+                
+                // Only track important clicks (links, buttons, etc.)
+                if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                    target.closest('a') || target.closest('button')) {
+                    fetch(API_BASE + '/track/click', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                }
+            });
+        }
+
+        // Track form submissions
+        function setupFormTracking() {
+            document.addEventListener('submit', function(e) {
+                var form = e.target;
+                var data = {
+                    formType: form.id || form.name || 'unknown',
+                    formData: {}
+                };
+                
+                // Collect form data
+                var inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    if (input.name) {
+                        data.formData[input.name] = input.value || '';
+                    }
+                });
+                
+                fetch(API_BASE + '/track/formsubmit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            });
+        }
+
+        // Initialize tracking
+        trackPageView();
+        setupClickTracking();
+        setupFormTracking();
+    })();
+</script>
+</body>
+
+</html>

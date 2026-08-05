@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get a Quote - Lanvai Experts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ========== MAIN STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f0e8;
+            min-height: 100vh;
+            color: #1a1a2e;
+        }
+
+        /* ========== TOAST ========== */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #0d9488, #059669);
+            color: #fef9c3;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 25px rgba(13, 148, 136, 0.4);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+        }
+
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-notification.error {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-color: rgba(250, 204, 21, 0.3);
+            color: #fef9c3;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar-custom {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(37, 99, 235, 0.10));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 0.8rem 0;
+            border-bottom: 2px solid rgba(250, 204, 21, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 9998;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-custom .navbar-brand .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(13, 148, 136, 0.2);
+        }
+
+        .navbar-custom .navbar-brand .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .navbar-custom .nav-link {
+            color: #4a4a5a !important;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #0d9488 !important;
+            background: rgba(13, 148, 136, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .navbar-custom .nav-link.active {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(250, 204, 21, 0.08));
+            color: #0d9488 !important;
+            border: 1px solid rgba(13, 148, 136, 0.15);
+        }
+
+        .navbar-custom .nav-link .icon {
+            margin-right: 6px;
+        }
+
+        /* ========== QUOTE FORM ========== */
+        .quote-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid rgba(100, 116, 139, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+        }
+
+        .quote-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quote-header .quote-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #0d9488, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .quote-header h1 {
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .quote-header p {
+            color: #4a4a5a;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-control:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.08);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .quote-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2.5rem;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            border-radius: 50px;
+            padding: 0.6rem 1.5rem;
+            color: #4a4a5a;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(13, 148, 136, 0.04);
+            border-color: #0d9488;
+            color: #0d9488;
+        }
+
+        /* ========== SUCCESS STATE ========== */
+        .success-state {
+            display: none;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .success-state.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-state .success-icon {
+            font-size: 4rem;
+            color: #0d9488;
+            margin-bottom: 1rem;
+        }
+
+        .success-state h2 {
+            color: #1a1a2e;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-state p {
+            color: #4a4a5a;
+            font-size: 1.05rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(100, 116, 139, 0.08);
+            color: #6b6b80;
+            font-size: 0.85rem;
+        }
+
+        /* ========== CHAT ========== */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+        }
+
+        .chat-toggle {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(13, 148, 136, 0.4);
+        }
+
+        .chat-toggle .badge {
+            background: #f59e0b;
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            max-width: 90vw;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(100, 116, 139, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .chat-window.open {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(13, 148, 136, 0.04);
+            border-bottom: 1px solid rgba(100, 116, 139, 0.06);
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #0d9488;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #6b6b80;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        .chat-close:hover {
+            color: #1a1a2e;
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .chat-messages {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-messages .msg {
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg.bot {
+            background: rgba(13, 148, 136, 0.06);
+            color: #1a1a2e;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-messages .msg.user {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-messages .msg.system {
+            background: rgba(245, 158, 11, 0.06);
+            color: #1a1a2e;
+            align-self: center;
+            text-align: center;
+            font-size: 0.75rem;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            max-width: 95%;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            padding: 0.4rem 1rem 0.8rem;
+            border-top: 1px solid rgba(100, 116, 139, 0.06);
+        }
+
+        .quick-replies button {
+            background: rgba(13, 148, 136, 0.04);
+            border: 1px solid rgba(100, 116, 139, 0.1);
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.7rem;
+            color: #4a4a5a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quick-replies button:hover {
+            background: rgba(13, 148, 136, 0.08);
+            border-color: #0d9488;
+            color: #0d9488;
+        }
+
+        .chat-footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-top: 1px solid rgba(100, 116, 139, 0.06);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            background: rgba(255, 255, 255, 0.5);
+            color: #1a1a2e;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .chat-footer input:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.08);
+        }
+
+        .chat-footer input::placeholder {
+            color: #6b6b80;
+        }
+
+        .chat-footer .send-btn {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 70px;
+                right: -10px;
+                border-radius: 20px 20px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="logo-icon">
+                    <img src="/images/lanvai.png" alt="Lanvai Logo">
+                </span> LANVAI Experts
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="experts.html">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="get-quote.html">Get a Quote</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contactus.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="quote-container" id="quoteContainer">
+            <!-- Back Button -->
+            <div class="mb-3">
+                <a href="javascript:history.back()" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+
+            <!-- Header -->
+            <div class="quote-header">
+                <span class="quote-icon"><i class="fas fa-file-invoice"></i></span>
+                <h1>Get a Quote</h1>
+                <p>Fill in the details below and our team will get back to you with a tailored quote</p>
+            </div>
+
+            <!-- Form -->
+            <div id="quoteForm">
+                <form id="quoteFormElement" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+254 700 000 000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company Name</label>
+                            <input type="text" class="form-control" id="company" name="company" placeholder="Your Company">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="serviceType">Service Type <span class="required">*</span></label>
+                            <select class="form-control" id="serviceType" name="serviceType" required>
+                                <option value="">Select a service...</option>
+                                <option value="Marketing Services">📈 Marketing Services</option>
+                                <option value="Marketing Strategies">🧠 Marketing Strategies</option>
+                                <option value="Restructuring Services">🔄 Restructuring Services</option>
+                                <option value="Restructuring Strategies">📊 Restructuring Strategies</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="businessCategory">Business Category <span class="required">*</span></label>
+                            <select class="form-control" id="businessCategory" name="businessCategory" required>
+                                <option value="">Select a category...</option>
+                                <option value="E-commerce">🛍️ E-commerce</option>
+                                <option value="Technology">💻 Technology</option>
+                                <option value="Financial">🏦 Financial</option>
+                                <option value="Real Estate">🏠 Real Estate</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Agriculture">🌾 Agriculture</option>
+                                <option value="Media">🎦 Media</option>
+                                <option value="Logistic">🚛 Logistic</option>
+                                <option value="Energy">💡 Energy</option>
+                                <option value="Manufacturing">🏭 Manufacturing</option>
+                                <option value="Retail">🛍️ Retail</option>
+                                <option value="Healthcare">🏥 Healthcare</option>
+                                <option value="Hospitality">🍽️ Hospitality</option>
+                                <option value="Construction">🏗️ Construction</option>
+                                <option value="Legal">⚖️ Legal</option>
+                                <option value="Nonprofit">🤝 Nonprofit</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budget">Estimated Budget</label>
+                        <select class="form-control" id="budget" name="budget">
+                            <option value="">Select a range...</option>
+                            <option value="Under $500">Under $500</option>
+                            <option value="$500 - $2,000">$500 - $2,000</option>
+                            <option value="$2,000 - $5,000">$2,000 - $5,000</option>
+                            <option value="$5,000 - $10,000">$5,000 - $10,000</option>
+                            <option value="$10,000 - $25,000">$10,000 - $25,000</option>
+                            <option value="$25,000+">$25,000+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Project Details <span class="required">*</span></label>
+                        <textarea class="form-control" id="message" name="message" 
+                            placeholder="Tell us about your project, goals, and any specific requirements..." 
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Submit Request
+                    </button>
+                </form>
+            </div>
+
+            <!-- Success State -->
+            <div class="success-state" id="successState">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Quote Request Submitted!</h2>
+                <p>Thank you for reaching out. Our team will review your request and get back to you within 24-48 hours.</p>
+                <div class="mt-4">
+                    <a href="index.html" class="btn-back">
+                        <i class="fas fa-home"></i> Return to Home
+                    </a>
+                    <a href="javascript:location.reload()" class="btn-back ms-2">
+                        <i class="fas fa-redo"></i> Submit Another
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Lanvai Marketing | Smart Solutions for Smart Businesses</p>
+    </footer>
+
+    <!-- Chat Floating -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>LANVAI Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Need help with your quote? I can answer any questions about our services!</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What services do you offer?">📈 Services</button>
+                <button data-q="How long does a quote take?">⏱️ Timeline</button>
+                <button data-q="Pricing">💰 Pricing</button>
+                <button data-q="Contact support">📧 Contact</button>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        var API_BASE = 'http://localhost:5000/api';
+
+        // ================= TOAST =================
+        function showToast(msg, isError) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { t.classList.add('show'); }, 10);
+            setTimeout(function() { t.classList.remove('show'); }, 4000);
+        }
+
+        // ================= GET URL PARAMS =================
+        function getUrlParams() {
+            var params = {};
+            var query = window.location.search.substring(1);
+            var pairs = query.split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                if (pair.length === 2) {
+                    params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+                }
+            }
+            return params;
+        }
+
+        // ================= PRE-FILL FORM =================
+        function prefillForm() {
+            var params = getUrlParams();
+
+            if (params.service) {
+                var serviceSelect = document.getElementById('serviceType');
+                for (var i = 0; i < serviceSelect.options.length; i++) {
+                    if (serviceSelect.options[i].value === params.service) {
+                        serviceSelect.value = params.service;
+                        break;
+                    }
+                }
+            }
+
+            if (params.category) {
+                var categorySelect = document.getElementById('businessCategory');
+                for (var i = 0; i < categorySelect.options.length; i++) {
+                    if (categorySelect.options[i].value === params.category) {
+                        categorySelect.value = params.category;
+                        break;
+                    }
+                }
+            }
+
+            if (params.title) {
+                var message = document.getElementById('message');
+                message.value =
+                    `I'm interested in "${params.title}" for my ${params.category || 'business'}. Please provide a detailed quote.\n\nAdditional details:`;
+            } else if (params.service && params.category) {
+                var message = document.getElementById('message');
+                message.value =
+                    `I'm interested in ${params.service} for my ${params.category} business. Please provide a detailed quote.\n\nAdditional details:`;
+            }
+        }
+
+        // ================= FORM SUBMISSION =================
+        document.getElementById('quoteFormElement').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+            var formData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                company: document.getElementById('company').value.trim(),
+                serviceType: document.getElementById('serviceType').value,
+                businessCategory: document.getElementById('businessCategory').value,
+                budget: document.getElementById('budget').value,
+                message: document.getElementById('message').value.trim(),
+                timestamp: new Date().toISOString()
+            };
+
+            // Validate
+            if (!formData.fullName || !formData.email || !formData.phone ||
+                !formData.serviceType || !formData.businessCategory || !formData.message) {
+                showToast('Please fill in all required fields.', true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+                return;
+            }
+
+            // Validate email
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                showToast('Please enter a valid email address.', true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+                return;
+            }
+
+            console.log('📤 Submitting quote request:', formData);
+
+            // Save to localStorage for backup
+            var quotes = JSON.parse(localStorage.getItem('quote_requests') || '[]');
+            quotes.unshift(formData);
+            if (quotes.length > 50) quotes = quotes.slice(0, 50);
+            localStorage.setItem('quote_requests', JSON.stringify(quotes));
+
+            // Send to API
+            fetch(API_BASE + '/quote/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    console.log('✅ Quote submitted successfully:', data);
+                    showToast('✅ Quote request submitted successfully!');
+                    document.getElementById('quoteForm').style.display = 'none';
+                    document.getElementById('successState').classList.add('show');
+                })
+                .catch(function(error) {
+                    console.error('❌ Error submitting quote:', error);
+                    // Even if API fails, we saved to localStorage, so show success
+                    showToast('⚠️ Quote saved locally. Our team will contact you soon!');
+                    document.getElementById('quoteForm').style.display = 'none';
+                    document.getElementById('successState').classList.add('show');
+                })
+                .finally(function() {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request';
+                });
+        });
+
+        // ================= CHAT FUNCTIONALITY =================
+        (function() {
+            var W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn'),
+                Q = document.querySelectorAll('.quick-replies button');
+            var open = false;
+
+            var KB = {
+                'services': '📈 **Our Services**\n\nWe offer 4 main service categories:\n\n1️⃣ **Marketing Services** - SEO, lead generation, branding, automation, analytics\n2️⃣ **Marketing Strategies** - Market penetration, product development, expansion\n3️⃣ **Restructuring Services** - Process reengineering, cost optimization, transformation\n4️⃣ **Restructuring Strategies** - Strategic repositioning, merger integration\n\nSelect a service in the form above!',
+
+                'timeline': '⏱️ **Quote Timeline**\n\n1️⃣ **Submission** - You submit the form\n2️⃣ **Review** - Our team reviews your request (24-48 hours)\n3️⃣ **Consultation** - We schedule a call to discuss details\n4️⃣ **Quote** - You receive a detailed quote within 3-5 business days\n\nNeed it faster? Call us directly!',
+
+                'pricing': '💰 **Pricing**\n\nOur pricing varies based on:\n• Service type\n• Business category\n• Project scope\n• Timeline\n\nWe offer:\n✅ Customized quotes\n✅ Flexible payment plans\n✅ Competitive rates\n\nFill in the form to get a tailored quote!',
+
+                'contact': '📧 **Contact Us**\n\n📍 Thika Road Wendani, Nairobi, Kenya\n📞 +254 794914597 / +254 758887164\n📧 Lanvai254@Lanvai.com / support@Lanvai.com\n\nWe\'re available Mon-Fri, 8:00 AM - 6:00 PM EAT.'
+            };
+
+            function findAnswer(q) {
+                q = q.toLowerCase();
+                if (q.includes('services')) return KB['services'];
+                if (q.includes('timeline') || q.includes('long') || q.includes('time')) return KB['timeline'];
+                if (q.includes('price') || q.includes('cost') || q.includes('budget')) return KB['pricing'];
+                if (q.includes('contact') || q.includes('phone') || q.includes('email')) return KB['contact'];
+                return 'I can help with: 📈 Services | ⏱️ Timeline | 💰 Pricing | 📧 Contact. What would you like to know about getting a quote?';
+            }
+
+            function send() {
+                var t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                setTimeout(function() { addMsg(findAnswer(t), 'bot'); }, 300 + Math.random() * 500);
+            }
+
+            function addMsg(t, c) {
+                var d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            T.onclick = function() {
+                open = !open;
+                W.classList.toggle('open', open);
+                if (open) I.focus();
+            };
+            C.onclick = function() {
+                open = false;
+                W.classList.remove('open');
+            };
+            document.onkeydown = function(e) {
+                if (e.key === 'Escape' && open) {
+                    open = false;
+                    W.classList.remove('open');
+                }
+            };
+            S.onclick = send;
+            I.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+            Q.forEach(function(b) {
+                b.onclick = function() {
+                    I.value = b.dataset.q;
+                    send();
+                };
+            });
+        })();
+
+        // ================= INIT =================
+        document.addEventListener('DOMContentLoaded', function() {
+            prefillForm();
+        });
+
+        // ================= TRACKING =================
+        (function() {
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var data = {
+                    pageUrl: window.location.pathname || '/',
+                    pageTitle: document.title || 'Unknown Page',
+                    referrerUrl: document.referrer || ''
+                };
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            }
+
+            trackPageView();
+        })();
+    </script>
+</body>
+
+</html>

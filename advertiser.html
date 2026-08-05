@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Lanvai ADExchange – Advertiser</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f5f0eb;
+            min-height: 100vh;
+            color: #1a142b;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #fbbf24;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .navbar .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+        }
+        .brand-logo {
+            height: 45px;
+        }
+        .brand-text {
+            color: #1a142b;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .brand-text span {
+            color: #d97706;
+        }
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            color: #4b3d2b;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.25s;
+            cursor: pointer;
+        }
+        .nav-links a:hover {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: #fbbf24;
+            color: #1a142b;
+        }
+        .nav-links a.active {
+            background: #fbbf24;
+            border-color: #fbbf24;
+            color: #1a142b;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            text-align: center;
+            padding: 2rem 1.5rem 1rem;
+        }
+        .page-header .icon {
+            font-size: 3.5rem;
+            color: #d97706;
+            margin-bottom: 0.5rem;
+        }
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a142b;
+        }
+        .page-header h1 span {
+            color: #d97706;
+        }
+        .page-header p {
+            color: #4b3d2b;
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0.5rem auto;
+        }
+
+        /* ===== TABS ===== */
+        .tabs-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(251, 191, 36, 0.15);
+            padding-bottom: 0.5rem;
+        }
+        .tab-btn {
+            padding: 0.6rem 1.8rem;
+            border: none;
+            background: transparent;
+            color: #6b5d4a;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tab-btn:hover {
+            background: rgba(251, 191, 36, 0.08);
+            color: #1a142b;
+        }
+        .tab-btn.active {
+            background: #fbbf24;
+            color: #1a142b;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+        .tab-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            background: rgba(200, 200, 200, 0.2);
+        }
+        .tab-btn.locked::after {
+            content: ' 🔒';
+            font-size: 0.8rem;
+        }
+        .tab-btn.locked:hover {
+            background: transparent;
+            color: #6b5d4a;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CODE ACCESS SECTION ===== */
+        .code-access-section {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 3px solid #fbbf24;
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.15);
+        }
+        .code-access-section .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 0.75rem;
+        }
+        .code-access-section h3 {
+            color: #1a142b;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .code-access-section h3 i {
+            color: #d97706;
+        }
+        .code-access-section .sub-text {
+            color: #4b3d2b;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .request-code-row {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            border: 2px dashed rgba(251, 191, 36, 0.3);
+        }
+        .request-code-row .email-input {
+            flex: 2;
+            min-width: 200px;
+            padding: 0.7rem 1rem;
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: white;
+            color: #1a142b;
+            transition: 0.3s;
+        }
+        .request-code-row .email-input:focus {
+            outline: none;
+            border-color: #d97706;
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2);
+        }
+
+        .enter-code-row {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .enter-code-row input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            color: #1a142b;
+            transition: 0.3s;
+            letter-spacing: 2px;
+        }
+        .enter-code-row input:focus {
+            outline: none;
+            border-color: #d97706;
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.2);
+        }
+
+        .code-status {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .code-status.show {
+            display: block;
+        }
+        .code-status.success {
+            color: #16a34a;
+        }
+        .code-status.error {
+            color: #dc2626;
+        }
+        .code-status.info {
+            color: #d97706;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #d97706, #b45309);
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-secondary {
+            background: rgba(251, 191, 36, 0.1);
+            border: 2px solid rgba(251, 191, 36, 0.2);
+            padding: 0.7rem 2rem;
+            border-radius: 30px;
+            color: #1a142b;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+        .btn-secondary:hover {
+            background: rgba(251, 191, 36, 0.2);
+        }
+        .btn-secondary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== REACH OUT FORM ===== */
+        .reach-out-card {
+            background: white;
+            border: 2px solid rgba(251, 191, 36, 0.15);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        .reach-out-card h2 {
+            color: #1a142b;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .reach-out-card h2 i {
+            color: #d97706;
+            margin-right: 0.5rem;
+        }
+        .reach-out-card .subtitle {
+            color: #6b5d4a;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1a142b;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .form-group label .required {
+            color: #dc2626;
+        }
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 2px solid rgba(251, 191, 36, 0.15);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            background: #faf8f6;
+            color: #1a142b;
+        }
+        .form-control:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-box {
+            background: white;
+            border: 2px solid rgba(251, 191, 36, 0.1);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .stat-box:hover {
+            border-color: #fbbf24;
+            transform: translateY(-2px);
+        }
+        .stat-box .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a142b;
+        }
+        .stat-box .stat-label {
+            color: #6b5d4a;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-box .stat-icon {
+            font-size: 1.5rem;
+            color: #d97706;
+            margin-bottom: 0.3rem;
+        }
+
+        .campaign-card {
+            background: white;
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            transition: 0.2s;
+        }
+        .campaign-card:hover {
+            border-color: rgba(251, 191, 36, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        }
+        .campaign-card .campaign-info {
+            flex: 1;
+        }
+        .campaign-card .campaign-name {
+            font-weight: 600;
+            color: #1a142b;
+        }
+        .campaign-card .campaign-meta {
+            font-size: 0.85rem;
+            color: #6b5d4a;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.1rem;
+        }
+        .campaign-card .campaign-status {
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .campaign-status.active {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+        }
+        .campaign-status.pending {
+            background: rgba(251, 191, 36, 0.1);
+            color: #d97706;
+        }
+        .campaign-status.completed {
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+        }
+        .campaign-status.paused {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+        .campaign-card .campaign-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #4b3d2b;
+        }
+        .campaign-card .campaign-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .campaign-card .campaign-stats i {
+            color: #d97706;
+        }
+
+        .dashboard-content {
+            display: none !important;
+        }
+        .dashboard-content.unlocked {
+            display: block !important;
+        }
+
+        .dashboard-locked-overlay {
+            display: block !important;
+            text-align: center;
+            padding: 3rem 2rem;
+            background: white;
+            border-radius: 16px;
+            border: 2px solid rgba(251, 191, 36, 0.15);
+        }
+        .dashboard-locked-overlay.hidden {
+            display: none !important;
+        }
+        .dashboard-locked-overlay .lock-icon {
+            font-size: 4rem;
+            color: #d97706;
+            margin-bottom: 1rem;
+        }
+        .dashboard-locked-overlay h3 {
+            color: #1a142b;
+            margin-bottom: 0.5rem;
+        }
+        .dashboard-locked-overlay p {
+            color: #6b5d4a;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a142b;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast-notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(251, 191, 36, 0.15);
+            color: #6b5d4a;
+            font-size: 0.85rem;
+        }
+
+        /* ===== CHAT ===== */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        .chat-toggle {
+            background: linear-gradient(145deg, #d97706, #b45309);
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(255, 200, 50, 0.2);
+        }
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(251, 191, 36, 0.4);
+        }
+        .chat-toggle .badge {
+            background: #fbbf24;
+            color: #0e0a1a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            max-width: 90vw;
+            background: white;
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 2px solid rgba(251, 191, 36, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: chatSlideUp 0.3s ease;
+        }
+        .chat-window.open {
+            display: block;
+        }
+        @keyframes chatSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(251, 191, 36, 0.08);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+        }
+        .chat-header h3 {
+            font-size: 1rem;
+            color: #1a142b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #6b5d4a;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+        }
+        .chat-close:hover {
+            color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
+        }
+        .chat-messages {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .chat-messages .msg {
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .chat-messages .msg.bot {
+            background: rgba(251, 191, 36, 0.08);
+            color: #1a142b;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(251, 191, 36, 0.08);
+        }
+        .chat-messages .msg.user {
+            background: linear-gradient(145deg, #d97706, #b45309);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-messages .msg.system {
+            background: rgba(251, 191, 36, 0.08);
+            color: #d97706;
+            align-self: center;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            max-width: 95%;
+            border: 1px solid rgba(251, 191, 36, 0.1);
+        }
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            padding: 0.4rem 1rem 0.8rem;
+            border-top: 1px solid rgba(251, 191, 36, 0.08);
+        }
+        .quick-replies button {
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.7rem;
+            color: #4b3d2b;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quick-replies button:hover {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: #fbbf24;
+            color: #1a142b;
+        }
+        .chat-footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-top: 1px solid rgba(251, 191, 36, 0.08);
+            background: rgba(251, 191, 36, 0.04);
+        }
+        .chat-footer input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a142b;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .chat-footer input:focus {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+        .chat-footer .send-btn {
+            background: linear-gradient(145deg, #d97706, #b45309);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+        @media (max-width: 600px) {
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            .tabs {
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                flex: 1;
+                justify-content: center;
+                font-size: 0.85rem;
+                padding: 0.5rem 1rem;
+            }
+            .campaign-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .campaign-card .campaign-stats {
+                flex-wrap: wrap;
+            }
+            .request-code-row {
+                flex-direction: column;
+            }
+            .enter-code-row {
+                flex-direction: column;
+            }
+            .enter-code-row input {
+                width: 100%;
+                min-width: unset;
+            }
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 70px;
+                right: -10px;
+                border-radius: 20px 20px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='45' height='45' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23fbbf24'/%3E%3Ctext x='28' y='68' font-size='48' font-weight='bold' fill='%231a142b'%3EL%3C/text%3E%3C/svg%3E" alt="Lanvai Logo" class="brand-logo" />
+                <span class="brand-text">Lanvai <span>ADExchange</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="adexchange.html"><i class="fas fa-home"></i> Home</a>
+                <a href="adexchange.html"><i class="fas fa-ad"></i> Ad Exchange</a>
+                <a href="advertiser.html" class="active"><i class="fas fa-bullhorn"></i> Advertiser</a>
+                <a href="contactus.html"><i class="fas fa-headset"></i> Support</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="icon">🎯</div>
+        <h1>Advertiser <span>Dashboard</span></h1>
+        <p>Reach your target audience with targeted ad campaigns. Request your access code via email to unlock the dashboard.</p>
+    </section>
+
+    <!-- TABS -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('reachout')"><i class="fas fa-handshake"></i> Reach Out</button>
+            <button class="tab-btn locked" id="dashboardTabBtn" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</button>
+        </div>
+
+        <!-- REACH OUT TAB -->
+        <div class="tab-content active" id="reachoutContent">
+            <!-- CODE ACCESS SECTION -->
+            <div class="code-access-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-key"></i> Access Dashboard</h3>
+                </div>
+                <p class="sub-text">Request a 6‑digit access code via email, then enter it below to unlock the dashboard.</p>
+
+                <!-- Step 1: Request Code -->
+                <div class="request-code-row">
+                    <input type="email" class="email-input" id="codeRequestEmail" placeholder="Enter your email address" required />
+                    <button class="btn-secondary" id="requestCodeBtn" style="padding:0.6rem 1.8rem;">
+                        <i class="fas fa-envelope"></i> Request Code
+                    </button>
+                </div>
+
+                <!-- Step 2: Enter Code -->
+                <div class="enter-code-row">
+                    <input type="text" id="accessCodeInput" placeholder="Enter 6‑digit code from email" maxlength="6" onkeypress="handleCodeEnter(event)" autocomplete="off" />
+                    <button class="btn-primary" onclick="verifyCode()" style="padding:0.7rem 2.5rem; font-size:0.95rem;">
+                        <i class="fas fa-unlock"></i> Unlock Dashboard
+                    </button>
+                </div>
+
+                <div id="codeStatus" class="code-status"></div>
+
+                <div style="margin-top:0.8rem; display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+                    <span style="font-size:0.8rem; color:#6b5d4a;">
+                        <i class="fas fa-info-circle"></i> Code expires after 24 hours
+                    </span>
+                    <span id="codeDisplay" style="font-size:0.85rem; font-weight:600; color:#d97706; display:none;">
+                        <i class="fas fa-check-circle"></i> Dashboard Unlocked
+                    </span>
+                </div>
+            </div>
+
+            <!-- REACH OUT FORM -->
+            <div class="reach-out-card">
+                <h2><i class="fas fa-handshake"></i> Reach Out to Ad Owners</h2>
+                <p class="subtitle">Connect with ad owners to place your ads. Fill in your details and we'll help you get started.</p>
+
+                <form id="reachOutForm" onsubmit="submitReachOut(event)">
+                    <div class="form-group">
+                        <label>Your Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="advertiserName" placeholder="Enter your full name" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" class="form-control" id="advertiserEmail" placeholder="you@example.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-control" id="advertiserPhone" placeholder="+254 712 345 678" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Business/Company Name</label>
+                            <input type="text" class="form-control" id="businessName" placeholder="Your business name" />
+                        </div>
+                        <div class="form-group">
+                            <label>Industry</label>
+                            <select class="form-select" id="industry">
+                                <option value="">Select Industry</option>
+                                <option value="Technology">Technology</option>
+                                <option value="E-commerce">E-commerce</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Ad Format <span class="required">*</span></label>
+                        <select class="form-select" id="adFormat" required>
+                            <option value="">Select Ad Format</option>
+                            <option value="Banner">Banner Ad</option>
+                            <option value="Native">Native Ad</option>
+                            <option value="Video">Video Ad</option>
+                            <option value="Sponsored">Sponsored Content</option>
+                            <option value="Popup">Popup Ad</option>
+                            <option value="Social">Social Media Ad</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Budget ($) <span class="required">*</span></label>
+                            <input type="number" class="form-control" id="budget" placeholder="e.g., 500" min="50" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Duration (Days) <span class="required">*</span></label>
+                            <input type="number" class="form-control" id="duration" placeholder="e.g., 30" min="7" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Target Audience</label>
+                        <select class="form-select" id="targetAudience">
+                            <option value="">Select Target Audience</option>
+                            <option value="General">General Audience</option>
+                            <option value="Young Adults">Young Adults (18-25)</option>
+                            <option value="Professionals">Professionals (25-45)</option>
+                            <option value="Business">Business Owners</option>
+                            <option value="Students">Students</option>
+                            <option value="Parents">Parents</option>
+                            <option value="Tech Enthusiasts">Tech Enthusiasts</option>
+                            <option value="Local">Local Audience</option>
+                            <option value="International">International Audience</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message / Requirements</label>
+                        <textarea class="form-control" id="message" rows="4" placeholder="Describe your advertising needs, target audience, and any specific requirements..."></textarea>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send Request</button>
+                        <button type="reset" class="btn-secondary"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- DASHBOARD TAB -->
+        <div class="tab-content" id="dashboardContent">
+            <!-- Locked Overlay - Visible by default -->
+            <div class="dashboard-locked-overlay" id="dashboardLockedOverlay">
+                <div class="lock-icon"><i class="fas fa-lock"></i></div>
+                <h3>🔒 Dashboard is Locked</h3>
+                <p>Please request an access code via email and enter it above to unlock the dashboard.</p>
+                <button class="btn-primary" onclick="switchTab('reachout')"><i class="fas fa-key"></i> Go to Reach Out</button>
+            </div>
+
+            <!-- Dashboard Content - Hidden by default -->
+            <div class="dashboard-content" id="dashboardContentInner">
+                <!-- Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-box"><div class="stat-icon"><i class="fas fa-bullhorn"></i></div><div class="stat-number" id="totalCampaigns">0</div><div class="stat-label">Total Campaigns</div></div>
+                    <div class="stat-box"><div class="stat-icon"><i class="fas fa-play-circle"></i></div><div class="stat-number" id="activeCampaigns">0</div><div class="stat-label">Active Campaigns</div></div>
+                    <div class="stat-box"><div class="stat-icon"><i class="fas fa-eye"></i></div><div class="stat-number" id="totalImpressions">0</div><div class="stat-label">Total Impressions</div></div>
+                    <div class="stat-box"><div class="stat-icon"><i class="fas fa-mouse-pointer"></i></div><div class="stat-number" id="totalClicks">0</div><div class="stat-label">Total Clicks</div></div>
+                </div>
+                <!-- Campaign List -->
+                <div style="background:white; border:2px solid rgba(251,191,36,0.1); border-radius:24px; padding:1.5rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+                        <h3 style="color:#1a142b; font-size:1.2rem;"><i class="fas fa-list" style="color:#d97706;"></i> Your Campaigns</h3>
+                        <button class="btn-primary" style="padding:0.4rem 1.2rem; font-size:0.85rem;" onclick="switchTab('reachout')"><i class="fas fa-plus"></i> New Campaign</button>
+                    </div>
+                    <div id="campaignList">
+                        <div class="empty-state" style="text-align:center; padding:2rem; color:#6b5d4a;">
+                            <i class="fas fa-bullhorn" style="font-size:2.5rem; color:#d97706; display:block; margin-bottom:0.5rem;"></i>
+                            <p>No campaigns yet. Start your first campaign!</p>
+                            <button class="btn-primary" style="margin-top:0.5rem; padding:0.4rem 1.5rem; font-size:0.85rem;" onclick="switchTab('reachout')"><i class="fas fa-plus"></i> Create Campaign</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2025 Lanvai ADExchange | Smart Advertising Solutions</p></footer>
+
+    <!-- CHAT -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header"><h3><span class="online-dot"></span>Lanvai Assistant</h3><button class="chat-close" id="chatClose">✕</button></div>
+            <div class="chat-messages" id="chatMessages"><div class="msg bot">👋 Welcome! Request your access code via email to unlock the dashboard.</div></div>
+            <div class="quick-replies">
+                <button data-q="How do I advertise?">🎯 Advertise</button>
+                <button data-q="Reach out to ad owners">📢 Reach Out</button>
+                <button data-q="Campaign dashboard">📊 Dashboard</button>
+                <button data-q="Request code">🔑 Request Code</button>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me..." />
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script>
+        // ==============================================
+        // API BASE
+        // ==============================================
+        var API_BASE = '/api';
+        var ACCESS_CODE = '';
+
+        // ==============================================
+        // TOAST NOTIFICATION
+        // ==============================================
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ==============================================
+        // REQUEST CODE
+        // ==============================================
+        function requestCode() {
+            var email = document.getElementById('codeRequestEmail').value.trim();
+            if (!email) {
+                showToast('⚠️ Please enter your email address.', true);
+                document.getElementById('codeRequestEmail').focus();
+                return;
+            }
+
+            var btn = document.getElementById('requestCodeBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            document.getElementById('advertiserEmail').value = email;
+            localStorage.setItem('advertiser_email', email);
+
+            fetch(API_BASE + '/advertiser/request-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.json().then(function(errData) {
+                            throw new Error(errData.error || 'Server error');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(result) {
+                    if (result.success) {
+                        ACCESS_CODE = result.access_code;
+                        showToast('📧 Access code sent to ' + email + '!');
+                        var statusEl = document.getElementById('codeStatus');
+                        statusEl.textContent = '✅ Code sent! Check your email for the 6‑digit code.';
+                        statusEl.className = 'code-status show success';
+                        localStorage.setItem('advertiser_access_code', result.access_code);
+                        localStorage.setItem('advertiser_access_expires', result.expires_at);
+                        document.getElementById('accessCodeInput').focus();
+                    } else {
+                        showToast('❌ Failed to send code: ' + (result.error || 'Unknown error'), true);
+                        var statusEl = document.getElementById('codeStatus');
+                        statusEl.textContent = '❌ ' + (result.error || 'Failed to send code');
+                        statusEl.className = 'code-status show error';
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Request code error:', error);
+                    showToast('❌ Server error: ' + error.message, true);
+                    var statusEl = document.getElementById('codeStatus');
+                    statusEl.textContent = '❌ Server error: ' + error.message;
+                    statusEl.className = 'code-status show error';
+                })
+                .finally(function() {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-envelope"></i> Request Code';
+                });
+        }
+
+        // ==============================================
+        // VERIFY CODE
+        // ==============================================
+        function verifyCode() {
+            var input = document.getElementById('accessCodeInput').value.trim();
+            var statusEl = document.getElementById('codeStatus');
+            var email = document.getElementById('codeRequestEmail').value.trim() || document.getElementById('advertiserEmail')
+                .value.trim();
+
+            statusEl.className = 'code-status';
+
+            if (!input) {
+                statusEl.textContent = '❌ Please enter the code from your email.';
+                statusEl.className = 'code-status show error';
+                document.getElementById('accessCodeInput').focus();
+                return;
+            }
+
+            if (!email) {
+                statusEl.textContent = '❌ Please enter your email address first.';
+                statusEl.className = 'code-status show error';
+                document.getElementById('codeRequestEmail').focus();
+                return;
+            }
+
+            fetch(API_BASE + '/advertiser/verify-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_code: input, email: email })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.json().then(function(errData) {
+                            throw new Error(errData.error || 'Server error');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(result) {
+                    if (result.success && result.verified) {
+                        statusEl.textContent = '✅ Code verified! Dashboard unlocked.';
+                        statusEl.className = 'code-status show success';
+                        ACCESS_CODE = input;
+                        localStorage.setItem('advertiser_access_code', input);
+                        localStorage.setItem('advertiser_dashboard_unlocked', 'true');
+                        unlockDashboard();
+                        showToast('✅ Dashboard unlocked successfully!');
+                        document.getElementById('accessCodeInput').value = '';
+                        document.getElementById('codeDisplay').style.display = 'inline';
+                    } else {
+                        statusEl.textContent = '❌ ' + (result.error || 'Invalid or expired code');
+                        statusEl.className = 'code-status show error';
+                        showToast('❌ ' + (result.error || 'Invalid code'), true);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Verify code error:', error);
+                    statusEl.textContent = '❌ Server error: ' + error.message;
+                    statusEl.className = 'code-status show error';
+                    showToast('❌ Server error: ' + error.message, true);
+                });
+        }
+
+        function handleCodeEnter(event) {
+            if (event.key === 'Enter') verifyCode();
+        }
+
+        // ==============================================
+        // UNLOCK DASHBOARD
+        // ==============================================
+        function unlockDashboard() {
+            var tabBtn = document.getElementById('dashboardTabBtn');
+            tabBtn.classList.remove('locked');
+            tabBtn.innerHTML = '<i class="fas fa-chart-pie"></i> Dashboard';
+
+            document.getElementById('dashboardLockedOverlay').classList.add('hidden');
+            document.getElementById('dashboardLockedOverlay').style.display = 'none';
+            document.getElementById('dashboardContentInner').classList.add('unlocked');
+            document.getElementById('dashboardContentInner').style.display = 'block';
+            document.getElementById('codeDisplay').style.display = 'inline';
+
+            var email = localStorage.getItem('advertiser_email') || '';
+            if (email) {
+                loadCampaigns(email);
+            }
+        }
+
+        // ==============================================
+        // SWITCH TABS
+        // ==============================================
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+
+            var targetBtn = document.getElementById('dashboardTabBtn');
+            if (tab === 'dashboard') {
+                if (targetBtn.classList.contains('locked')) {
+                    showToast('🔒 Please request and enter the access code first.', true);
+                    document.querySelector('.tab-btn[onclick="switchTab(\'reachout\')"]').classList.add('active');
+                    return;
+                }
+                targetBtn.classList.add('active');
+            } else {
+                document.querySelector('.tab-btn[onclick="switchTab(\'reachout\')"]').classList.add('active');
+            }
+
+            document.querySelectorAll('.tab-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+
+            var targetContent = document.getElementById(tab + 'Content');
+            if (targetContent) {
+                targetContent.classList.add('active');
+
+                if (tab === 'dashboard') {
+                    if (localStorage.getItem('advertiser_dashboard_unlocked') === 'true') {
+                        document.getElementById('dashboardContentInner').style.display = 'block';
+                        document.getElementById('dashboardLockedOverlay').style.display = 'none';
+                        var email = localStorage.getItem('advertiser_email') || '';
+                        if (email) loadCampaigns(email);
+                    } else {
+                        document.getElementById('dashboardContentInner').style.display = 'none';
+                        document.getElementById('dashboardLockedOverlay').style.display = 'block';
+                    }
+                }
+            }
+        }
+
+        // ==============================================
+        // SUBMIT CAMPAIGN - Sends to Admin AdExchange
+        // ==============================================
+        function submitReachOut(event) {
+            event.preventDefault();
+
+            var name = document.getElementById('advertiserName').value.trim();
+            var email = document.getElementById('advertiserEmail').value.trim();
+            var phone = document.getElementById('advertiserPhone').value.trim();
+            var business = document.getElementById('businessName').value.trim();
+            var industry = document.getElementById('industry').value;
+            var adFormat = document.getElementById('adFormat').value;
+            var budget = document.getElementById('budget').value;
+            var duration = document.getElementById('duration').value;
+            var target = document.getElementById('targetAudience').value;
+            var message = document.getElementById('message').value.trim();
+
+            if (!name || !email || !adFormat || !budget || !duration) {
+                showToast('⚠️ Please fill in all required fields', true);
+                return;
+            }
+
+            var btn = event.target.querySelector('.btn-primary');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            localStorage.setItem('advertiser_email', email);
+            document.getElementById('codeRequestEmail').value = email;
+
+            var data = {
+                advertiserName: name,
+                advertiserEmail: email,
+                advertiserPhone: phone,
+                businessName: business,
+                industry: industry,
+                adFormat: adFormat,
+                budget: parseFloat(budget),
+                duration: parseInt(duration),
+                targetAudience: target,
+                message: message,
+                accessCode: ACCESS_CODE || localStorage.getItem('advertiser_access_code') || ''
+            };
+
+            // ===== MAIN SUBMISSION TO ADMIN =====
+            // 1. Submit campaign to the admin via /api/advertiser/campaign
+            fetch(API_BASE + '/advertiser/campaign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.json().then(function(errData) {
+                            throw new Error(errData.error || 'Server error');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(result) {
+                    if (result.success) {
+                        showToast('✅ Campaign submitted successfully! Admin will review it.');
+                        document.getElementById('reachOutForm').reset();
+                        loadCampaigns(email);
+                        
+                        // 2. Also send to inquiries endpoint for admin AdExchange section
+                        // This ensures it appears in the AdExchange tab on admin
+                        var inquiryData = {
+                            full_name: name,
+                            email: email,
+                            phone: phone,
+                            course: 'Ad Campaign: ' + adFormat,
+                            message: 'Business: ' + business + '\nIndustry: ' + industry + 
+                                    '\nBudget: $' + budget + '\nDuration: ' + duration + ' days' +
+                                    '\nTarget: ' + target + '\nMessage: ' + message,
+                            status: 'pending',
+                            type: 'advertiser'
+                        };
+                        
+                        // Send to inquiries endpoint (this creates the entry for admin AdExchange)
+                        return fetch(API_BASE + '/inquiries/submit', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(inquiryData)
+                        });
+                    } else {
+                        showToast('❌ Failed: ' + (result.error || 'Unknown error'), true);
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
+                        throw new Error('Campaign submission failed');
+                    }
+                })
+                .then(function(inquiryResponse) {
+                    if (inquiryResponse) {
+                        return inquiryResponse.json();
+                    }
+                    return null;
+                })
+                .then(function(inquiryResult) {
+                    if (inquiryResult && inquiryResult.success) {
+                        console.log('✅ Inquiry also sent to admin AdExchange section');
+                    }
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
+                    setTimeout(function() {
+                        if (localStorage.getItem('advertiser_dashboard_unlocked') === 'true') {
+                            switchTab('dashboard');
+                        } else {
+                            showToast('🔑 Request your access code to unlock the dashboard.', false);
+                        }
+                    }, 1000);
+                })
+                .catch(function(error) {
+                    console.error('Submit error:', error);
+                    showToast('❌ Failed: ' + error.message, true);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Request';
+                });
+        }
+
+        // ==============================================
+        // LOAD CAMPAIGNS
+        // ==============================================
+        function loadCampaigns(email) {
+            if (!email) email = localStorage.getItem('advertiser_email') || '';
+            if (!email) return;
+
+            var url = API_BASE + '/advertiser/campaigns?email=' + encodeURIComponent(email);
+
+            fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.success) {
+                        renderCampaigns(data.campaigns || []);
+                        updateDashboardStats(data.stats || {});
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Load campaigns error:', error);
+                });
+        }
+
+        function renderCampaigns(campaigns) {
+            var container = document.getElementById('campaignList');
+            if (!campaigns || campaigns.length === 0) {
+                container.innerHTML =
+                    `<div class="empty-state" style="text-align:center;padding:2rem;color:#6b5d4a;">
+                    <i class="fas fa-bullhorn" style="font-size:2.5rem;color:#d97706;display:block;margin-bottom:0.5rem;"></i>
+                    <p>No campaigns yet. Start your first campaign!</p>
+                    <button class="btn-primary" style="margin-top:0.5rem;padding:0.4rem 1.5rem;font-size:0.85rem;" onclick="switchTab('reachout')"><i class="fas fa-plus"></i> Create Campaign</button>
+                </div>`;
+                return;
+            }
+            var html = '';
+            for (var i = 0; i < campaigns.length; i++) {
+                var c = campaigns[i];
+                var statusClass = c.status === 'active' ? 'active' : c.status === 'pending' ? 'pending' : c.status ===
+                    'completed' ? 'completed' : 'paused';
+                var statusDisplay = c.status.charAt(0).toUpperCase() + c.status.slice(1);
+                html += `<div class="campaign-card">
+                    <div class="campaign-info">
+                        <div class="campaign-name">${c.ad_format||'N/A'} Campaign</div>
+                        <div class="campaign-meta">
+                            <span><i class="fas fa-tag"></i> ${c.industry||'General'}</span>
+                            <span><i class="fas fa-calendar"></i> ${new Date(c.created_at).toLocaleDateString()}</span>
+                            <span><i class="fas fa-clock"></i> ${c.duration_days||0} days</span>
+                            <span class="campaign-status ${statusClass}">${statusDisplay}</span>
+                        </div>
+                    </div>
+                    <div class="campaign-stats">
+                        <span><i class="fas fa-eye"></i> ${(c.impressions||0).toLocaleString()}</span>
+                        <span><i class="fas fa-mouse-pointer"></i> ${(c.clicks||0).toLocaleString()}</span>
+                        <span><i class="fas fa-dollar-sign"></i> $${(c.budget||0).toLocaleString()}</span>
+                    </div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function updateDashboardStats(stats) {
+            if (!stats) return;
+            document.getElementById('totalCampaigns').textContent = stats.total_campaigns || 0;
+            document.getElementById('activeCampaigns').textContent = stats.active_campaigns || 0;
+            document.getElementById('totalImpressions').textContent = (stats.total_impressions || 0).toLocaleString();
+            document.getElementById('totalClicks').textContent = (stats.total_clicks || 0).toLocaleString();
+        }
+
+        // ==============================================
+        // CHAT
+        // ==============================================
+        (function() {
+            const W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn');
+            let open = !1;
+            const KB = {
+                'how do I advertise advertiser': `🎯 **How to Advertise**\n1. Fill in your details in the Reach Out form.\n2. Request an access code via email.\n3. Enter the code to unlock the dashboard.\n4. Submit your campaign request.`,
+                'reach out to ad owners': `📢 **Reach Out**\nFill the form with your business info, ad format, budget, and target audience. We'll connect you with ad owners.`,
+                'campaign dashboard': `📊 **Dashboard**\nUnlock with the code sent to your email. View campaigns, impressions, clicks, and stats.`,
+                'request code': `🔑 **Request Code**\nClick "Request Code" – we'll send a 6‑digit code to your email. Enter it to unlock the dashboard.`
+            };
+
+            function findAnswer(q) {
+                q = q.toLowerCase();
+                for (let [keys, val] of Object.entries(KB)) {
+                    let k = keys.split(' ');
+                    for (let word of k)
+                        if (q.includes(word) || word.includes(q.split(' ')[0])) return val;
+                }
+                return `I can help with: 🎯 Advertise | 📢 Reach Out | 📊 Dashboard | 🔑 Request Code. What would you like?`;
+            }
+
+            function addMsg(t, c) {
+                let d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            function send() {
+                let t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                let r = findAnswer(t);
+                setTimeout(() => addMsg(r, 'bot'), 300 + Math.random() * 500);
+            }
+            T.onclick = () => { open = !open;
+                W.classList.toggle('open', open); if (open) I.focus(); };
+            C.onclick = () => { open = !1;
+                W.classList.remove('open'); };
+            S.onclick = send;
+            I.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault();
+                    send(); } };
+            document.querySelectorAll('.quick-replies button').forEach(b => b.onclick = () => { I.value = b.dataset.q;
+                send(); });
+            setTimeout(() => addMsg('💡 Ask about: Advertise, Reach Out, Dashboard, or Request Code.', 'system'), 1200);
+        })();
+
+        // ==============================================
+        // INITIALIZE
+        // ==============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('requestCodeBtn').addEventListener('click', requestCode);
+
+            var isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            
+            if (!isLocalhost && localStorage.getItem('advertiser_dashboard_unlocked') === 'true') {
+                unlockDashboard();
+                var code = localStorage.getItem('advertiser_access_code');
+                if (code) document.getElementById('codeDisplay').style.display = 'inline';
+                var email = localStorage.getItem('advertiser_email') || '';
+                if (email) {
+                    document.getElementById('codeRequestEmail').value = email;
+                    loadCampaigns(email);
+                }
+            } else {
+                document.getElementById('dashboardLockedOverlay').style.display = 'block';
+                document.getElementById('dashboardContentInner').style.display = 'none';
+                document.getElementById('dashboardTabBtn').classList.add('locked');
+                localStorage.removeItem('advertiser_dashboard_unlocked');
+            }
+
+            var emailInput = document.getElementById('advertiserEmail');
+            var codeEmailInput = document.getElementById('codeRequestEmail');
+            emailInput.addEventListener('input', function() {
+                if (!codeEmailInput.value) {
+                    codeEmailInput.value = this.value;
+                }
+            });
+            codeEmailInput.addEventListener('input', function() {
+                if (!emailInput.value) {
+                    emailInput.value = this.value;
+                }
+            });
+
+            if (emailInput.value) {
+                codeEmailInput.value = emailInput.value;
+                localStorage.setItem('advertiser_email', emailInput.value);
+            }
+        });
+    </script>
+</body>
+</html>

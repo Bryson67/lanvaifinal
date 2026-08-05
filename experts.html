@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EDULINK - Business Services</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ========== MAIN STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f0e8;
+            min-height: 100vh;
+            color: #1a1a2e;
+        }
+
+        /* ========== TOAST ========== */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #0d9488, #059669);
+            color: #fef9c3;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 25px rgba(13, 148, 136, 0.4);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+        }
+
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-notification.error {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-color: rgba(250, 204, 21, 0.3);
+            color: #fef9c3;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar-custom {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(37, 99, 235, 0.10));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 0.8rem 0;
+            border-bottom: 2px solid rgba(250, 204, 21, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 9998;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-custom .navbar-brand .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(13, 148, 136, 0.2);
+        }
+
+        .navbar-custom .navbar-brand .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .navbar-custom .nav-link {
+            color: #4a4a5a !important;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #0d9488 !important;
+            background: rgba(13, 148, 136, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .navbar-custom .nav-link.active {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(250, 204, 21, 0.08));
+            color: #0d9488 !important;
+            border: 1px solid rgba(13, 148, 136, 0.15);
+        }
+
+        /* ========== MAIN TOGGLE BUTTONS ========== */
+        .main-toggle-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .main-toggle-btn {
+            padding: 0.7rem 2.5rem;
+            border: 2px solid rgba(100, 116, 139, 0.25);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.5);
+            color: #4a4a5a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-toggle-btn:hover {
+            border-color: rgba(13, 148, 136, 0.4);
+            color: #0d9488;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(13, 148, 136, 0.08);
+        }
+
+        .main-toggle-btn.active-marketing {
+            border-color: #0d9488;
+            color: #0d9488;
+            background: rgba(13, 148, 136, 0.08);
+            box-shadow: 0 0 30px rgba(13, 148, 136, 0.05);
+        }
+
+        .main-toggle-btn.active-restructuring {
+            border-color: #f59e0b;
+            color: #b45309;
+            background: rgba(245, 158, 11, 0.08);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.05);
+        }
+
+        /* ========== SUB TOGGLE BUTTONS ========== */
+        .sub-toggle-container {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .sub-toggle-btn {
+            padding: 0.5rem 1.8rem;
+            border: 2px solid rgba(100, 116, 139, 0.2);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            color: #4a4a5a;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .sub-toggle-btn:hover {
+            border-color: rgba(13, 148, 136, 0.3);
+            color: #0d9488;
+            transform: translateY(-2px);
+        }
+
+        .sub-toggle-btn.active-services {
+            border-color: #0d9488;
+            color: #0d9488;
+            background: rgba(13, 148, 136, 0.08);
+            box-shadow: 0 0 20px rgba(13, 148, 136, 0.05);
+        }
+
+        .sub-toggle-btn.active-strategies {
+            border-color: #f59e0b;
+            color: #b45309;
+            background: rgba(245, 158, 11, 0.08);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.05);
+        }
+
+        /* ========== MODE INDICATOR ========== */
+        .mode-indicator {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 0.6rem 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(100, 116, 139, 0.08);
+        }
+
+        .mode-indicator .mode-label {
+            color: #6b6b80;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .mode-indicator .mode-name {
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* ========== SERVICES DISPLAY ========== */
+        .services-display {
+            display: none;
+        }
+
+        .services-display.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(37, 99, 235, 0.05));
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: #0d9488;
+            margin-bottom: 0.8rem;
+        }
+
+        .category-badge i {
+            margin-right: 6px;
+            color: #0d9488;
+        }
+
+        #servicesTitle {
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        #servicesSubtext {
+            color: #4a4a5a;
+            font-size: 1.05rem;
+        }
+
+        /* ========== CATEGORY FILTERS ========== */
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0 1.5rem 0;
+        }
+
+        .btn-category {
+            padding: 0.35rem 1.2rem;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            color: #4a4a5a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .btn-category:hover {
+            border-color: rgba(13, 148, 136, 0.3);
+            color: #0d9488;
+            transform: translateY(-2px);
+        }
+
+        .btn-category.active {
+            border-color: #0d9488;
+            color: #0d9488;
+            background: rgba(13, 148, 136, 0.08);
+        }
+
+        /* ========== SERVICE CARDS ========== */
+        .service-detail-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(100, 116, 139, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem 1.2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            height: 100%;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .service-detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0d9488, #f59e0b, #3b82f6);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .service-detail-card:hover {
+            border-color: rgba(13, 148, 136, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(13, 148, 136, 0.08);
+        }
+
+        .service-detail-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-detail-card .service-icon {
+            font-size: 2.8rem;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(135deg, #0d9488, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .service-detail-card:hover .service-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .service-detail-card .card-title {
+            color: #1a1a2e;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .service-detail-card .card-text {
+            color: #4a4a5a;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .service-detail-card .learn-more-btn {
+            background: transparent;
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            color: #0d9488;
+            padding: 0.3rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .service-detail-card .learn-more-btn:hover {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(37, 99, 235, 0.05));
+            border-color: #0d9488;
+            color: #0d9488;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(13, 148, 136, 0.1);
+        }
+
+        /* ========== LOADING SPINNER ========== */
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+            color: #4a4a5a;
+        }
+
+        .loading-spinner i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
+            animation: spin 1s linear infinite;
+            color: #0d9488;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ========== CHAT ========== */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+        }
+
+        .chat-toggle {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(13, 148, 136, 0.4);
+        }
+
+        .chat-toggle .badge {
+            background: #f59e0b;
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            max-width: 90vw;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(100, 116, 139, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .chat-window.open {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(13, 148, 136, 0.04);
+            border-bottom: 1px solid rgba(100, 116, 139, 0.06);
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #0d9488;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #6b6b80;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        .chat-close:hover {
+            color: #1a1a2e;
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .chat-messages {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-messages .msg {
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg.bot {
+            background: rgba(13, 148, 136, 0.06);
+            color: #1a1a2e;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-messages .msg.user {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-messages .msg.system {
+            background: rgba(245, 158, 11, 0.06);
+            color: #1a1a2e;
+            align-self: center;
+            text-align: center;
+            font-size: 0.75rem;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            max-width: 95%;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            padding: 0.4rem 1rem 0.8rem;
+            border-top: 1px solid rgba(100, 116, 139, 0.06);
+        }
+
+        .quick-replies button {
+            background: rgba(13, 148, 136, 0.04);
+            border: 1px solid rgba(100, 116, 139, 0.1);
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.7rem;
+            color: #4a4a5a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quick-replies button:hover {
+            background: rgba(13, 148, 136, 0.08);
+            border-color: #0d9488;
+            color: #0d9488;
+        }
+
+        .auth-overlay {
+            display: none;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            border-top: 1px solid rgba(100, 116, 139, 0.06);
+        }
+
+        .auth-overlay.show {
+            display: block;
+        }
+
+        .auth-overlay .auth-icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .auth-overlay h4 {
+            color: #1a1a2e;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .auth-overlay p {
+            color: #4a4a5a;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .auth-btns {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+
+        .auth-btns button {
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .auth-btns .login-btn {
+            background: rgba(13, 148, 136, 0.08);
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            color: #0d9488;
+        }
+
+        .auth-btns .login-btn:hover {
+            background: rgba(13, 148, 136, 0.15);
+        }
+
+        .auth-btns .register-btn {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            color: #fff;
+        }
+
+        .auth-btns .register-btn:hover {
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+        }
+
+        .chat-footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-top: 1px solid rgba(100, 116, 139, 0.06);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            background: rgba(255, 255, 255, 0.5);
+            color: #1a1a2e;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .chat-footer input:focus {
+            border-color: #0d9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.08);
+        }
+
+        .chat-footer input::placeholder {
+            color: #6b6b80;
+        }
+
+        .chat-footer .send-btn {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 70px;
+                right: -10px;
+                border-radius: 20px 20px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .main-toggle-btn {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.85rem;
+            }
+            .sub-toggle-btn {
+                padding: 0.3rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .service-detail-card {
+                padding: 1rem;
+            }
+            .service-detail-card .service-icon {
+                font-size: 2rem;
+            }
+            .category-filters {
+                gap: 0.3rem;
+            }
+            .btn-category {
+                padding: 0.25rem 0.8rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* ========== POPUP OVERLAY ========== */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            z-index: 10050;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .popup-card {
+            background: white;
+            border-radius: 28px;
+            max-width: 460px;
+            width: 100%;
+            padding: 1.8rem 1.8rem 1.8rem;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+            transform: translateX(40px);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(13, 148, 136, 0.1);
+            position: relative;
+            margin: 1rem;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .popup-overlay.show .popup-card {
+            transform: translateX(0);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            background: transparent;
+            border: none;
+            font-size: 1.6rem;
+            line-height: 1;
+            color: #6b6b80;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0 6px;
+            z-index: 2;
+        }
+
+        .popup-close:hover {
+            color: #1a1a2e;
+            transform: rotate(90deg);
+        }
+
+        .popup-card .popup-scroll {
+            overflow-y: auto;
+            padding-right: 4px;
+            flex: 1;
+            margin-top: 0.2rem;
+        }
+
+        .popup-card .popup-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .popup-card .popup-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 10px;
+        }
+
+        .popup-card .popup-scroll::-webkit-scrollbar-thumb {
+            background: #0d9488;
+            border-radius: 10px;
+        }
+
+        .popup-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0d9488;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup-card h2 i {
+            color: #f59e0b;
+        }
+
+        .popup-card .popup-subhead {
+            color: #4a4a5a;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #0d9488;
+            padding-left: 12px;
+        }
+
+        .popup-card .popup-full-message {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #1a1a2e;
+        }
+
+        .popup-card .popup-full-message p {
+            margin-bottom: 0.6rem;
+        }
+
+        .popup-card .popup-full-message ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0.8rem 0;
+        }
+
+        .popup-card .popup-full-message ul li {
+            padding: 0.35rem 0 0.35rem 28px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%230d9488" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>') left center no-repeat;
+            background-size: 18px;
+            color: #1a1a2e;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .popup-card .popup-full-message ul li:last-child {
+            border-bottom: none;
+        }
+
+        .popup-card .popup-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .popup-card .btn-popup-primary {
+            background: linear-gradient(135deg, #0d9488, #059669);
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.25s;
+            box-shadow: 0 4px 14px rgba(13, 148, 136, 0.25);
+            cursor: pointer;
+        }
+
+        .popup-card .btn-popup-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.35);
+            color: white;
+        }
+
+        .popup-card .btn-popup-secondary {
+            background: transparent;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            color: #4a4a5a;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .popup-card .btn-popup-secondary:hover {
+            border-color: #0d9488;
+            color: #0d9488;
+            background: rgba(13, 148, 136, 0.04);
+        }
+
+        @media (max-width: 640px) {
+            .popup-overlay {
+                padding-right: 0;
+                align-items: flex-end;
+                justify-content: center;
+            }
+            .popup-card {
+                max-width: 94%;
+                margin: 0 0 1rem 0;
+                border-radius: 24px 24px 0 0;
+                transform: translateY(30px);
+                max-height: 95vh;
+            }
+            .popup-overlay.show .popup-card {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="logo-icon">
+                    <img src="/images/lanvai.png" alt="Lanvai Logo">
+                </span> LANVAI Experts
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="experts.html">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contactus.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4" style="color:#1a1a2e; font-weight:700;">
+            Business Services &amp; Strategies
+        </h1>
+
+        <!-- Services Display -->
+        <div id="servicesDisplay" class="services-display active">
+            <div class="text-center">
+                <div class="category-badge" id="selectedCategoryBadge">📌 Select a Category</div>
+                <h2 class="mb-3" id="servicesTitle">Marketing Services</h2>
+                <p class="lead" id="servicesSubtext">Choose your business category to see relevant services</p>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="category-filters" id="categoryFilters">
+                <!-- Business Categories -->
+                <button class="btn-category active" data-category="E-commerce">🛍️ E-commerce</button>
+                <button class="btn-category" data-category="Technology">💻 Technology</button>
+                <button class="btn-category" data-category="Financial">🏦 Financial</button>
+                <button class="btn-category" data-category="Real Estate">🏠 Real Estate</button>
+                <button class="btn-category" data-category="Education">📚 Education</button>
+                <button class="btn-category" data-category="Agriculture">🌾 Agriculture</button>
+                <button class="btn-category" data-category="Media">🎦 Media</button>
+                <button class="btn-category" data-category="Logistic">🚛 Logistic</button>
+                <button class="btn-category" data-category="Energy">💡 Energy</button>
+                <button class="btn-category" data-category="Manufacturing">🏭 Manufacturing</button>
+                <button class="btn-category" data-category="Retail">🛍️ Retail</button>
+                <button class="btn-category" data-category="Healthcare">🏥 Healthcare</button>
+                <button class="btn-category" data-category="Hospitality">🍽️ Hospitality</button>
+                <button class="btn-category" data-category="Construction">🏗️ Construction</button>
+                <button class="btn-category" data-category="Legal">⚖️ Legal</button>
+                <button class="btn-category" data-category="Nonprofit">🤝 Nonprofit</button>
+
+                <!-- Strategy Categories -->
+                <button class="btn-category" data-category="E-commerce Strategies">📊 E-commerce Strategies</button>
+                <button class="btn-category" data-category="Technology Strategies">📊 Technology Strategies</button>
+                <button class="btn-category" data-category="Financial Strategies">📊 Financial Strategies</button>
+                <button class="btn-category" data-category="Real Estate Strategies">📊 Real Estate Strategies</button>
+                <button class="btn-category" data-category="General Strategies">📊 General Strategies</button>
+            </div>
+
+            <!-- Main Category Buttons -->
+            <div class="main-toggle-container">
+                <button class="main-toggle-btn active-marketing" id="marketingMainBtn">
+                    <span class="btn-icon">📈</span> Marketing
+                </button>
+                <button class="main-toggle-btn" id="restructuringMainBtn">
+                    <span class="btn-icon">🔄</span> Restructuring
+                </button>
+            </div>
+
+            <!-- Sub Category Buttons -->
+            <div class="sub-toggle-container active" id="subToggleContainer">
+                <button class="sub-toggle-btn active-services" id="servicesSubBtn">
+                    <i class="fas fa-cogs"></i> Services
+                </button>
+                <button class="sub-toggle-btn" id="strategiesSubBtn">
+                    <i class="fas fa-lightbulb"></i> Strategies
+                </button>
+            </div>
+
+            <!-- Mode Indicator -->
+            <div class="mode-indicator">
+                <span class="mode-label">Currently viewing</span>
+                <span class="mode-name" id="currentModeName">📈 Marketing Services</span>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="row services-grid" id="dynamicServicesContainer">
+                <div class="col-12">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner"></i>
+                        <p>Loading services from database...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 EDULINK | Smart Solutions for Smart Businesses</p>
+    </footer>
+
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- ========== POPUP (LANVAI MARKETING) - FULL MESSAGE + SCROLL ========== -->
+    <div class="popup-overlay" id="lanvaiPopup">
+        <div class="popup-card">
+            <button class="popup-close" id="popupCloseBtn" aria-label="Close popup">✕</button>
+            <h2><i class="fas fa-shield-alt"></i> Lanvai Marketing</h2>
+            <div class="popup-subhead">Protection · Structure · Right Partnerships</div>
+
+            <div class="popup-scroll">
+                <div class="popup-full-message">
+                    <p><strong>Influencers across Kenya</strong> have recently faced a tough reality — being brought on board to promote brands, only for the company’s reputation to later collapse, leaving the influencer unfairly labeled as a fraud. This is not just frustrating — it’s damaging to your personal brand and long-term credibility.</p>
+
+                    <p><strong>At Lanvai Marketing, we believe influencers deserve protection, structure, and the right partnerships.</strong></p>
+
+                    <p>We work with influencers to:</p>
+                    <ul>
+                        <li>✔️ Vet brands before any collaboration</li>
+                        <li>✔️ Structure clear, legally sound contracts</li>
+                        <li>✔️ Protect your reputation and long-term value</li>
+                        <li>✔️ Ensure transparency in every deal</li>
+                    </ul>
+
+                    <p><strong>For companies and brands:</strong><br>
+                    We connect you with the <em>right</em> influencers — not just popular names, but individuals who truly align with your brand values, audience, and goals. Not every influencer is the right fit for every campaign, and that’s where we come in.</p>
+
+                    <p>We handle:</p>
+                    <ul>
+                        <li>✔️ Influencer sourcing and vetting</li>
+                        <li>✔️ Campaign alignment and strategy</li>
+                        <li>✔️ Contract negotiation and management</li>
+                        <li>✔️ Long-term partnership building</li>
+                    </ul>
+
+                    <p><strong>Let’s build smarter, safer, and more impactful collaborations.</strong></p>
+                </div>
+            </div>
+
+            <div class="popup-buttons">
+                <a href="contactus.html" class="btn-popup-primary">
+                    <i class="fas fa-paper-plane"></i> Reach Out
+                </a>
+                <button class="btn-popup-secondary" id="popupNotInterestedBtn">Not interested</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Floating -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>LANVAI Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Welcome to LANVAI! I'm here to help with business services, marketing, restructuring, and more. What would you like to know?</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What is LANVAI?">🏠 About</button>
+                <button data-q="Marketing Services">📈 Marketing</button>
+                <button data-q="Restructuring Services">🔄 Restructuring</button>
+                <button data-q="Contact support">📧 Contact</button>
+            </div>
+            <div class="auth-overlay" id="authOverlay">
+                <div class="auth-icon">🔒</div>
+                <h4>Connect to a Live Person</h4>
+                <p>Please login or register to chat with a live agent.</p>
+                <div class="auth-btns">
+                    <button class="login-btn" id="loginBtn">🔑 Login</button>
+                    <button class="register-btn" id="registerBtn">📝 Register</button>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        var API_BASE = 'http://localhost:5000/api';
+
+        // ================= STATE =================
+        var state = {
+            main: "marketing",
+            sub: "services",
+            category: "E-commerce"
+        };
+
+        var data = {
+            marketingServices: {},
+            marketingStrategies: {},
+            restructuringServices: {},
+            restructuringStrategies: {}
+        };
+
+        // ================= UI HELPERS =================
+        function showToast(msg, isError) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() {
+                t.classList.add('show');
+            }, 10);
+            setTimeout(function() {
+                t.classList.remove('show');
+            }, 3000);
+        }
+
+        // ================= FETCH =================
+        async function fetchData() {
+            try {
+                console.log('📡 Fetching services from:', API_BASE + '/expert-services');
+                var res = await fetch(API_BASE + '/expert-services');
+                console.log('📡 Response status:', res.status);
+
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status + ': ' + res.statusText);
+                }
+
+                var result = await res.json();
+                console.log("📊 API RESULT:", result);
+                return result;
+            } catch (err) {
+                console.error("❌ Fetch error:", err);
+                return null;
+            }
+        }
+
+        // ================= SAFE DATA PARSER =================
+        function parseData(result) {
+            if (!result) {
+                console.warn('⚠️ No result data to parse');
+                return false;
+            }
+
+            var hasData = false;
+
+            if (result.marketingServices && Object.keys(result.marketingServices).length > 0) {
+                data.marketingServices = result.marketingServices;
+                hasData = true;
+                console.log('✅ Marketing Services loaded:', Object.keys(data.marketingServices));
+            }
+
+            if (result.marketingStrategies && Object.keys(result.marketingStrategies).length > 0) {
+                data.marketingStrategies = result.marketingStrategies;
+                hasData = true;
+                console.log('✅ Marketing Strategies loaded:', Object.keys(data.marketingStrategies));
+            }
+
+            if (result.restructuringServices && Object.keys(result.restructuringServices).length > 0) {
+                data.restructuringServices = result.restructuringServices;
+                hasData = true;
+                console.log('✅ Restructuring Services loaded:', Object.keys(data.restructuringServices));
+            }
+
+            if (result.restructuringStrategies && Object.keys(result.restructuringStrategies).length > 0) {
+                data.restructuringStrategies = result.restructuringStrategies;
+                hasData = true;
+                console.log('✅ Restructuring Strategies loaded:', Object.keys(data.restructuringStrategies));
+            }
+
+            if (!hasData) {
+                console.warn('⚠️ No data found in expected structure, searching...');
+                for (var key in result) {
+                    if (typeof result[key] === 'object' && result[key] !== null) {
+                        var keyLower = key.toLowerCase();
+                        if (keyLower.includes('market') && keyLower.includes('service')) {
+                            data.marketingServices = result[key];
+                            hasData = true;
+                            console.log('✅ Found marketing services in:', key);
+                        } else if (keyLower.includes('market') && keyLower.includes('strateg')) {
+                            data.marketingStrategies = result[key];
+                            hasData = true;
+                            console.log('✅ Found marketing strategies in:', key);
+                        } else if (keyLower.includes('restructur') && keyLower.includes('service')) {
+                            data.restructuringServices = result[key];
+                            hasData = true;
+                            console.log('✅ Found restructuring services in:', key);
+                        } else if (keyLower.includes('restructur') && keyLower.includes('strateg')) {
+                            data.restructuringStrategies = result[key];
+                            hasData = true;
+                            console.log('✅ Found restructuring strategies in:', key);
+                        }
+                    }
+                }
+            }
+
+            return hasData;
+        }
+
+        // ================= RENDER ENGINE =================
+        function getServices() {
+            var main = state.main;
+            var sub = state.sub;
+            var category = state.category;
+
+            var source = [];
+
+            if (main === "marketing" && sub === "services") {
+                source = data.marketingServices[category] || [];
+                console.log('📚 Getting marketing services for', category, ':', source.length);
+            } else if (main === "marketing" && sub === "strategies") {
+                if (category.includes('Strategies')) {
+                    source = data.marketingStrategies[category] || [];
+                    if (source.length === 0) {
+                        var baseCategory = category.replace(' Strategies', '');
+                        source = data.marketingStrategies[baseCategory] || [];
+                    }
+                } else {
+                    source = data.marketingStrategies[category] || [];
+                    if (source.length === 0) {
+                        source = data.marketingStrategies["General Strategies"] || [];
+                        if (source.length === 0) {
+                            source = data.marketingStrategies["General"] || [];
+                        }
+                    }
+                }
+                console.log('📚 Getting marketing strategies for', category, ':', source.length);
+            } else if (main === "restructuring" && sub === "services") {
+                source = data.restructuringServices[category] || [];
+                console.log('📚 Getting restructuring services for', category, ':', source.length);
+            } else if (main === "restructuring" && sub === "strategies") {
+                if (category.includes('Strategies')) {
+                    source = data.restructuringStrategies[category] || [];
+                    if (source.length === 0) {
+                        var baseCategory = category.replace(' Strategies', '');
+                        source = data.restructuringStrategies[baseCategory] || [];
+                    }
+                } else {
+                    source = data.restructuringStrategies[category] || [];
+                    if (source.length === 0) {
+                        source = data.restructuringStrategies["General Strategies"] || [];
+                        if (source.length === 0) {
+                            source = data.restructuringStrategies["General"] || [];
+                        }
+                    }
+                }
+                console.log('📚 Getting restructuring strategies for', category, ':', source.length);
+            }
+
+            return source || [];
+        }
+
+        // ================= RENDER =================
+        function render() {
+            var services = getServices();
+
+            var container = document.getElementById("dynamicServicesContainer");
+            container.innerHTML = "";
+
+            var main = state.main;
+            var sub = state.sub;
+            var category = state.category;
+
+            document.getElementById("servicesTitle").textContent =
+                main.charAt(0).toUpperCase() + main.slice(1) + " " + sub.charAt(0).toUpperCase() + sub.slice(1);
+
+            document.getElementById("selectedCategoryBadge").textContent =
+                "📌 " + category;
+
+            document.getElementById("currentModeName").textContent =
+                (main === "marketing" ? "📈" : "🔄") + " " + main.charAt(0).toUpperCase() + main.slice(1) + " " + sub
+                .charAt(0).toUpperCase() + sub.slice(1);
+
+            updateActiveStates();
+
+            if (!services || services.length === 0) {
+                var message = "No services found for this category.";
+                if (sub === "strategies") {
+                    message = "No strategies found for this category. Try selecting a different strategy category or click on 'General Strategies'.";
+                }
+                container.innerHTML = `
+                        <div class="col-12 text-center" style="color:#4a4a5a; padding:2rem;">
+                            <i class="fas fa-inbox" style="font-size:2rem; display:block; margin-bottom:0.5rem;"></i>
+                            <p>${message}</p>
+                            <small style="color:#7a6a94;">Try selecting a different category or check back later.</small>
+                        </div>
+                    `;
+                return;
+            }
+
+            services.forEach(function(s) {
+                var icon = (s.icon || "fa-cog");
+                if (icon.indexOf('fa-') !== 0) {
+                    icon = 'fa-' + icon;
+                }
+
+                var col = document.createElement("div");
+                col.className = "col-md-6 col-lg-4 mb-4";
+
+                col.innerHTML = `
+                        <div class="service-detail-card">
+                            <i class="fas ${icon} service-icon"></i>
+                            <h5 class="card-title">${s.title}</h5>
+                            <p class="card-text">${s.desc || s.description || 'No description available'}</p>
+                            <button class="learn-more-btn" data-title="${s.title}" data-service="${getServiceName()}" data-category="${category}" data-details="${s.details || s.desc || s.description || ''}">
+                                Learn More →
+                            </button>
+                        </div>
+                    `;
+
+                container.appendChild(col);
+            });
+
+            attachLearnMoreEvents();
+        }
+
+        // ================= UPDATE ACTIVE TAB STATES =================
+        function updateActiveStates() {
+            document.querySelectorAll('.main-toggle-btn').forEach(function(btn) {
+                btn.classList.remove('active-marketing', 'active-restructuring');
+            });
+
+            if (state.main === 'marketing') {
+                document.getElementById('marketingMainBtn').classList.add('active-marketing');
+            } else {
+                document.getElementById('restructuringMainBtn').classList.add('active-restructuring');
+            }
+
+            document.querySelectorAll('.sub-toggle-btn').forEach(function(btn) {
+                btn.classList.remove('active-services', 'active-strategies');
+            });
+
+            if (state.sub === 'services') {
+                document.getElementById('servicesSubBtn').classList.add('active-services');
+            } else {
+                document.getElementById('strategiesSubBtn').classList.add('active-strategies');
+            }
+        }
+
+        // ================= GET SERVICE NAME =================
+        function getServiceName() {
+            var main = state.main;
+            var sub = state.sub;
+            return main.charAt(0).toUpperCase() + main.slice(1) + " " + sub.charAt(0).toUpperCase() + sub.slice(1);
+        }
+
+        // ================= LEARN MORE BUTTON =================
+        function attachLearnMoreEvents() {
+            var buttons = document.querySelectorAll('.learn-more-btn');
+            buttons.forEach(function(btn) {
+                btn.removeEventListener('click', handleLearnMore);
+                btn.addEventListener('click', handleLearnMore);
+            });
+        }
+
+        function handleLearnMore(e) {
+            var btn = e.currentTarget;
+            var title = btn.dataset.title;
+            var service = btn.dataset.service;
+            var category = btn.dataset.category;
+            var details = btn.dataset.details;
+
+            showToast("📋 Loading " + title + " details...");
+
+            var url = 'service-details.html?title=' + encodeURIComponent(title) +
+                '&service=' + encodeURIComponent(service) +
+                '&category=' + encodeURIComponent(category) +
+                '&details=' + encodeURIComponent(details);
+
+            setTimeout(function() {
+                window.location.href = url;
+            }, 400);
+        }
+
+        // ================= LOAD FLOW =================
+        async function loadData() {
+            var container = document.getElementById("dynamicServicesContainer");
+            container.innerHTML = `
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner"></i>
+                        <p>Loading services from database...</p>
+                    </div>
+                `;
+
+            var result = await fetchData();
+
+            if (result) {
+                var hasData = parseData(result);
+                if (hasData) {
+                    showToast("✅ Services loaded from database!");
+                    render();
+                } else {
+                    console.warn('⚠️ No services found in database, using fallback');
+                    loadFallback();
+                    showToast("⚠️ No services in database, using fallback data", true);
+                    render();
+                }
+            } else {
+                console.warn('⚠️ Failed to fetch from API, using fallback');
+                loadFallback();
+                showToast("⚠️ Using fallback data (API unavailable)", true);
+                render();
+            }
+        }
+
+        // ================= FALLBACK =================
+        function loadFallback() {
+            console.log("📦 Using fallback data");
+            data.marketingServices = {
+                "E-commerce": [
+                    { title: "SEO Optimization", desc: "Rank higher in search results", icon: "fa-magnifying-glass",
+                        details: "Our SEO Optimization service helps your e-commerce store rank higher in search engine results, driving organic traffic and increasing sales." },
+                    { title: "Conversion Rate Optimization", desc: "Increase sales and conversions",
+                        icon: "fa-cart-shopping",
+                        details: "We analyze your customer journey and optimize every touchpoint to maximize conversions and revenue." }
+                ],
+                "Technology": [
+                    { title: "SaaS Growth Marketing", desc: "Scale your user base", icon: "fa-cloud",
+                        details: "Strategic marketing solutions designed specifically for SaaS companies to acquire and retain customers." }
+                ]
+            };
+
+            data.marketingStrategies = {
+                "E-commerce": [
+                    { title: "Market Penetration", desc: "Grow market share", icon: "fa-bullseye",
+                        details: "Develop strategies to penetrate new markets and increase your market share through targeted campaigns." }
+                ]
+            };
+
+            data.restructuringServices = {
+                "E-commerce": [
+                    { title: "Business Process Reengineering", desc: "Transform business processes",
+                        icon: "fa-cogs",
+                        details: "Reengineer your business processes for maximum efficiency and effectiveness." }
+                ]
+            };
+
+            data.restructuringStrategies = {
+                "E-commerce": [
+                    { title: "Strategic Repositioning", desc: "Reposition your business", icon: "fa-rocket",
+                        details: "Strategic repositioning to capture new market opportunities." }
+                ]
+            };
+        }
+
+        // ================= EVENTS =================
+        function initEvents() {
+            var categoryBtns = document.querySelectorAll(".btn-category");
+
+            categoryBtns.forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    categoryBtns.forEach(function(b) {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    state.category = this.dataset.category;
+                    render();
+                });
+            });
+
+            document.getElementById("marketingMainBtn")
+                .addEventListener("click", function() {
+                    state.main = "marketing";
+                    render();
+                });
+
+            document.getElementById("restructuringMainBtn")
+                .addEventListener("click", function() {
+                    state.main = "restructuring";
+                    render();
+                });
+
+            document.getElementById("servicesSubBtn")
+                .addEventListener("click", function() {
+                    state.sub = "services";
+                    render();
+                });
+
+            document.getElementById("strategiesSubBtn")
+                .addEventListener("click", function() {
+                    state.sub = "strategies";
+                    render();
+                });
+        }
+
+        // ================= POPUP CONTROLS =================
+        function initPopup() {
+            var overlay = document.getElementById('lanvaiPopup');
+            var closeBtn = document.getElementById('popupCloseBtn');
+            var notInterestedBtn = document.getElementById('popupNotInterestedBtn');
+
+            setTimeout(function() {
+                overlay.classList.add('show');
+            }, 1200);
+
+            function closePopup() {
+                overlay.classList.remove('show');
+            }
+
+            closeBtn.addEventListener('click', closePopup);
+            notInterestedBtn.addEventListener('click', closePopup);
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    closePopup();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('show')) {
+                    closePopup();
+                }
+            });
+        }
+
+        // ================= INIT =================
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log('🚀 Experts page loading...');
+            initEvents();
+            loadData();
+            initPopup();
+        });
+    </script>
+
+    <script>
+        // ===== CHAT FUNCTIONALITY =====
+        (function() {
+            var W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn'),
+                A = document.getElementById('authOverlay'),
+                Q = document.querySelectorAll('.quick-replies button');
+            var open = false,
+                auth = false,
+                person = false;
+
+            var KB = {
+                'lanvai about platform company': '🏫 **About LANVAI**\n\nLANVAI is a dedicated business services platform focused on helping companies grow and restructure.\n\n**Our Services:**\n1️⃣ Marketing Services 📈 - Comprehensive marketing solutions for businesses\n2️⃣ Marketing Strategies 🧠 - Strategic marketing planning and execution\n3️⃣ Restructuring Services 🔄 - Business restructuring and optimization\n4️⃣ Restructuring Strategies 📊 - Strategic business transformation',
+
+                'marketing services': '📈 **Marketing Services**\n\n**Business Categories:**\nE-commerce, Technology, Financial, Real Estate, Education, Agriculture, Media, Logistics, Energy, Manufacturing, Retail, Healthcare, Hospitality, Construction, Legal, Nonprofit\n\n**Services Include:**\n• SEO & Marketing\n• Lead Generation\n• Branding\n• Automation\n• Analytics\n\nSelect a category above to see specific services!',
+
+                'marketing strategies': '🧠 **Marketing Strategies**\n\n**Business Categories:**\nE-commerce, Technology, Financial, Real Estate, Education, Agriculture, Media, Logistics, Energy, Manufacturing, Retail, Healthcare, Hospitality, Construction, Legal, Nonprofit\n\n**Strategies Include:**\n• Market Penetration Strategy\n• Product Development Strategy\n• Market Expansion Strategy\n• Diversification Strategy\n• Digital Transformation Strategy',
+
+                'restructuring services': '🔄 **Restructuring Services**\n\n**Business Categories:**\nE-commerce, Technology, Financial, Real Estate, Education, Agriculture, Media, Logistics, Energy, Manufacturing, Retail, Healthcare, Hospitality, Construction, Legal, Nonprofit\n\n**Services Include:**\n• Business Process Reengineering\n• Cost Optimization\n• Digital Transformation\n• Organizational Restructuring\n• Financial Turnaround',
+
+                'restructuring strategies': '📊 **Restructuring Strategies**\n\n**Business Categories:**\nE-commerce, Technology, Financial, Real Estate, Education, Agriculture, Media, Logistics, Energy, Manufacturing, Retail, Healthcare, Hospitality, Construction, Legal, Nonprofit\n\n**Strategies Include:**\n• Strategic Repositioning\n• Merger Integration\n• Operational Excellence\n• Cultural Transformation\n• Financial Restructuring',
+
+                'contact support email phone location': '📧 **Contact Us**\n📍 Thika Road Wendani, Nairobi, Kenya\n📞 +254 794914597 / +254 758887164\n📧 Lanvai254@Lanvai.com / support@Lanvai.com'
+            };
+
+            function findAnswer(q) {
+                q = q.toLowerCase();
+                if (q.includes('person') || q.includes('agent') || q.includes('live') || (q.includes('support') && q.includes(
+                    'talk'))) return 'person';
+
+                if (q.includes('marketing services')) return KB['marketing services'];
+                if (q.includes('marketing strategies')) return KB['marketing strategies'];
+                if (q.includes('restructuring services')) return KB['restructuring services'];
+                if (q.includes('restructuring strategies')) return KB['restructuring strategies'];
+                if (q.includes('marketing')) return KB['marketing services'];
+                if (q.includes('restructuring')) return KB['restructuring services'];
+
+                for (var keys in KB) {
+                    var k = keys.split(' ');
+                    for (var i = 0; i < k.length; i++) {
+                        if (q.indexOf(k[i]) !== -1) {
+                            return KB[keys];
+                        }
+                    }
+                }
+
+                return 'I can help with: 🏠 About EDULINK | 📈 Marketing Services | 🧠 Marketing Strategies | 🔄 Restructuring Services | 📊 Restructuring Strategies | 📧 Contact. What would you like to know?';
+            }
+
+            function send() {
+                var t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                var r = findAnswer(t);
+                if (r === 'person') {
+                    if (auth) {
+                        addMsg('🟢 Connecting to agent...', 'system');
+                        setTimeout(function() {
+                            addMsg('👤 Agent: How can I help you?', 'bot');
+                            person = true;
+                            A.classList.remove('show');
+                        }, 1200);
+                    } else {
+                        A.classList.add('show');
+                        I.disabled = true;
+                        S.disabled = true;
+                        addMsg('🔐 Please login or register to connect with a live person.', 'system');
+                    }
+                    return;
+                }
+                setTimeout(function() { addMsg(r, 'bot'); }, 300 + Math.random() * 500);
+            }
+
+            function addMsg(t, c) {
+                var d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            T.onclick = function() {
+                open = !open;
+                W.classList.toggle('open', open);
+                if (open) I.focus();
+            };
+            C.onclick = function() {
+                open = false;
+                W.classList.remove('open');
+            };
+            document.onkeydown = function(e) {
+                if (e.key === 'Escape' && open) {
+                    open = false;
+                    W.classList.remove('open');
+                }
+            };
+            S.onclick = send;
+            I.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+            Q.forEach(function(b) {
+                b.onclick = function() {
+                    I.value = b.dataset.q;
+                    send();
+                };
+            });
+            document.getElementById('loginBtn').onclick = function() {
+                auth = true;
+                A.classList.remove('show');
+                I.disabled = false;
+                S.disabled = false;
+                addMsg('✅ Logged in! You can now connect to a live person.', 'system');
+            };
+            document.getElementById('registerBtn').onclick = function() {
+                auth = true;
+                A.classList.remove('show');
+                I.disabled = false;
+                S.disabled = false;
+                addMsg('✅ Registered! You can now connect to a live person.', 'system');
+            };
+            I.disabled = false;
+            S.disabled = false;
+            setTimeout(function() {
+                addMsg('💡 Ask about: Marketing Services, Marketing Strategies, Restructuring Services, or Restructuring Strategies!', 'system');
+            }, 1200);
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>EDULINK | Elevate Your Learning Journey</title>
+    <link rel="stylesheet" href="../styles/courses.css">
+    <style>
+        /* Fix chat styles to match course detail page */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(125, 86, 181, 0.4);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(125, 86, 181, 0.5);
+        }
+
+        .chat-toggle .badge {
+            background: #4ade80;
+            color: #0e0a1a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            max-width: 90vw;
+            background: rgba(22, 18, 38, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: chatSlideUp 0.3s ease;
+        }
+
+        .chat-window.open {
+            display: block;
+        }
+
+        @keyframes chatSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(40, 30, 65, 0.5);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.08);
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            color: #f0ecf7;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #b08acf;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        .chat-close:hover {
+            color: #f58aae;
+            background: rgba(245, 138, 174, 0.1);
+        }
+
+        .chat-messages {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-messages .msg {
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg.bot {
+            background: rgba(40, 30, 65, 0.5);
+            color: #e8ddf5;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-messages .msg.user {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-messages .msg.system {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+            align-self: center;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            max-width: 95%;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            padding: 0.4rem 1rem 0.8rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .quick-replies button {
+            background: rgba(40, 30, 65, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.7rem;
+            color: #cfbcf5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quick-replies button:hover {
+            background: rgba(60, 40, 90, 0.5);
+            border-color: rgba(160, 120, 200, 0.25);
+            color: white;
+        }
+
+        .auth-overlay {
+            display: none;
+            padding: 1rem;
+            background: rgba(20, 14, 40, 0.8);
+            text-align: center;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .auth-overlay.show {
+            display: block;
+        }
+
+        .auth-overlay .auth-icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .auth-overlay h4 {
+            color: #dac9f0;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .auth-overlay p {
+            color: #7a6a94;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .auth-btns {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+
+        .auth-btns button {
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .auth-btns .login-btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.2);
+            color: #cfbcfa;
+        }
+
+        .auth-btns .login-btn:hover {
+            background: rgba(160, 110, 220, 0.2);
+        }
+
+        .auth-btns .register-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+        }
+
+        .auth-btns .register-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+
+        .chat-footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+            background: rgba(12, 8, 24, 0.3);
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            background: rgba(12, 8, 24, 0.5);
+            color: #f0eaff;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .chat-footer input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+
+        .chat-footer input::placeholder {
+            color: #7a6a94;
+        }
+
+        .chat-footer .send-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 70px;
+                right: -10px;
+                border-radius: 20px 20px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== 3D SPACE BACKGROUND ===== -->
+    <div id="space-container">
+        <canvas id="space-canvas"></canvas>
+    </div>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="/images/edulink.jpg" alt="EDULINK Logo">
+            </div>
+            <div>
+                <div class="logo-text">EDULINK</div>
+                <div class="logo-tagline">Elevate Your Learning</div>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="courses.html">Home</a>
+            <a href="contact.html">Contact us</a>
+            <a href="library.html">Library</a>
+            <a href="institution.html">Institution</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <div class="hero-card">
+        <h1>EDULINK Courses</h1>
+        <p class="description">
+            Explore our wide range of courses designed to help you master new skills and advance your career. Whether you're looking to learn programming, data science, design, or any other field, we have the right course for you. Our expert instructors and comprehensive
+            curriculum will guide you every step of the way. Start your learning journey with EDULINK today!
+        </p>
+
+        <main>
+            <div class="btn">
+                <a href="students.html">
+                    <button>Students</button>
+                </a>
+            </div>
+            <div class="btn">
+                <a href="institution.html">
+                    <button>Institution</button>
+                </a>
+            </div>
+            <div class="btn">
+                <a href="library.html">
+                    <button>Library</button>
+                </a>
+            </div>
+            <div class="btn">
+                <a href="uni-abroad.html">
+                    <button>Uni Abroad</button>
+                </a>
+            </div>
+        </main>
+
+        <div class="contact-info">
+            <a href="tel:254794914597">254794914597</a>
+            <span>edulink254@gmail.com</span>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 EDULINK | Smart Solutions for Smart Learners</p>
+    </footer>
+
+    <!-- CHAT BUTTON - FIXED STYLES -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>EDULINK Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Welcome to EDULINK! I'm here to help with courses, institutions, library, and study abroad. What would you like to know?</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What is EDULINK?">🏠 About</button>
+                <button data-q="How do I find courses?">🎓 Courses</button>
+                <button data-q="Register institution">🏛️ Institution</button>
+                <button data-q="Library services">📖 Library</button>
+                <button data-q="Study abroad">🌍 Uni Abroad</button>
+                <button data-q="Contact support">📧 Contact</button>
+            </div>
+            <div class="auth-overlay" id="authOverlay">
+                <div class="auth-icon">🔒</div>
+                <h4>Connect to a Live Person</h4>
+                <p>Please login or register to chat with a live agent.</p>
+                <div class="auth-btns">
+                    <button class="login-btn" id="loginBtn">🔑 Login</button>
+                    <button class="register-btn" id="registerBtn">📝 Register</button>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything about EDULINK...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <!-- ===== 3D SPACE ANIMATION SCRIPT ===== -->
+    <script>
+        // ===== 3D SPACE WITH MOUSE INTERACTION =====
+        (function() {
+            const canvas = document.getElementById('space-canvas');
+            const container = document.getElementById('space-container');
+            const ctx = canvas.getContext('2d');
+
+            let width, height;
+            let mouseX = 0,
+                mouseY = 0;
+            let targetX = 0,
+                targetY = 0;
+            let stars = [];
+            let numStars = 300;
+            let speed = 0.3;
+
+            const colors = [
+                'rgba(139, 92, 246, 0.9)',
+                'rgba(168, 85, 247, 0.8)',
+                'rgba(196, 181, 253, 0.7)',
+                'rgba(236, 72, 153, 0.6)',
+                'rgba(244, 114, 182, 0.5)',
+                'rgba(255, 255, 255, 0.8)'
+            ];
+
+            function resize() {
+                width = container.clientWidth;
+                height = container.clientHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            class Star {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 2.5 + 0.5;
+                    this.speed = Math.random() * 0.5 + 0.2;
+                    this.opacity = Math.random() * 0.8 + 0.2;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                    this.pulse = Math.random() * Math.PI * 2;
+                    this.pulseSpeed = Math.random() * 0.02 + 0.005;
+                    this.z = Math.random() * 200 + 50;
+                }
+
+                update(mx, my) {
+                    const moveX = (mx - width / 2) * 0.0005 * this.z * 0.01;
+                    const moveY = (my - height / 2) * 0.0005 * this.z * 0.01;
+
+                    this.x += moveX * this.speed;
+                    this.y += moveY * this.speed;
+                    this.pulse += this.pulseSpeed;
+                    this.currentOpacity = this.opacity * (0.7 + 0.3 * Math.sin(this.pulse));
+
+                    if (this.x < -10) this.x = width + 10;
+                    if (this.x > width + 10) this.x = -10;
+                    if (this.y < -10) this.y = height + 10;
+                    if (this.y > height + 10) this.y = -10;
+                }
+
+                draw(ctx) {
+                    const size = this.size * (0.5 + 0.5 * Math.sin(this.pulse * 0.5));
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, size * 3
+                    );
+                    gradient.addColorStop(0, this.color.replace('0.9', this.currentOpacity));
+                    gradient.addColorStop(0.5, this.color.replace('0.9', this.currentOpacity * 0.3));
+                    gradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, size * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, size * 0.8, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color.replace('0.9', this.currentOpacity);
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, size * 0.3, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                    ctx.fill();
+                }
+            }
+
+            let shootingStars = [];
+
+            class ShootingStar {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height * 0.3;
+                    this.length = Math.random() * 80 + 40;
+                    this.speed = Math.random() * 8 + 5;
+                    this.angle = Math.random() * 0.5 - 0.25;
+                    this.opacity = 0;
+                    this.life = 0;
+                    this.maxLife = Math.random() * 100 + 50;
+                    this.active = false;
+                }
+
+                start() {
+                    this.x = Math.random() * width * 0.8 + width * 0.1;
+                    this.y = Math.random() * height * 0.3;
+                    this.length = Math.random() * 80 + 40;
+                    this.speed = Math.random() * 8 + 5;
+                    this.angle = Math.random() * 0.4 - 0.2;
+                    this.opacity = 0;
+                    this.life = 0;
+                    this.maxLife = Math.random() * 80 + 40;
+                    this.active = true;
+                }
+
+                update() {
+                    if (!this.active) return;
+                    this.life++;
+                    this.x += Math.cos(this.angle) * this.speed;
+                    this.y += Math.sin(this.angle) * this.speed;
+
+                    if (this.life < 20) {
+                        this.opacity = this.life / 20;
+                    } else if (this.life > this.maxLife - 20) {
+                        this.opacity = (this.maxLife - this.life) / 20;
+                    } else {
+                        this.opacity = 1;
+                    }
+
+                    if (this.life > this.maxLife || this.x > width + 50 || this.y > height + 50) {
+                        this.active = false;
+                    }
+                }
+
+                draw(ctx) {
+                    if (!this.active || this.opacity < 0.01) return;
+
+                    const endX = this.x - Math.cos(this.angle) * this.length;
+                    const endY = this.y - Math.sin(this.angle) * this.length;
+
+                    const gradient = ctx.createLinearGradient(this.x, this.y, endX, endY);
+                    gradient.addColorStop(0, `rgba(255,255,255,${this.opacity})`);
+                    gradient.addColorStop(0.3, `rgba(200,180,255,${this.opacity * 0.8})`);
+                    gradient.addColorStop(1, `rgba(139,92,246,0)`);
+
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(endX, endY);
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 2 * this.opacity;
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 3 * this.opacity, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${this.opacity * 0.8})`;
+                    ctx.fill();
+                }
+            }
+
+            function initStars() {
+                stars = [];
+                for (let i = 0; i < numStars; i++) {
+                    stars.push(new Star());
+                }
+                shootingStars = [];
+                for (let i = 0; i < 5; i++) {
+                    const ss = new ShootingStar();
+                    ss.start();
+                    shootingStars.push(ss);
+                }
+            }
+
+            function animate() {
+                targetX += (mouseX - targetX) * 0.1;
+                targetY += (mouseY - targetY) * 0.1;
+
+                ctx.clearRect(0, 0, width, height);
+
+                const nebulaGradient = ctx.createRadialGradient(
+                    width * 0.3 + targetX * 0.01,
+                    height * 0.3 + targetY * 0.01,
+                    0,
+                    width * 0.3 + targetX * 0.01,
+                    height * 0.3 + targetY * 0.01,
+                    width * 0.6
+                );
+                nebulaGradient.addColorStop(0, 'rgba(139, 92, 246, 0.03)');
+                nebulaGradient.addColorStop(0.5, 'rgba(168, 85, 247, 0.02)');
+                nebulaGradient.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = nebulaGradient;
+                ctx.fillRect(0, 0, width, height);
+
+                const nebulaGradient2 = ctx.createRadialGradient(
+                    width * 0.7 + targetX * 0.008,
+                    height * 0.7 + targetY * 0.008,
+                    0,
+                    width * 0.7 + targetX * 0.008,
+                    height * 0.7 + targetY * 0.008,
+                    width * 0.5
+                );
+                nebulaGradient2.addColorStop(0, 'rgba(236, 72, 153, 0.03)');
+                nebulaGradient2.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = nebulaGradient2;
+                ctx.fillRect(0, 0, width, height);
+
+                for (let star of stars) {
+                    star.update(targetX, targetY);
+                    star.draw(ctx);
+                }
+
+                for (let ss of shootingStars) {
+                    ss.update();
+                    ss.draw(ctx);
+                }
+
+                if (Math.random() < 0.003) {
+                    for (let ss of shootingStars) {
+                        if (!ss.active) {
+                            ss.start();
+                            break;
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            document.addEventListener('mousemove', function(e) {
+                const rect = container.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+            });
+
+            document.addEventListener('touchmove', function(e) {
+                const touch = e.touches[0];
+                const rect = container.getBoundingClientRect();
+                mouseX = touch.clientX - rect.left;
+                mouseY = touch.clientY - rect.top;
+            }, { passive: true });
+
+            window.addEventListener('resize', function() {
+                resize();
+                for (let star of stars) {
+                    star.x = Math.random() * width;
+                    star.y = Math.random() * height;
+                }
+            });
+
+            resize();
+            initStars();
+            animate();
+
+            console.log('🚀 3D Space Animation Loaded - Move your mouse!');
+        })();
+
+        // ===== CHAT FUNCTIONALITY - EDUCATION ONLY =====
+        (function() {
+            const W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn'),
+                A = document.getElementById('authOverlay'),
+                Q = document.querySelectorAll('.quick-replies button');
+            let open = !1,
+                auth = !1,
+                person = !1;
+
+            // ===== EDUCATION-ONLY KNOWLEDGE BASE =====
+            const KB = {
+                'edulink about platform company': `🏫 **About EDULINK**
+
+EDULINK is a dedicated educational platform focused on connecting students with quality learning opportunities and helping institutions reach more learners.
+
+**Our Education Services:**
+
+1️⃣ **Students 🎓** - Search and enroll in courses from various institutions
+2️⃣ **Institution Registration 🏛️** - Schools and training centers can register and list courses
+3️⃣ **Library 📖** - Access a wide range of educational materials
+4️⃣ **Study Abroad 🌍** - International university opportunities
+
+**Our Mission:** Making quality education accessible to everyone.`,
+
+                'students page search courses enroll find': `🎓 **Students Page - Course Search**
+
+**How to Find Courses:**
+1. Go to Students page
+2. Type your desired course in the search bar
+3. Click Search or press Enter
+4. View institutions offering that course
+5. Click "Enroll now" to start enrollment
+
+**Available Institutions:**
+• EDULINK Tech Academy - Data Science, AI, Full Stack, UI/UX
+• Nairobi Digital Institute - Digital Marketing, Graphic Design, Web Dev
+• Crestview University - Business Admin, Economics, Data Analytics
+• Innovation Hub Lagos - Product Design, Mobile Dev, Cloud Computing
+• Global School of Design - Fashion Design, Interior Design, Animation
+• CodeCraft Academy - Python, JavaScript, React, Node.js, DevOps
+• Eco Business School - Sustainability, Green Finance, ESG
+
+**Course Categories:** Technology, Business, Design, Programming, Marketing, Data Science
+
+**Enrollment Process:** Click "Enroll now" → Institution contacts you → Complete registration`,
+
+                'institution registration form register': `🏛️ **Institution Registration - Complete Guide**
+
+Register your institution to list courses on EDULINK.
+
+**Form Fields:**
+
+📋 **Institution Details:**
+• Institution Name (required)
+• Branches/Campuses (required)
+• Institution Logo
+• Email (required)
+• Website
+• Social Handles
+
+📚 **Courses:**
+• Courses Offered (comma separated)
+• Course Mode - Online, Offline, Hybrid
+• Intake Date
+• Study Type - Full-time, Part-time, Both
+• Cluster Points (optional)
+• Period (years) - required
+• Cost Per Year (USD) - required
+• Category - Degree, Diploma, Certificate, Professional, Short Course
+• Branch Offering
+
+**Review takes 2-5 business days.**`,
+
+                'library read free buy sell books': `📖 **EDULINK Digital Library**
+
+**1️⃣ Read Free Content 📚**
+20+ categories at no cost:
+• Novels, Short Stories, Poems
+• Tongue Twisters, Classic Literature
+• Adventure, Fantasy, Science Fiction
+• Detective, Children's Books
+• Historical, Philosophy, Drama
+• Essays, Biography, Fairytales
+• Religion, Romance, Mystery
+• Professional Literature
+
+**2️⃣ Buy Written Content 🛒**
+Featured Books:
+• The Alchemist - Adventure ($12.99)
+• Dune - Science Fiction ($18.50)
+• Pride and Prejudice - Classic ($9.99)
+• Sherlock Holmes - Detective ($14.20)
+• Harry Potter - Fantasy ($22.00)
+• The Hobbit - Adventure ($11.40)
+• 1984 - Science Fiction ($10.99)
+• Little Women - Classic ($8.75)
+
+**3️⃣ Sell Your Written Content ✍️**
+• You must be the author
+• 10% revenue share to EDULINK
+• You keep 90% of all sales`,
+
+                'study abroad universities international': `🌍 **Study Abroad**
+
+**Partner Universities:**
+🇬🇧 University of London - UK (QS #45)
+🇺🇸 Harvard University - USA (QS #5)
+🇨🇦 University of Toronto - Canada (QS #21)
+🇦🇺 University of Melbourne - Australia (QS #33)
+🇩🇪 Technical University of Munich - Germany (QS #49)
+🇳🇱 University of Amsterdam - Netherlands (QS #55)
+🇫🇷 Sorbonne University - France (QS #75)
+🇸🇬 National University of Singapore - Singapore (QS #11)
+
+**Services:**
+• Scholarships Available
+• 50+ Countries
+• Free Application Support
+• Accommodation Assistance
+• Visa Guidance
+• Internship Opportunities`,
+
+                'contact support email phone location': `📧 **Contact Us**
+
+**Visit Us:**
+Thika Road Wendani, Nairobi, Kenya
+
+**Call Us:**
++254 794914597
++254 758887164
+
+**Email Us:**
+edulink254@edulink.com
+support@edulink.com
+
+**FAQs:**
+• Response time: Within 24 hours
+• Free consultation: 30-minute initial consultation
+• Payment methods: Bank transfers, M-Pesa, Credit Cards, PayPal`,
+
+                'pricing cost fees revenue share': `💰 **Education Pricing**
+
+**Students:**
+• Course Search - FREE
+• Library Reading - FREE
+• Course Enrollment - Varies by institution
+
+**Institutions:**
+• Institution Registration - FREE
+• Course Listings - FREE
+• Student Matching - FREE
+
+**Book Sellers:**
+• Listing - FREE
+• Revenue Share - 10% to EDULINK, 90% to you`,
+
+                'support help assistance': `🆘 **Support & Assistance**
+
+**How to Get Help:**
+
+1️⃣ **AI Chat Assistant** (24/7) - That's me! Ask anything.
+
+2️⃣ **Live Support Agent** - Type "talk to a person" (login required)
+
+3️⃣ **Email Support** - support@edulink.com
+
+4️⃣ **Phone Support** - +254 794914597
+
+**Common Support Topics:**
+• Finding courses
+• Institution registration
+• Library usage
+• Enrollment process
+• Study abroad opportunities
+• Technical issues
+• Account management
+
+**Support Hours:** Monday - Friday, 8:00 AM - 6:00 PM EAT`,
+
+                'courses available edulink courses': `📚 **Available Courses**
+Data Science, AI/ML, Full Stack, UI/UX, Digital Marketing, Web Dev, Cybersecurity, Business Admin, Economics, Data Analytics, Project Management, Python, JavaScript, React, Node.js, DevOps, Cloud, Blockchain, Sustainability, Green Finance, ESG`
+            };
+
+            function findAnswer(q) {
+                q = q.toLowerCase();
+
+                if (q.includes('person') || q.includes('agent') || q.includes('live') || (q.includes('support') && q.includes(
+                    'talk'))) return 'person';
+
+                // Study abroad keywords
+                if (q.includes('abroad') || q.includes('international') || q.includes('uni') || q.includes('university') ||
+                    q.includes('overseas') || q.includes('foreign') || q.includes('study abroad')) {
+                    return KB['study abroad universities international'];
+                }
+
+                for (let [keys, val] of Object.entries(KB)) {
+                    let k = keys.split(' ');
+                    for (let word of k) {
+                        if (q.includes(word) || word.includes(q.split(' ')[0])) return val;
+                    }
+                }
+
+                // Course detection
+                const courses = ['data science', 'programming', 'design', 'marketing', 'development', 'ai', 'machine learning',
+                    'business', 'analytics', 'cybersecurity', 'cloud', 'blockchain', 'python', 'javascript', 'react',
+                    'node', 'devops', 'full stack', 'ui/ux', 'graphic', 'web', 'mobile', 'sustainability', 'finance',
+                    'esg'
+                ];
+                for (let c of courses) {
+                    if (q.includes(c)) {
+                        return `📚 **${c.charAt(0).toUpperCase()+c.slice(1)} Courses** available! Go to Students page and search "${c}" to see institutions offering this course.`;
+                    }
+                }
+
+                return `I can help with: 🏠 About EDULINK | 🎓 Courses | 🏛️ Institution | 📖 Library | 🌍 Study Abroad | 📧 Contact. What would you like to know?`;
+            }
+
+            function send() {
+                let t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                let r = findAnswer(t);
+                if (r === 'person') {
+                    if (auth) {
+                        addMsg('🟢 Connecting to agent...', 'system');
+                        setTimeout(() => {
+                            addMsg('👤 Agent: How can I help you?', 'bot');
+                            person = !0;
+                            A.classList.remove('show');
+                        }, 1200);
+                    } else {
+                        A.classList.add('show');
+                        I.disabled = S.disabled = !0;
+                        addMsg('🔐 Please login or register to connect with a live person.', 'system');
+                    }
+                    return;
+                }
+                setTimeout(() => addMsg(r, 'bot'), 300 + Math.random() * 500);
+            }
+
+            function addMsg(t, c) {
+                let d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            T.onclick = () => {
+                open = !open;
+                W.classList.toggle('open', open);
+                if (open) I.focus();
+            };
+            C.onclick = () => {
+                open = !1;
+                W.classList.remove('open');
+            };
+            document.onkeydown = e => {
+                if (e.key === 'Escape' && open) {
+                    open = !1;
+                    W.classList.remove('open');
+                }
+            };
+            S.onclick = send;
+            I.onkeydown = e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+            Q.forEach(b => b.onclick = () => {
+                I.value = b.dataset.q;
+                send();
+            });
+            document.getElementById('loginBtn').onclick = () => {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Logged in! You can now connect to a live person.', 'system');
+            };
+            document.getElementById('registerBtn').onclick = () => {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Registered! You can now connect to a live person.', 'system');
+            };
+            I.disabled = S.disabled = !1;
+            setTimeout(() => addMsg('💡 Ask about: Courses, Institution Registration, Library, or Study Abroad!', 'system'),
+                1200);
+        })();
+    </script>
+
+    <!-- Tracking Script -->
+<script>
+    (function() {
+        var API_BASE = 'http://localhost:5000/api';
+        var visitorId = localStorage.getItem('visitor_id');
+        if (!visitorId) {
+            visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+            localStorage.setItem('visitor_id', visitorId);
+        }
+
+        // Track page view
+        function trackPageView() {
+            var data = {
+                pageUrl: window.location.pathname || '/',
+                pageTitle: document.title || 'Unknown Page',
+                referrerUrl: document.referrer || ''
+            };
+            
+            fetch(API_BASE + '/track/pageview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(function() {});
+        }
+
+        // Track clicks
+        function setupClickTracking() {
+            document.addEventListener('click', function(e) {
+                var target = e.target;
+                var data = {
+                    elementId: target.id || '',
+                    elementClass: target.className || '',
+                    elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                    pageUrl: window.location.pathname || '/'
+                };
+                
+                // Only track important clicks (links, buttons, etc.)
+                if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                    target.closest('a') || target.closest('button')) {
+                    fetch(API_BASE + '/track/click', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                }
+            });
+        }
+
+        // Track form submissions
+        function setupFormTracking() {
+            document.addEventListener('submit', function(e) {
+                var form = e.target;
+                var data = {
+                    formType: form.id || form.name || 'unknown',
+                    formData: {}
+                };
+                
+                // Collect form data
+                var inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    if (input.name) {
+                        data.formData[input.name] = input.value || '';
+                    }
+                });
+                
+                fetch(API_BASE + '/track/formsubmit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            });
+        }
+
+        // Initialize tracking
+        trackPageView();
+        setupClickTracking();
+        setupFormTracking();
+    })();
+</script>
+
+</body>
+
+</html>

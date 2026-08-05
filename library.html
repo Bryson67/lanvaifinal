@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULINK - Library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            color: #f0ecf7;
+            padding: 0;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: rgba(20, 14, 40, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f2ecff;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .nav-brand span {
+            color: #b08acf;
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            background: rgba(130, 80, 190, 0.15);
+            border: 1px solid rgba(170, 130, 220, 0.15);
+            color: #cfbcfa;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: 0.25s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .nav-links a:hover {
+            background: rgba(160, 110, 220, 0.2);
+            border-color: rgba(170, 130, 220, 0.25);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .nav-links a.active {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border-color: #7d56b5;
+            color: white;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        /* ===== MAIN CARD ===== */
+        .library-card {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(30, 22, 50, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 28px;
+            backdrop-filter: blur(10px);
+        }
+
+        .library-card h1 {
+            font-size: 2.2rem;
+            color: #f2ecff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subhead {
+            color: #b8aad0;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== BUTTON GROUP ===== */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-group .btn button {
+            padding: 0.7rem 2rem;
+            border: 1px solid rgba(160, 120, 200, 0.15);
+            border-radius: 40px;
+            background: rgba(40, 30, 65, 0.4);
+            color: #cfbcfa;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-group .btn button:hover {
+            background: rgba(160, 110, 220, 0.15);
+            border-color: rgba(170, 130, 220, 0.3);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* ===== PANELS ===== */
+        .panel {
+            display: none;
+            background: rgba(20, 14, 40, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            animation: fadeSlide 0.4s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel h2 {
+            color: #dac9f0;
+            font-size: 1.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-close-panel {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+        .btn-close-panel:hover {
+            background: rgba(239, 68, 68, 0.25);
+            color: white;
+        }
+
+        /* ===== CATEGORY GRID ===== */
+        .category-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .category-tag {
+            background: rgba(130, 80, 190, 0.15);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            color: #cfbcfa;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .category-tag:hover {
+            background: rgba(160, 110, 220, 0.2);
+            border-color: rgba(170, 130, 220, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* ===== BOOK GRID ===== */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .book-item {
+            background: rgba(40, 30, 65, 0.3);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1rem;
+            transition: 0.25s;
+        }
+        .book-item:hover {
+            border-color: rgba(160, 120, 200, 0.15);
+            background: rgba(40, 30, 65, 0.5);
+            transform: translateY(-2px);
+        }
+        .book-item h4 {
+            color: #e8ddf5;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+        .book-item .category-badge {
+            font-size: 0.7rem;
+            color: #b08acf;
+            background: rgba(130, 80, 190, 0.1);
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+        }
+        .book-item .price-tag {
+            color: #4ade80;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== SELL FORM ===== */
+        .warning-box {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .form-group label {
+            color: #b8aad0;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select {
+            padding: 0.5rem 0.8rem;
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            color: #f0eaff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.25s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+        .form-group input::placeholder {
+            color: #7a6a94;
+        }
+
+        .btn-submit {
+            background: linear-gradient(145deg, #4ade80, #22a65e);
+            border: none;
+            border-radius: 14px;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0e0a1a;
+            cursor: pointer;
+            transition: 0.25s;
+            margin-top: 0.8rem;
+            width: 100%;
+        }
+        .btn-submit:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+        }
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-pay {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 14px;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.25s;
+            margin-top: 0.8rem;
+            width: 100%;
+        }
+        .btn-pay:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+        .btn-pay:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-pay .spinner {
+            display: none;
+            animation: spin 1s linear infinite;
+        }
+        .btn-pay .spinner.show {
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .payment-status {
+            margin-top: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .payment-status.show {
+            display: block;
+        }
+        .payment-status.success {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+        .payment-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+        .payment-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+        .payment-status .payment-ref {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            display: block;
+            margin-top: 0.2rem;
+        }
+
+        .payment-badge {
+            display: inline-block;
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        .payment-badge.unpaid {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+        .payment-badge.paid {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+        }
+
+        /* Phone input for M-Pesa */
+        .phone-input-group {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+        .phone-input-group .phone-prefix {
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            padding: 0.5rem 0.6rem;
+            color: #7a6a94;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .phone-input-group input {
+            flex: 1;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.08);
+            color: #5e4d78;
+            font-size: 0.85rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0.8rem;
+            }
+            .nav-links {
+                justify-content: center;
+            }
+            .library-card {
+                padding: 1rem;
+                margin: 0.8rem;
+            }
+            .book-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .book-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn-group .btn button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ===== CHAT STYLES ===== */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(125, 86, 181, 0.4);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(125, 86, 181, 0.5);
+        }
+
+        .chat-toggle .badge {
+            background: #4ade80;
+            color: #0e0a1a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            max-width: 90vw;
+            background: rgba(22, 18, 38, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: chatSlideUp 0.3s ease;
+        }
+
+        .chat-window.open {
+            display: block;
+        }
+
+        @keyframes chatSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(40, 30, 65, 0.5);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.08);
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            color: #f0ecf7;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #b08acf;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        .chat-close:hover {
+            color: #f58aae;
+            background: rgba(245, 138, 174, 0.1);
+        }
+
+        .chat-messages {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-messages .msg {
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg.bot {
+            background: rgba(40, 30, 65, 0.5);
+            color: #e8ddf5;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-messages .msg.user {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-messages .msg.system {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+            align-self: center;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            max-width: 95%;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            padding: 0.4rem 1rem 0.8rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .quick-replies button {
+            background: rgba(40, 30, 65, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.7rem;
+            color: #cfbcf5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quick-replies button:hover {
+            background: rgba(60, 40, 90, 0.5);
+            border-color: rgba(160, 120, 200, 0.25);
+            color: white;
+        }
+
+        .auth-overlay {
+            display: none;
+            padding: 1rem;
+            background: rgba(20, 14, 40, 0.8);
+            text-align: center;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .auth-overlay.show {
+            display: block;
+        }
+
+        .auth-overlay .auth-icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .auth-overlay h4 {
+            color: #dac9f0;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .auth-overlay p {
+            color: #7a6a94;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .auth-btns {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+
+        .auth-btns button {
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .auth-btns .login-btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.2);
+            color: #cfbcfa;
+        }
+
+        .auth-btns .login-btn:hover {
+            background: rgba(160, 110, 220, 0.2);
+        }
+
+        .auth-btns .register-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+        }
+
+        .auth-btns .register-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+
+        .chat-footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+            background: rgba(12, 8, 24, 0.3);
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            background: rgba(12, 8, 24, 0.5);
+            color: #f0eaff;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .chat-footer input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+
+        .chat-footer input::placeholder {
+            color: #7a6a94;
+        }
+
+        .chat-footer .send-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 70px;
+                right: -10px;
+                border-radius: 20px 20px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-brand">📚 EDULINK <span>Library</span></div>
+        <div class="nav-links">
+            <a href="courses.html">🏠 Home</a>
+            <a href="students.html">🎓 Students</a>
+            <a href="institution.html">🏛️ Institution</a>
+            <a href="library.html" class="active">📖 Library</a>
+        </div>
+    </nav>
+
+    <div class="library-card">
+        <h1>📖 Welcome to Library</h1>
+        <div class="subhead">
+            We have various offers like reading free. We also allow users to buy or sell their written content with EDULINK.
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="btn-group">
+            <div class="btn"><button id="readFreeBtn">📚 Read free</button></div>
+            <div class="btn"><button id="buyBtn">🛒 Buy written content</button></div>
+            <div class="btn"><button id="sellBtn">✍️ Sell your written content</button></div>
+        </div>
+
+        <!-- PANEL: READ FREE -->
+        <div id="readPanel" class="panel">
+            <h2>📂 Choose a category <button class="btn-close-panel" id="closeReadPanel">✕ close</button></h2>
+            <div class="category-grid">
+                <span class="category-tag">Novels</span>
+                <span class="category-tag">Short stories</span>
+                <span class="category-tag">Poems</span>
+                <span class="category-tag">Tongue twisters</span>
+                <span class="category-tag">Classic</span>
+                <span class="category-tag">Adventure</span>
+                <span class="category-tag">Fantasy</span>
+                <span class="category-tag">Science fiction</span>
+                <span class="category-tag">Detective</span>
+                <span class="category-tag">Children</span>
+                <span class="category-tag">Historical</span>
+                <span class="category-tag">Philosophy</span>
+                <span class="category-tag">Drama</span>
+                <span class="category-tag">Essays</span>
+                <span class="category-tag">Biography</span>
+                <span class="category-tag">Fairytales</span>
+                <span class="category-tag">Religion</span>
+                <span class="category-tag">Romance</span>
+                <span class="category-tag">Mystery</span>
+                <span class="category-tag">Professional literature</span>
+            </div>
+            <p style="margin-top: 1rem; color: #7a6a94;">✨ Click any category above to explore (demo).</p>
+        </div>
+
+        <!-- PANEL: BUY -->
+        <div id="buyPanel" class="panel">
+            <h2>📗 Available books <button class="btn-close-panel" id="closeBuyPanel">✕ close</button></h2>
+            <div class="book-grid">
+                <div class="book-item">
+                    <h4>The Alchemist</h4><span class="category-badge">Adventure</span>
+                    <div class="price-tag">$12.99</div>
+                </div>
+                <div class="book-item">
+                    <h4>Dune</h4><span class="category-badge">Science fiction</span>
+                    <div class="price-tag">$18.50</div>
+                </div>
+                <div class="book-item">
+                    <h4>Pride and Prejudice</h4><span class="category-badge">Classic</span>
+                    <div class="price-tag">$9.99</div>
+                </div>
+                <div class="book-item">
+                    <h4>Sherlock Holmes</h4><span class="category-badge">Detective</span>
+                    <div class="price-tag">$14.20</div>
+                </div>
+                <div class="book-item">
+                    <h4>Harry Potter</h4><span class="category-badge">Fantasy</span>
+                    <div class="price-tag">$22.00</div>
+                </div>
+                <div class="book-item">
+                    <h4>The Hobbit</h4><span class="category-badge">Adventure</span>
+                    <div class="price-tag">$11.40</div>
+                </div>
+                <div class="book-item">
+                    <h4>1984</h4><span class="category-badge">Science fiction</span>
+                    <div class="price-tag">$10.99</div>
+                </div>
+                <div class="book-item">
+                    <h4>Little Women</h4><span class="category-badge">Classic</span>
+                    <div class="price-tag">$8.75</div>
+                </div>
+            </div>
+            <p style="margin-top: 1rem; color: #7a6a94;">📌 More books available. Contact library for details.</p>
+        </div>
+
+        <!-- PANEL: SELL -->
+        <div id="sellPanel" class="panel">
+            <h2>📤 Sell your content <button class="btn-close-panel" id="closeSellPanel">✕ close</button></h2>
+            
+            <!-- Payment Requirement Notice -->
+            <div class="warning-box">
+                💰 <strong>Listing Fee Required:</strong> A one-time payment of <strong>100 KES</strong> is required to list your book for sale. You'll receive an STK Push on your phone.
+            </div>
+
+            <!-- Payment Status -->
+            <div id="paymentStatus" class="payment-status">
+                <span id="paymentStatusText"></span>
+                <span class="payment-ref" id="paymentRefText"></span>
+            </div>
+
+            <form id="sellForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Title <span class="required" style="color:#f87171;">*</span></label>
+                        <input type="text" id="bookTitle" placeholder="Book title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author <span class="required" style="color:#f87171;">*</span></label>
+                        <input type="text" id="bookAuthor" placeholder="Full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Book category <span class="required" style="color:#f87171;">*</span></label>
+                        <select id="bookCategory">
+                            <option>eBook</option>
+                            <option>Physical book</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (USD) <span class="required" style="color:#f87171;">*</span></label>
+                        <input type="number" id="bookPrice" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Year published <span class="required" style="color:#f87171;">*</span></label>
+                        <input type="number" id="bookYear" placeholder="2025" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <input type="text" id="bookGenre" placeholder="e.g. Fantasy">
+                    </div>
+                    <div class="form-group">
+                        <label>Other books by author</label>
+                        <input type="text" id="otherBooks" placeholder="comma separated">
+                    </div>
+                    <div class="form-group">
+                        <label>Email <span class="required" style="color:#f87171;">*</span></label>
+                        <input type="email" id="bookEmail" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number (M-Pesa) <span class="required" style="color:#f87171;">*</span></label>
+                        <div class="phone-input-group">
+                            <span class="phone-prefix">+254</span>
+                            <input type="tel" id="bookPhone" placeholder="712345678" required>
+                        </div>
+                        <small style="color:#7a6a94; font-size:0.7rem;">Enter phone number without country code (e.g., 712345678)</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Status</label>
+                        <input type="text" id="paymentStatusDisplay" value="🔴 Not Paid" disabled style="background:rgba(40,18,60,0.4); border-color:rgba(160,100,200,0.15); color:#f87171;">
+                    </div>
+                    <div class="form-group">
+                        <label>10% share (auto)</label>
+                        <input type="text" value="10% of sale" disabled style="background:rgba(40,18,60,0.4); border-color:rgba(160,100,200,0.15); color:#c9b0e0;">
+                    </div>
+                </div>
+
+                <!-- Payment Button -->
+                <button type="button" class="btn-pay" id="payButton">
+                    <span class="spinner" id="paySpinner"><i class="fas fa-spinner"></i></span>
+                    💳 Pay 100 KES via M-Pesa
+                </button>
+
+                <!-- Submit Button (disabled until payment) -->
+                <button type="submit" class="btn-submit" id="submitButton" disabled>
+                    📩 Submit for Review
+                </button>
+                
+                <p style="margin-top: 0.8rem; color: #44e413;">By submitting, you confirm you are the author.</p>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 EDULINK | Smart Solutions for Smart Learners</p>
+    </footer>
+
+    <!-- ===== CHAT FLOATING ===== -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>EDULINK Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Welcome to EDULINK! I'm here to help with courses, institutions, library, and study abroad. What would you like to know?</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What is EDULINK?">🏠 About</button>
+                <button data-q="How do I find courses?">🎓 Courses</button>
+                <button data-q="Register institution">🏛️ Institution</button>
+                <button data-q="Library services">📖 Library</button>
+                <button data-q="Study abroad">🌍 Uni Abroad</button>
+                <button data-q="Contact support">📧 Contact</button>
+            </div>
+            <div class="auth-overlay" id="authOverlay">
+                <div class="auth-icon">🔒</div>
+                <h4>Connect to a Live Person</h4>
+                <p>Please login or register to chat with a live agent.</p>
+                <div class="auth-btns">
+                    <button class="login-btn" id="loginBtn">🔑 Login</button>
+                    <button class="register-btn" id="registerBtn">📝 Register</button>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything about EDULINK...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script>
+        // ==============================================
+        // TOAST NOTIFICATION
+        // ==============================================
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ==============================================
+        // API BASE
+        // ==============================================
+        var API_BASE = 'http://localhost:5000/api';
+
+        // ==============================================
+        // CHAT FUNCTIONALITY
+        // ==============================================
+        (function() {
+            const W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn'),
+                A = document.getElementById('authOverlay'),
+                Q = document.querySelectorAll('.quick-replies button');
+            let open = !1,
+                auth = !1,
+                person = !1;
+
+            const KB = {
+                'edulink about platform company': `🏫 **About EDULINK**
+
+EDULINK is a dedicated educational platform focused on connecting students with quality learning opportunities and helping institutions reach more learners.
+
+**Our Education Services:**
+
+1️⃣ **Students 🎓** - Search and enroll in courses from various institutions
+2️⃣ **Institution Registration 🏛️** - Schools and training centers can register and list courses
+3️⃣ **Library 📖** - Access a wide range of educational materials
+4️⃣ **Study Abroad 🌍** - International university opportunities
+
+**Our Mission:** Making quality education accessible to everyone.`,
+
+                'students page search courses enroll find': `🎓 **Students Page - Course Search**
+
+**How to Find Courses:**
+1. Go to Students page
+2. Type your desired course in the search bar
+3. Click Search or press Enter
+4. View institutions offering that course
+5. Click "Enroll now" to start enrollment
+
+**Available Institutions:**
+• EDULINK Tech Academy - Data Science, AI, Full Stack, UI/UX
+• Nairobi Digital Institute - Digital Marketing, Graphic Design, Web Dev
+• Crestview University - Business Admin, Economics, Data Analytics
+• Innovation Hub Lagos - Product Design, Mobile Dev, Cloud Computing
+• Global School of Design - Fashion Design, Interior Design, Animation
+• CodeCraft Academy - Python, JavaScript, React, Node.js, DevOps
+• Eco Business School - Sustainability, Green Finance, ESG
+
+**Course Categories:** Technology, Business, Design, Programming, Marketing, Data Science
+
+**Enrollment Process:** Click "Enroll now" → Institution contacts you → Complete registration`,
+
+                'institution registration form register': `🏛️ **Institution Registration - Complete Guide**
+
+Register your institution to list courses on EDULINK.
+
+**Form Fields:**
+
+📋 **Institution Details:**
+• Institution Name (required)
+• Branches/Campuses (required)
+• Institution Logo
+• Email (required)
+• Website
+• Social Handles
+
+📚 **Courses:**
+• Courses Offered (comma separated)
+• Course Mode - Online, Offline, Hybrid
+• Intake Date
+• Study Type - Full-time, Part-time, Both
+• Cluster Points (optional)
+• Period (years) - required
+• Cost Per Year (USD) - required
+• Category - Degree, Diploma, Certificate, Professional, Short Course
+• Branch Offering
+
+**Review takes 2-5 business days.**`,
+
+                'library read free buy sell books': `📖 **EDULINK Digital Library**
+
+**1️⃣ Read Free Content 📚**
+20+ categories at no cost:
+• Novels, Short Stories, Poems
+• Tongue Twisters, Classic Literature
+• Adventure, Fantasy, Science Fiction
+• Detective, Children's Books
+• Historical, Philosophy, Drama
+• Essays, Biography, Fairytales
+• Religion, Romance, Mystery
+• Professional Literature
+
+**2️⃣ Buy Written Content 🛒**
+Featured Books:
+• The Alchemist - Adventure ($12.99)
+• Dune - Science Fiction ($18.50)
+• Pride and Prejudice - Classic ($9.99)
+• Sherlock Holmes - Detective ($14.20)
+• Harry Potter - Fantasy ($22.00)
+• The Hobbit - Adventure ($11.40)
+• 1984 - Science Fiction ($10.99)
+• Little Women - Classic ($8.75)
+
+**3️⃣ Sell Your Written Content ✍️**
+• You must be the author
+• 10% revenue share to EDULINK
+• You keep 90% of all sales
+• Listing fee: 100 KES (one-time payment via M-Pesa STK Push)`,
+
+                'study abroad universities international': `🌍 **Study Abroad**
+
+**Partner Universities:**
+🇬🇧 University of London - UK (QS #45)
+🇺🇸 Harvard University - USA (QS #5)
+🇨🇦 University of Toronto - Canada (QS #21)
+🇦🇺 University of Melbourne - Australia (QS #33)
+🇩🇪 Technical University of Munich - Germany (QS #49)
+🇳🇱 University of Amsterdam - Netherlands (QS #55)
+🇫🇷 Sorbonne University - France (QS #75)
+🇸🇬 National University of Singapore - Singapore (QS #11)
+
+**Services:**
+• Scholarships Available
+• 50+ Countries
+• Free Application Support
+• Accommodation Assistance
+• Visa Guidance
+• Internship Opportunities`,
+
+                'contact support email phone location': `📧 **Contact Us**
+
+**Visit Us:**
+Thika Road Wendani, Nairobi, Kenya
+
+**Call Us:**
++254 794914597
++254 758887164
+
+**Email Us:**
+edulink254@edulink.com
+support@edulink.com
+
+**FAQs:**
+• Response time: Within 24 hours
+• Free consultation: 30-minute initial consultation
+• Payment methods: Bank transfers, M-Pesa, Credit Cards, PayPal`
+            };
+
+            function findAnswer(q) {
+                q = q.toLowerCase();
+                if (q.includes('person') || q.includes('agent') || q.includes('live') || (q.includes('support') && q.includes(
+                    'talk'))) return 'person';
+
+                if (q.includes('abroad') || q.includes('international') || q.includes('uni') || q.includes('university') ||
+                    q.includes('overseas') || q.includes('foreign') || q.includes('study abroad')) {
+                    return KB['study abroad universities international'];
+                }
+
+                for (let [keys, val] of Object.entries(KB)) {
+                    let k = keys.split(' ');
+                    for (let word of k) {
+                        if (q.includes(word) || word.includes(q.split(' ')[0])) return val;
+                    }
+                }
+
+                const courses = ['data science', 'programming', 'design', 'marketing', 'development', 'ai', 'machine learning',
+                    'business', 'analytics', 'cybersecurity', 'cloud', 'blockchain', 'python', 'javascript', 'react',
+                    'node', 'devops', 'full stack', 'ui/ux', 'graphic', 'web', 'mobile', 'sustainability', 'finance',
+                    'esg'
+                ];
+                for (let c of courses) {
+                    if (q.includes(c)) {
+                        return `📚 **${c.charAt(0).toUpperCase()+c.slice(1)} Courses** available! Go to Students page and search "${c}" to see institutions offering this course.`;
+                    }
+                }
+
+                return `I can help with: 🏠 About EDULINK | 🎓 Courses | 🏛️ Institution | 📖 Library | 🌍 Study Abroad | 📧 Contact. What would you like to know?`;
+            }
+
+            function send() {
+                let t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                let r = findAnswer(t);
+                if (r === 'person') {
+                    if (auth) {
+                        addMsg('🟢 Connecting to agent...', 'system');
+                        setTimeout(() => {
+                            addMsg('👤 Agent: How can I help you?', 'bot');
+                            person = !0;
+                            A.classList.remove('show');
+                        }, 1200);
+                    } else {
+                        A.classList.add('show');
+                        I.disabled = S.disabled = !0;
+                        addMsg('🔐 Please login or register to connect with a live person.', 'system');
+                    }
+                    return;
+                }
+                setTimeout(() => addMsg(r, 'bot'), 300 + Math.random() * 500);
+            }
+
+            function addMsg(t, c) {
+                let d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            T.onclick = () => {
+                open = !open;
+                W.classList.toggle('open', open);
+                if (open) I.focus();
+            };
+            C.onclick = () => {
+                open = !1;
+                W.classList.remove('open');
+            };
+            document.onkeydown = e => {
+                if (e.key === 'Escape' && open) {
+                    open = !1;
+                    W.classList.remove('open');
+                }
+            };
+            S.onclick = send;
+            I.onkeydown = e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+            Q.forEach(b => b.onclick = () => {
+                I.value = b.dataset.q;
+                send();
+            });
+            document.getElementById('loginBtn').onclick = () => {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Logged in! You can now connect to a live person.', 'system');
+            };
+            document.getElementById('registerBtn').onclick = () => {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Registered! You can now connect to a live person.', 'system');
+            };
+            I.disabled = S.disabled = !1;
+            setTimeout(() => addMsg('💡 Ask about: Courses, Institution Registration, Library, or Study Abroad!', 'system'),
+                1200);
+        })();
+
+        // ==============================================
+        // LIBRARY FUNCTIONALITY
+        // ==============================================
+
+        // Panel toggles
+        const readPanel = document.getElementById('readPanel');
+        const buyPanel = document.getElementById('buyPanel');
+        const sellPanel = document.getElementById('sellPanel');
+
+        const readBtn = document.getElementById('readFreeBtn');
+        const buyBtn = document.getElementById('buyBtn');
+        const sellBtn = document.getElementById('sellBtn');
+
+        const closeRead = document.getElementById('closeReadPanel');
+        const closeBuy = document.getElementById('closeBuyPanel');
+        const closeSell = document.getElementById('closeSellPanel');
+
+        function hideAllPanels() {
+            readPanel.classList.remove('active');
+            buyPanel.classList.remove('active');
+            sellPanel.classList.remove('active');
+        }
+
+        function showPanel(panel) {
+            hideAllPanels();
+            if (panel) panel.classList.add('active');
+        }
+
+        readBtn.addEventListener('click', () => showPanel(readPanel));
+        buyBtn.addEventListener('click', () => showPanel(buyPanel));
+        sellBtn.addEventListener('click', () => showPanel(sellPanel));
+
+        closeRead.addEventListener('click', () => readPanel.classList.remove('active'));
+        closeBuy.addEventListener('click', () => buyPanel.classList.remove('active'));
+        closeSell.addEventListener('click', () => sellPanel.classList.remove('active'));
+
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                showToast(`📘 You selected: "${this.textContent}" — free reading section.`);
+            });
+        });
+
+        // ==============================================
+        // INTASEND STK PUSH PAYMENT
+        // ==============================================
+
+        var paymentCompleted = false;
+        var paymentReference = '';
+        var paymentId = '';
+
+        const payButton = document.getElementById('payButton');
+        const paySpinner = document.getElementById('paySpinner');
+        const submitButton = document.getElementById('submitButton');
+        const paymentStatusDiv = document.getElementById('paymentStatus');
+        const paymentStatusText = document.getElementById('paymentStatusText');
+        const paymentRefText = document.getElementById('paymentRefText');
+        const paymentStatusDisplay = document.getElementById('paymentStatusDisplay');
+
+        // Payment button click - IntaSend STK Push
+        payButton.addEventListener('click', function() {
+            // Validate required fields
+            const title = document.getElementById('bookTitle').value.trim();
+            const author = document.getElementById('bookAuthor').value.trim();
+            const price = document.getElementById('bookPrice').value.trim();
+            const year = document.getElementById('bookYear').value.trim();
+            const email = document.getElementById('bookEmail').value.trim();
+            const phone = document.getElementById('bookPhone').value.trim();
+
+            if (!title || !author || !price || !year || !email) {
+                showToast('⚠️ Please fill in all required fields (Title, Author, Price, Year, Email).', true);
+                return;
+            }
+
+            if (!phone || phone.length < 9) {
+                showToast('⚠️ Please enter a valid M-Pesa phone number (e.g., 712345678).', true);
+                return;
+            }
+
+            // Format phone number
+            let formattedPhone = phone;
+            if (formattedPhone.startsWith('0')) {
+                formattedPhone = '254' + formattedPhone.substring(1);
+            } else if (!formattedPhone.startsWith('254')) {
+                formattedPhone = '254' + formattedPhone;
+            }
+
+            // Disable payment button
+            payButton.disabled = true;
+            paySpinner.classList.add('show');
+            payButton.innerHTML = '<span class="spinner show"><i class="fas fa-spinner"></i></span> Sending STK Push...';
+
+            // Show pending status
+            paymentStatusDiv.className = 'payment-status show pending';
+            paymentStatusText.textContent = '⏳ Sending STK Push to your phone... Please check your M-Pesa and enter PIN.';
+            paymentRefText.textContent = '';
+
+            // Prepare payment data
+            const paymentData = {
+                phone: formattedPhone,
+                amount: 100,
+                email: email,
+                description: 'EDULINK Book Listing Fee - ' + title,
+                base_url: window.location.origin
+            };
+
+            console.log('📤 Sending STK Push:', paymentData);
+
+            // Call IntaSend STK Push API
+            fetch(API_BASE + '/payment/mpesa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paymentData)
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('✅ STK Push Response:', data);
+
+                if (data.success) {
+                    paymentId = data.payment_id || '';
+                    paymentReference = data.reference || data.payment_id || 'REF-' + Date.now();
+
+                    paymentCompleted = true;
+                    
+                    paymentStatusDiv.className = 'payment-status show success';
+                    paymentStatusText.textContent = '✅ STK Push sent! Check your phone and enter M-Pesa PIN.';
+                    paymentRefText.textContent = '📋 Reference: ' + paymentReference + ' | Amount: 100 KES';
+
+                    paymentStatusDisplay.value = '✅ Paid - ' + paymentReference;
+                    paymentStatusDisplay.style.color = '#4ade80';
+                    
+                    submitButton.disabled = false;
+                    payButton.innerHTML = '✅ Paid 100 KES';
+                    payButton.style.background = 'linear-gradient(145deg, #4ade80, #22a65e)';
+                    
+                    showToast('✅ STK Push sent! Check your phone and enter PIN to complete payment.');
+
+                    // Start polling for payment status
+                    pollPaymentStatus(paymentId);
+                } else {
+                    paymentStatusDiv.className = 'payment-status show error';
+                    paymentStatusText.textContent = '❌ Failed to send STK Push: ' + (data.error || 'Unknown error');
+                    paymentRefText.textContent = '';
+                    
+                    payButton.disabled = false;
+                    paySpinner.classList.remove('show');
+                    payButton.innerHTML = '💳 Pay 100 KES via M-Pesa';
+                    
+                    showToast('❌ Failed to send STK Push: ' + (data.error || 'Unknown error'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('❌ Error sending STK Push:', error);
+                
+                paymentStatusDiv.className = 'payment-status show error';
+                paymentStatusText.textContent = '❌ Error: ' + error.message;
+                paymentRefText.textContent = '';
+                
+                payButton.disabled = false;
+                paySpinner.classList.remove('show');
+                payButton.innerHTML = '💳 Pay 100 KES via M-Pesa';
+                
+                showToast('❌ Error sending payment: ' + error.message, true);
+            });
+        });
+
+        // Poll payment status
+        function pollPaymentStatus(paymentId) {
+            if (!paymentId) return;
+
+            let attempts = 0;
+            const maxAttempts = 20; // 20 * 5s = 100s max
+
+            const checkStatus = setInterval(function() {
+                attempts++;
+                
+                fetch(API_BASE + '/payment/status?paymentId=' + paymentId, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    console.log('📊 Payment Status:', data);
+
+                    if (data.status === 'completed') {
+                        clearInterval(checkStatus);
+                        paymentCompleted = true;
+                        
+                        paymentStatusDiv.className = 'payment-status show success';
+                        paymentStatusText.textContent = '✅ Payment completed successfully!';
+                        paymentRefText.textContent = '📋 Reference: ' + (data.payment_id || paymentReference);
+                        
+                        paymentStatusDisplay.value = '✅ Paid - ' + (data.payment_id || paymentReference);
+                        paymentStatusDisplay.style.color = '#4ade80';
+                        
+                        submitButton.disabled = false;
+                        payButton.innerHTML = '✅ Paid 100 KES';
+                        payButton.style.background = 'linear-gradient(145deg, #4ade80, #22a65e)';
+                        
+                        showToast('✅ Payment completed successfully! You can now submit your book.');
+                    } else if (data.status === 'failed') {
+                        clearInterval(checkStatus);
+                        paymentCompleted = false;
+                        
+                        paymentStatusDiv.className = 'payment-status show error';
+                        paymentStatusText.textContent = '❌ Payment failed. Please try again.';
+                        paymentRefText.textContent = '';
+                        
+                        payButton.disabled = false;
+                        paySpinner.classList.remove('show');
+                        payButton.innerHTML = '💳 Pay 100 KES via M-Pesa';
+                        payButton.style.background = 'linear-gradient(145deg, #f59e0b, #d97706)';
+                        
+                        showToast('❌ Payment failed. Please try again.', true);
+                    } else if (attempts >= maxAttempts) {
+                        clearInterval(checkStatus);
+                        showToast('⏰ Payment status check timed out. Please check your M-Pesa.', true);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error checking payment status:', error);
+                    if (attempts >= maxAttempts) {
+                        clearInterval(checkStatus);
+                    }
+                });
+            }, 5000); // Check every 5 seconds
+        }
+
+        // ==============================================
+        // FORM SUBMISSION
+        // ==============================================
+
+        document.getElementById('sellForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!paymentCompleted) {
+                showToast('⚠️ Please complete the payment of 100 KES first.', true);
+                return;
+            }
+
+            const title = document.getElementById('bookTitle').value.trim();
+            const author = document.getElementById('bookAuthor').value.trim();
+            const category = document.getElementById('bookCategory').value;
+            const price = document.getElementById('bookPrice').value.trim();
+            const year = document.getElementById('bookYear').value.trim();
+            const genre = document.getElementById('bookGenre').value.trim();
+            const otherBooks = document.getElementById('otherBooks').value.trim();
+            const email = document.getElementById('bookEmail').value.trim();
+            const phone = document.getElementById('bookPhone').value.trim();
+
+            if (!title || !author || !price || !year || !email || !phone) {
+                showToast('⚠️ Please fill in all required fields.', true);
+                return;
+            }
+
+            const formData = {
+                title: title,
+                author: author,
+                category: category,
+                price: parseFloat(price),
+                year: parseInt(year),
+                genre: genre || 'Not specified',
+                otherBooks: otherBooks || 'None',
+                phone: phone,
+                email: email,
+                paymentReference: paymentReference,
+                paymentId: paymentId,
+                paymentAmount: 100,
+                currency: 'KES',
+                submissionDate: new Date().toISOString()
+            };
+
+            console.log('📤 Submitting book:', formData);
+
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+            fetch(API_BASE + '/library/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('✅ Book submitted:', data);
+                showToast('✅ Your book has been submitted for review! We will contact you shortly.');
+                
+                document.getElementById('sellForm').reset();
+                paymentCompleted = false;
+                paymentReference = '';
+                paymentId = '';
+                paymentStatusDisplay.value = '🔴 Not Paid';
+                paymentStatusDisplay.style.color = '#f87171';
+                submitButton.disabled = true;
+                submitButton.innerHTML = '📩 Submit for Review';
+                payButton.innerHTML = '💳 Pay 100 KES via M-Pesa';
+                payButton.style.background = 'linear-gradient(145deg, #f59e0b, #d97706)';
+                payButton.disabled = false;
+                paySpinner.classList.remove('show');
+                paymentStatusDiv.className = 'payment-status';
+            })
+            .catch(function(error) {
+                console.error('❌ Error submitting book:', error);
+                showToast('❌ Error submitting book: ' + error.message, true);
+                submitButton.disabled = false;
+                submitButton.innerHTML = '📩 Submit for Review';
+            });
+        });
+    </script>
+</body>
+
+</html>

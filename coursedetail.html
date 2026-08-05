@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULINK | Course Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            color: #f0ecf7;
+        }
+
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.15);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #f2ecff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .page-header h1 a {
+            color: #b69bdb;
+            text-decoration: none;
+            font-size: 1.8rem;
+            transition: 0.2s;
+        }
+        .page-header h1 a:hover { color: #d4bbf5; }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-actions .btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.25);
+            color: #cfbcfa;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-actions .btn:hover {
+            background: rgba(160, 110, 220, 0.25);
+            border-color: #b18be0;
+            color: white;
+        }
+
+        .course-detail-card {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .course-banner {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(37, 99, 235, 0.15));
+            padding: 2rem 2.5rem;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .course-banner .hosted-badge {
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .course-banner .hosted-badge.edulink {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.25);
+            color: #4ade80;
+        }
+
+        .course-banner .hosted-badge.institution {
+            background: rgba(60, 160, 220, 0.15);
+            border: 1px solid rgba(60, 160, 220, 0.25);
+            color: #8fcbff;
+        }
+
+        .course-banner .course-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f2ecff;
+        }
+
+        .course-banner .course-subtitle {
+            color: #b8aad0;
+            font-size: 1rem;
+            margin-top: 0.2rem;
+        }
+
+        .course-banner .course-price-large {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4ade80;
+            text-align: right;
+        }
+        .course-banner .course-price-large .price-label {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #7a6a94;
+            display: block;
+        }
+
+        .course-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem 2.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .course-content {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+        }
+
+        .course-left {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .institution-section {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .institution-section .inst-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .institution-section .inst-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: rgba(40, 30, 65, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .institution-section .inst-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .institution-section .inst-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e8ddf5;
+        }
+
+        .institution-section .inst-type {
+            font-size: 0.8rem;
+            color: #7a6a94;
+        }
+
+        .institution-section .inst-about {
+            color: #b8aad0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+        }
+
+        .institution-section .inst-achievements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .institution-section .inst-achievements .achieve-tag {
+            background: rgba(130, 80, 190, 0.12);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #b08acf;
+            border: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .inst-branches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .inst-branches .branch-tag {
+            background: rgba(60, 160, 220, 0.1);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #8fcbff;
+            border: 1px solid rgba(60, 160, 220, 0.1);
+        }
+
+        .course-info-section {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .course-info-section h3 {
+            font-size: 1.1rem;
+            color: #dac9f0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .course-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .course-info-grid .info-item {
+            background: rgba(12, 8, 24, 0.3);
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(160, 120, 200, 0.04);
+        }
+
+        .course-info-grid .info-item .info-label {
+            font-size: 0.7rem;
+            color: #7a6a94;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .course-info-grid .info-item .info-value {
+            font-size: 0.95rem;
+            color: #f0ecf7;
+            font-weight: 500;
+            margin-top: 0.1rem;
+        }
+
+        @media (max-width: 500px) {
+            .course-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .enrollment-types-section {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .enrollment-types-section h3 {
+            font-size: 1.1rem;
+            color: #dac9f0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .enrollment-type-group {
+            background: rgba(12, 8, 24, 0.2);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .enrollment-type-group .et-name {
+            font-weight: 600;
+            color: #e8ddf5;
+            font-size: 0.95rem;
+        }
+
+        .enrollment-type-group .et-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            margin-top: 0.3rem;
+            font-size: 0.85rem;
+            color: #b8aad0;
+        }
+
+        .enrollment-type-group .et-details span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .course-description {
+            color: #b8aad0;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-top: 0.5rem;
+        }
+
+        .topics-section {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .topics-section h3 {
+            font-size: 1.1rem;
+            color: #dac9f0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .topic-item {
+            background: rgba(12, 8, 24, 0.3);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .topic-item .topic-name {
+            color: #e8ddf5;
+            font-weight: 500;
+        }
+
+        .topic-item .topic-files {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .topic-item .topic-files span {
+            font-size: 0.75rem;
+            color: #7a6a94;
+            background: rgba(0,0,0,0.2);
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .other-courses-section {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .other-courses-section h3 {
+            font-size: 1.1rem;
+            color: #dac9f0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .other-course-item {
+            background: rgba(12, 8, 24, 0.2);
+            border: 1px solid rgba(160, 120, 200, 0.04);
+            border-radius: 12px;
+            padding: 0.7rem 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            transition: 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .other-course-item:hover {
+            border-color: rgba(160, 120, 200, 0.2);
+            background: rgba(40, 30, 65, 0.4);
+        }
+
+        .other-course-item .oc-name {
+            color: #e8ddf5;
+            font-weight: 500;
+        }
+
+        .other-course-item .oc-price {
+            color: #4ade80;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .other-course-item .oc-badge {
+            font-size: 0.65rem;
+            color: #7a6a94;
+            background: rgba(0,0,0,0.2);
+            padding: 0.1rem 0.6rem;
+            border-radius: 12px;
+        }
+
+        .course-right {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .action-card {
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 1rem;
+        }
+
+        .action-card .price-display {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4ade80;
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.06);
+            margin-bottom: 1rem;
+        }
+
+        .action-card .price-display small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #7a6a94;
+            display: block;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .action-buttons .buy-btn {
+            background: linear-gradient(145deg, #4ade80, #22a65e);
+            border: none;
+            padding: 0.9rem;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0e0a1a;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .action-buttons .buy-btn:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .action-buttons .wishlist-btn {
+            background: rgba(130, 80, 190, 0.15);
+            border: 1px solid rgba(170, 130, 220, 0.2);
+            padding: 0.8rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #cfbcfa;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .action-buttons .wishlist-btn:hover {
+            background: rgba(160, 110, 220, 0.2);
+            border-color: #b18be0;
+            color: white;
+        }
+
+        .action-buttons .wishlist-btn.active {
+            background: rgba(236, 72, 153, 0.15);
+            border-color: rgba(236, 72, 153, 0.25);
+            color: #f472b6;
+        }
+
+        .action-buttons .contact-btn {
+            background: rgba(60, 160, 220, 0.12);
+            border: 1px solid rgba(60, 160, 220, 0.15);
+            padding: 0.8rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #8fcbff;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .action-buttons .contact-btn:hover {
+            background: rgba(60, 160, 220, 0.2);
+            border-color: rgba(60, 160, 220, 0.3);
+            color: white;
+        }
+
+        .back-link {
+            color: #7a6a94;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .back-link:hover {
+            color: #cfbcfa;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #7a6a94;
+        }
+        .loading-spinner i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Chat styles */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(125, 86, 181, 0.4);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(125, 86, 181, 0.5);
+        }
+
+        .chat-toggle .badge {
+            background: #4ade80;
+            color: #0e0a1a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            max-width: 90vw;
+            background: rgba(22, 18, 38, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: chatSlideUp 0.3s ease;
+        }
+
+        .chat-window.open {
+            display: block;
+        }
+
+        @keyframes chatSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            background: rgba(40, 30, 65, 0.5);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.08);
+        }
+
+        .chat-header h3 {
+            font-size: 1rem;
+            color: #f0ecf7;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #b08acf;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        .chat-close:hover {
+            color: #f58aae;
+            background: rgba(245, 138, 174, 0.1);
+        }
+
+        .chat-messages {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 0.8rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chat-messages .msg {
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-messages .msg.bot {
+            background: rgba(40, 30, 65, 0.5);
+            color: #e8ddf5;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-messages .msg.user {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-messages .msg.system {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+            align-self: center;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            max-width: 95%;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            padding: 0.4rem 1rem 0.8rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .quick-replies button {
+            background: rgba(40, 30, 65, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.7rem;
+            color: #cfbcf5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quick-replies button:hover {
+            background: rgba(60, 40, 90, 0.5);
+            border-color: rgba(160, 120, 200, 0.25);
+            color: white;
+        }
+
+        .auth-overlay {
+            display: none;
+            padding: 1rem;
+            background: rgba(20, 14, 40, 0.8);
+            text-align: center;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+
+        .auth-overlay.show {
+            display: block;
+        }
+
+        .auth-overlay .auth-icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .auth-overlay h4 {
+            color: #dac9f0;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .auth-overlay p {
+            color: #7a6a94;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .auth-btns {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+
+        .auth-btns button {
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .auth-btns .login-btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.2);
+            color: #cfbcfa;
+        }
+
+        .auth-btns .login-btn:hover {
+            background: rgba(160, 110, 220, 0.2);
+        }
+
+        .auth-btns .register-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+        }
+
+        .auth-btns .register-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+
+        .chat-footer {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+            background: rgba(12, 8, 24, 0.3);
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            background: rgba(12, 8, 24, 0.5);
+            color: #f0eaff;
+            font-size: 0.85rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .chat-footer input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+
+        .chat-footer input::placeholder {
+            color: #7a6a94;
+        }
+
+        .chat-footer .send-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .page-header h1 { font-size: 1.5rem; }
+            .course-banner { padding: 1.5rem; }
+            .course-banner .course-title { font-size: 1.3rem; }
+            .course-banner .course-price-large { font-size: 1.5rem; }
+            .course-content { padding: 1rem; }
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 70px;
+                right: -10px;
+                border-radius: 20px 20px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <!-- Toast -->
+        <div id="toast" class="toast-notification"></div>
+
+        <!-- Header -->
+        <div class="page-header">
+            <h1>
+                <a href="students.html">⬅️</a> 📚 Course Details
+            </h1>
+            <div class="header-actions">
+                <a href="students.html" class="btn">🔍 Browse Courses</a>
+                <a href="institution.html" class="btn">🏛️ Register Institution</a>
+                <a href="library.html" class="btn">📖 Library</a>
+            </div>
+        </div>
+
+        <!-- Course Detail -->
+        <div id="courseDetailContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner"></i>
+                <p>Loading course details...</p>
+            </div>
+        </div>
+
+        <a href="students.html" class="back-link">← Back to Course Search</a>
+    </div>
+
+    <!-- ===== CHAT FLOATING ===== -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>EDULINK Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Welcome to EDULINK! I can help you with course details, enrollment, institutions, and study abroad. What would you like to know?</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What is EDULINK?">🏠 About</button>
+                <button data-q="How do I find courses?">🎓 Courses</button>
+                <button data-q="Register institution">🏛️ Institution</button>
+                <button data-q="Library services">📖 Library</button>
+                <button data-q="Study abroad">🌍 Uni Abroad</button>
+                <button data-q="Contact support">📧 Contact</button>
+            </div>
+            <div class="auth-overlay" id="authOverlay">
+                <div class="auth-icon">🔒</div>
+                <h4>Connect to a Live Person</h4>
+                <p>Please login or register to chat with a live agent.</p>
+                <div class="auth-btns">
+                    <button class="login-btn" id="loginBtn">🔑 Login</button>
+                    <button class="register-btn" id="registerBtn">📝 Register</button>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything about EDULINK...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script>
+        // ==============================================
+        // COURSE DETAIL - FETCH FROM BACKEND
+        // ==============================================
+
+        var API_BASE = '/api';
+        var CURRENCY_SYMBOL = 'KES ';
+        var CURRENCY_RATE = 150; // 1 USD = 150 KES (approximate)
+
+        // ===== ENROLLMENT TYPE LABELS WITH EMOJIS =====
+        var enrollmentLabels = {
+            'onlineRollingFulltime': '📱 Online Rolling Fulltime',
+            'onlineRollingParttime': '📱 Online Rolling Parttime',
+            'onlineIntakeFulltime': '📱 Online Intake Fulltime',
+            'onlineIntakeParttime': '📱 Online Intake Parttime',
+            'physicalRollingFulltime': '🏫 Physical Rolling Fulltime',
+            'physicalRollingParttime': '🏫 Physical Rolling Parttime',
+            'physicalIntakeFulltime': '🏫 Physical Intake Fulltime',
+            'physicalIntakeParttime': '🏫 Physical Intake Parttime',
+            'hybridRollingFulltime': '🔄 Hybrid Rolling Fulltime',
+            'hybridRollingParttime': '🔄 Hybrid Rolling Parttime',
+            'hybridIntakeFulltime': '🔄 Hybrid Intake Fulltime',
+            'hybridIntakeParttime': '🔄 Hybrid Intake Parttime'
+        };
+
+        // ===== TOAST =====
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ===== GET COURSE FROM URL =====
+        function getCourseIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // ===== FORMAT PRICE IN KES =====
+        function formatPrice(priceUSD) {
+            if (!priceUSD || priceUSD === 0) return 'Contact for pricing';
+            var priceKES = Math.round(priceUSD * CURRENCY_RATE);
+            return CURRENCY_SYMBOL + priceKES.toLocaleString('en-KE');
+        }
+
+        function formatPricePlain(priceUSD) {
+            if (!priceUSD || priceUSD === 0) return '0';
+            return Math.round(priceUSD * CURRENCY_RATE).toString();
+        }
+
+        // ===== FETCH SINGLE COURSE BY ID =====
+        function fetchCourseById(courseId) {
+            return fetch(API_BASE + '/courses', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data && data.courses) {
+                    var course = data.courses.find(function(c) {
+                        return c.id == courseId || c.id === courseId;
+                    });
+                    if (course) {
+                        return course;
+                    }
+                }
+                return fetch(API_BASE + '/media/news?id=' + courseId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(function(response) {
+                    if (!response.ok) return null;
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data && data.article) {
+                        return data.article;
+                    }
+                    return null;
+                });
+            })
+            .catch(function(error) {
+                console.error('Error fetching course:', error);
+                return null;
+            });
+        }
+
+        // ===== FETCH ALL COURSES FOR "OTHER COURSES" =====
+        function fetchAllCourses() {
+            return fetch(API_BASE + '/courses', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data && data.courses) {
+                    return data.courses;
+                }
+                return [];
+            })
+            .catch(function(error) {
+                console.error('Error fetching courses:', error);
+                return [];
+            });
+        }
+
+        // ===== GET OTHER COURSES BY SAME INSTITUTION =====
+        function getOtherCourses(allCourses, currentCourse) {
+            if (!currentCourse) return [];
+            return allCourses.filter(function(c) {
+                return c.id != currentCourse.id && c.id !== currentCourse.id && 
+                       c.institution === currentCourse.institution;
+            });
+        }
+
+        // ===== RENDER COURSE DETAIL =====
+        function renderCourseDetail(course, allCourses) {
+            var container = document.getElementById('courseDetailContainer');
+
+            if (!course) {
+                container.innerHTML = `
+                    <div class="course-detail-card" style="padding:3rem; text-align:center;">
+                        <div style="font-size:3rem; margin-bottom:1rem;">🔍</div>
+                        <h2 style="color:#f0ecf7;">Course Not Found</h2>
+                        <p style="color:#7a6a94;">The course you're looking for doesn't exist or has been removed.</p>
+                        <a href="students.html" class="back-link" style="margin-top:1rem;">← Back to Course Search</a>
+                    </div>
+                `;
+                return;
+            }
+
+            var isEdulinkHosted = course.hostedType === 'lanvai' || course.hostedType === 'edulink';
+            var badgeClass = isEdulinkHosted ? 'edulink' : 'institution';
+            var badgeText = isEdulinkHosted ? '🚀 EDULINK Hosted' : '🏛️ Institution Hosted';
+
+            var enrollmentLabel = '';
+            if (course.enrollmentType && enrollmentLabels[course.enrollmentType]) {
+                enrollmentLabel = enrollmentLabels[course.enrollmentType];
+            } else if (course.enrollmentType) {
+                enrollmentLabel = course.enrollmentType;
+            }
+
+            var infoItems = [
+                { label: 'Category', value: course.category || 'General' },
+                { label: 'Study Type', value: course.studyType || 'N/A' },
+                { label: 'Mode', value: course.mode || 'N/A' },
+                { label: 'Duration', value: course.duration ? course.duration + (course.duration > 1 ? ' years' : ' year') : 'N/A' },
+                { label: 'Cluster Points', value: course.clusterPoints || 'N/A' },
+                { label: 'Intake Date', value: course.intakeDate || 'Flexible' },
+                { label: 'Branch', value: course.branch || 'Main Campus' },
+                { label: 'Location', value: course.address || 'N/A' }
+            ];
+
+            if (!isEdulinkHosted && enrollmentLabel) {
+                infoItems.push({ label: 'Enrollment Type', value: enrollmentLabel });
+            }
+
+            if (isEdulinkHosted) {
+                infoItems.push({ label: 'Revenue Share', value: '10% to EDULINK · 90% to Institution' });
+            }
+
+            var infoHtml = infoItems.map(function(item) {
+                return `
+                    <div class="info-item">
+                        <div class="info-label">${item.label}</div>
+                        <div class="info-value">${item.value}</div>
+                    </div>
+                `;
+            }).join('');
+
+            var otherCourses = allCourses ? getOtherCourses(allCourses, course) : [];
+            var otherHtml = '';
+            if (otherCourses.length > 0) {
+                var otherItems = otherCourses.map(function(c) {
+                    var hostedLabel = c.hostedType === 'lanvai' || c.hostedType === 'edulink' ? '🚀 EDULINK' : '🏛️ Institution';
+                    var priceDisplay = c.price ? formatPrice(c.price) : 'Contact';
+                    return `
+                        <a href="coursedetail.html?id=${c.id}" class="other-course-item">
+                            <span class="oc-name">${c.name}</span>
+                            <div>
+                                <span class="oc-price">${priceDisplay}</span>
+                                <span class="oc-badge">${hostedLabel}</span>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+                otherHtml = `
+                    <div class="other-courses-section">
+                        <h3>🏫 Other Courses by ${course.institution}</h3>
+                        ${otherItems}
+                    </div>
+                `;
+            }
+
+            var topicsHtml = '';
+            if (isEdulinkHosted && course.topics && course.topics.length > 0) {
+                var topicItems = course.topics.map(function(t) {
+                    return `
+                        <div class="topic-item">
+                            <span class="topic-name">📘 ${t}</span>
+                        </div>
+                    `;
+                }).join('');
+                topicsHtml = `
+                    <div class="topics-section">
+                        <h3>📋 Course Topics</h3>
+                        ${topicItems}
+                    </div>
+                `;
+            }
+
+            var enrollmentHtml = '';
+            if (!isEdulinkHosted && course.enrollmentType) {
+                var etLabel = enrollmentLabels[course.enrollmentType] || course.enrollmentType;
+                enrollmentHtml = `
+                    <div class="enrollment-types-section">
+                        <h3>📋 Enrollment Details</h3>
+                        <div class="enrollment-type-group">
+                            <div class="et-name">${etLabel}</div>
+                            <div class="et-details">
+                                <span>💰 ${formatPrice(course.price)}</span>
+                                <span>📅 ${course.duration || 'N/A'} ${course.duration && course.duration > 1 ? 'years' : 'year'}</span>
+                                <span>📋 ${course.studyType || 'N/A'}</span>
+                                <span>📍 ${course.mode || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            var priceDisplay = course.price ? formatPrice(course.price) : 'Contact for pricing';
+            var priceLabel = isEdulinkHosted ? 'Full Program' : 'per year';
+
+            // Get plain price for payment
+            var plainPrice = course.price ? formatPricePlain(course.price) : '0';
+            var courseName = encodeURIComponent(course.name || 'Course');
+
+            container.innerHTML = `
+                <div class="course-detail-card">
+                    <div class="course-banner">
+                        <div>
+                            <span class="hosted-badge ${badgeClass}">${badgeText}</span>
+                            <h1 class="course-title">${course.name || 'Unnamed Course'}</h1>
+                            <div class="course-subtitle">${course.institution || 'Unknown Institution'} · ${course.category || 'General'}</div>
+                        </div>
+                        <div>
+                            <div class="course-price-large">
+                                ${priceDisplay}
+                                <span class="price-label">${priceLabel}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="course-content">
+                        <div class="course-left">
+                            <div class="institution-section">
+                                <div class="inst-header">
+                                    <div class="inst-logo">${isEdulinkHosted ? '🚀' : '🏛️'}</div>
+                                    <div>
+                                        <div class="inst-name">${course.institution || 'Unknown Institution'}</div>
+                                        <div class="inst-type">${isEdulinkHosted ? '🚀 EDULINK Hosted Partner' : '🏛️ Registered Institution'}</div>
+                                    </div>
+                                </div>
+                                <div class="inst-about">${course.about || 'No institution description available.'}</div>
+                            </div>
+
+                            <div class="course-info-section">
+                                <h3>📊 Course Information</h3>
+                                <div class="course-info-grid">
+                                    ${infoHtml}
+                                </div>
+                            </div>
+
+                            ${enrollmentHtml}
+
+                            <div class="course-description">
+                                <strong style="color:#dac9f0;">📝 About This Course</strong><br>
+                                ${course.description || 'No description available for this course.'}
+                            </div>
+
+                            ${topicsHtml}
+                            ${otherHtml}
+                        </div>
+
+                        <div class="course-right">
+                            <div class="action-card">
+                                <div class="price-display">
+                                    ${priceDisplay}
+                                    <small>${priceLabel}</small>
+                                </div>
+                                <div class="action-buttons">
+                                    <a href="payment.html?course_id=${course.id}&course_name=${courseName}&amount=${plainPrice}&currency=KES" class="buy-btn">
+                                        <i class="fas fa-shopping-cart"></i> Buy Now - ${priceDisplay}
+                                    </a>
+                                    <button class="wishlist-btn" id="wishlistBtn" onclick="handleWishlist('${course.id}')">
+                                        <i class="fas fa-heart"></i> Add to Wishlist
+                                    </button>
+                                    <button class="contact-btn" onclick="handleContact('${course.id}')">
+                                        <i class="fas fa-envelope"></i> Contact Institution
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="background:rgba(20,14,40,0.3); border-radius:12px; padding:1rem; border:1px solid rgba(160,120,200,0.04);">
+                                <div style="font-size:0.8rem; color:#7a6a94; text-align:center;">
+                                    <i class="fas fa-shield-alt"></i> Secure payment via M-Pesa & Card<br>
+                                    <span style="font-size:0.7rem;">All prices in Kenyan Shillings (KES)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            checkWishlistStatus(course.id);
+        }
+
+        // ===== HANDLE CONTACT =====
+        function handleContact(courseId) {
+            showToast('📧 Contact form will open for course ID: ' + courseId);
+        }
+
+        // ===== HANDLE WISHLIST =====
+        var wishlist = JSON.parse(localStorage.getItem('edulink_wishlist') || '[]');
+
+        function handleWishlist(courseId) {
+            var index = wishlist.indexOf(courseId);
+            var btn = document.getElementById('wishlistBtn');
+            
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<i class="fas fa-heart"></i> Add to Wishlist';
+                }
+                showToast('💔 Removed from wishlist');
+            } else {
+                wishlist.push(courseId);
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="fas fa-heart"></i> In Wishlist ❤️';
+                }
+                showToast('❤️ Added to your wishlist!');
+            }
+            localStorage.setItem('edulink_wishlist', JSON.stringify(wishlist));
+        }
+
+        function checkWishlistStatus(courseId) {
+            var btn = document.getElementById('wishlistBtn');
+            if (btn && wishlist.includes(courseId)) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-heart"></i> In Wishlist ❤️';
+            }
+        }
+
+        // ===== CHAT FUNCTIONALITY =====
+        (function() {
+            var W = document.getElementById('chatWindow');
+            var M = document.getElementById('chatMessages');
+            var I = document.getElementById('chatInput');
+            var S = document.getElementById('sendBtn');
+            var A = document.getElementById('authOverlay');
+            var Q = document.querySelectorAll('.quick-replies button');
+            var auth = false;
+            var person = false;
+
+            document.getElementById('chatToggle').addEventListener('click', function() {
+                var isOpen = W.style.display === 'block';
+                W.style.display = isOpen ? 'none' : 'block';
+                if (!isOpen) I.focus();
+            });
+
+            document.getElementById('chatClose').addEventListener('click', function() {
+                W.style.display = 'none';
+            });
+
+            function addMsg(t, c) {
+                var d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            function send() {
+                var t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                setTimeout(function() {
+                    addMsg('🤖 Thanks for your question! A course expert will get back to you shortly.', 'bot');
+                }, 500);
+            }
+
+            S.onclick = send;
+            I.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+            Q.forEach(function(b) {
+                b.onclick = function() {
+                    I.value = this.dataset.q;
+                    send();
+                };
+            });
+        })();
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            var courseId = getCourseIdFromURL();
+            console.log('🔍 Looking for course:', courseId);
+
+            if (!courseId) {
+                document.getElementById('courseDetailContainer').innerHTML = `
+                    <div class="course-detail-card" style="padding:3rem; text-align:center;">
+                        <div style="font-size:3rem; margin-bottom:1rem;">🔍</div>
+                        <h2 style="color:#f0ecf7;">No Course Selected</h2>
+                        <p style="color:#7a6a94;">Please select a course from the students page.</p>
+                        <a href="students.html" class="back-link" style="margin-top:1rem;">← Back to Course Search</a>
+                    </div>
+                `;
+                return;
+            }
+
+            fetch(API_BASE + '/courses', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data && data.courses) {
+                    var allCourses = data.courses;
+                    var course = allCourses.find(function(c) {
+                        return c.id == courseId || c.id === courseId;
+                    });
+                    
+                    if (course) {
+                        console.log('✅ Found course:', course.name);
+                        renderCourseDetail(course, allCourses);
+                        showToast('✅ ' + course.name + ' loaded successfully!');
+                    } else {
+                        return fetch(API_BASE + '/media/news?id=' + courseId, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(function(response) {
+                            if (!response.ok) return null;
+                            return response.json();
+                        })
+                        .then(function(newsData) {
+                            if (newsData && newsData.article) {
+                                var article = newsData.article;
+                                var courseFromArticle = {
+                                    id: article.id,
+                                    name: article.title,
+                                    institution: 'EDULINK Media',
+                                    category: article.category || 'General',
+                                    price: 0,
+                                    description: article.description,
+                                    hostedType: 'edulink',
+                                    about: 'Featured article from EDULINK Media',
+                                    studyType: 'N/A',
+                                    mode: 'N/A',
+                                    duration: 1,
+                                    branch: 'Online',
+                                    address: 'N/A',
+                                    topics: []
+                                };
+                                renderCourseDetail(courseFromArticle, allCourses);
+                                showToast('📰 ' + article.title);
+                            } else {
+                                document.getElementById('courseDetailContainer').innerHTML = `
+                                    <div class="course-detail-card" style="padding:3rem; text-align:center;">
+                                        <div style="font-size:3rem; margin-bottom:1rem;">❌</div>
+                                        <h2 style="color:#f0ecf7;">Course Not Found</h2>
+                                        <p style="color:#7a6a94;">The course with ID "${courseId}" doesn't exist.</p>
+                                        <a href="students.html" class="back-link" style="margin-top:1rem;">← Back to Course Search</a>
+                                    </div>
+                                `;
+                                showToast('❌ Course not found', true);
+                            }
+                        });
+                    }
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading course details:', error);
+                document.getElementById('courseDetailContainer').innerHTML = `
+                    <div class="course-detail-card" style="padding:3rem; text-align:center;">
+                        <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
+                        <h2 style="color:#f0ecf7;">Error Loading Course</h2>
+                        <p style="color:#7a6a94;">${error.message}</p>
+                        <a href="students.html" class="back-link" style="margin-top:1rem;">← Back to Course Search</a>
+                    </div>
+                `;
+                showToast('❌ Error loading course: ' + error.message, true);
+            });
+        });
+    </script>
+
+    <!-- Tracking Script -->
+    <script>
+        (function() {
+            var API_BASE = '/api';
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var data = {
+                    pageUrl: window.location.pathname || '/',
+                    pageTitle: document.title || 'Unknown Page',
+                    referrerUrl: document.referrer || ''
+                };
+                
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            }
+
+            function setupClickTracking() {
+                document.addEventListener('click', function(e) {
+                    var target = e.target;
+                    var data = {
+                        elementId: target.id || '',
+                        elementClass: target.className || '',
+                        elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                        pageUrl: window.location.pathname || '/'
+                    };
+                    
+                    if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                        target.closest('a') || target.closest('button')) {
+                        fetch(API_BASE + '/track/click', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        }).catch(function() {});
+                    }
+                });
+            }
+
+            trackPageView();
+            setupClickTracking();
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDULINK | Institution Course Submission</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            color: #f0ecf7;
+        }
+
+        /* Toast */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast-notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        /* Form Card */
+        .form-card {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(30, 22, 50, 0.3);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 24px;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            color: #f2ecff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .form-header h1 a {
+            color: #b69bdb;
+            text-decoration: none;
+            font-size: 1.6rem;
+            transition: 0.2s;
+        }
+        .form-header h1 a:hover {
+            color: #d4bbf5;
+        }
+        .form-header p {
+            color: #b8aad0;
+            font-size: 1rem;
+            margin-top: 0.2rem;
+        }
+
+        /* ===== TWO-COLUMN GRID LAYOUT ===== */
+        .form-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem 1.8rem;
+        }
+
+        .form-grid-2col .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #b8aad0;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        .form-group label .required {
+            color: #f87171;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 0.9rem;
+            background: rgba(12, 8, 24, 0.6);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 10px;
+            color: #f0eaff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.25s;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #7a6a94;
+        }
+        .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .form-group select option {
+            background: #1b142b;
+            color: #eae0f5;
+        }
+
+        .logo-upload {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .logo-upload input[type="file"] {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.4rem;
+            background: rgba(12, 8, 24, 0.4);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 10px;
+            color: #b8aad0;
+            font-size: 0.8rem;
+        }
+        .logo-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: rgba(20, 14, 40, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #7a6a94;
+            overflow: hidden;
+        }
+        .logo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* CHECKBOX STYLES */
+        .same-as-institution {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
+            padding: 0.3rem 0.6rem;
+            background: rgba(130, 80, 190, 0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(160, 120, 200, 0.1);
+        }
+        .same-as-institution input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #7d56b5;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .same-as-institution label {
+            font-size: 0.75rem;
+            color: #b8aad0;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+        .same-as-institution label i {
+            color: #7d56b5;
+            margin-right: 4px;
+        }
+        .same-as-institution .copied-indicator {
+            font-size: 0.65rem;
+            color: #4ade80;
+            display: none;
+        }
+        .same-as-institution .copied-indicator.show {
+            display: inline;
+        }
+
+        /* Certification Body Field */
+        .certification-body-group {
+            display: none;
+            margin-top: 0.3rem;
+            animation: slideDown 0.3s ease;
+        }
+        .certification-body-group.visible {
+            display: block;
+        }
+        .certification-body-group input {
+            width: 100%;
+            padding: 0.4rem 0.8rem;
+            background: rgba(12, 8, 24, 0.4);
+            border: 1px solid rgba(74, 222, 128, 0.15);
+            border-radius: 8px;
+            color: #f0eaff;
+            font-size: 0.8rem;
+            outline: none;
+            transition: 0.25s;
+        }
+        .certification-body-group input:focus {
+            border-color: #4ade80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+        }
+        .certification-body-group input::placeholder {
+            color: #7a6a94;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+        .section-divider h2 {
+            font-size: 1.2rem;
+            color: #dac9f0;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .section-divider hr {
+            flex: 1;
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(160, 120, 200, 0.3), transparent);
+        }
+        .section-divider .section-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Branch Card - compact */
+        .branch-card {
+            background: rgba(40, 30, 65, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.15);
+            border-radius: 16px;
+            padding: 1rem 1.2rem 0.8rem 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .branch-title {
+            font-size: 0.95rem;
+            color: #dac9f0;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .branch-address-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+        }
+        .branch-address-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .branch-location-btn {
+            background: rgba(60, 160, 220, 0.2);
+            border: 1px solid rgba(60, 160, 220, 0.3);
+            color: #8fcbff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .branch-location-btn:hover {
+            background: rgba(60, 160, 220, 0.3);
+            border-color: #5bb0ff;
+            color: white;
+        }
+        .branch-location-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .branch-location-status {
+            font-size: 0.65rem;
+            color: #8fcbff;
+            margin-top: 0.1rem;
+        }
+
+        .branch-social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.4rem;
+        }
+        .branch-social-field {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 8px;
+            padding: 0.05rem 0.05rem 0.05rem 0.4rem;
+            transition: 0.25s;
+        }
+        .branch-social-field:focus-within {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.2);
+        }
+        .branch-social-field .social-icon {
+            font-size: 0.8rem;
+            min-width: 18px;
+            text-align: center;
+        }
+        .branch-social-field input {
+            border: none;
+            background: transparent;
+            padding: 0.3rem 0.3rem 0.3rem 0.1rem;
+            flex: 1;
+            color: #f0eaff;
+            font-size: 0.75rem;
+            outline: none;
+            min-width: 40px;
+        }
+        .branch-social-field input::placeholder {
+            color: #7a6a94;
+            font-size: 0.65rem;
+        }
+        .branch-social-field .social-label {
+            font-size: 0.55rem;
+            color: #7a6a94;
+            opacity: 0.6;
+            min-width: 20px;
+        }
+
+        .add-branch-btn {
+            background: rgba(130, 80, 190, 0.25);
+            border: 1px solid rgba(170, 130, 220, 0.3);
+            color: #cfbcfa;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.3rem;
+        }
+        .add-branch-btn:hover {
+            background: rgba(160, 110, 220, 0.3);
+            border-color: #b18be0;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .saved-branches-horizontal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.4rem 0 0.6rem 0;
+            padding: 0.4rem 0.6rem;
+            background: rgba(20, 14, 40, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            min-height: 32px;
+            align-items: center;
+        }
+        .saved-branches-horizontal .empty-msg {
+            color: #7a6a94;
+            font-size: 0.8rem;
+            width: 100%;
+            text-align: center;
+        }
+        .branch-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(130, 80, 190, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            border: 1px solid rgba(160, 120, 200, 0.15);
+            font-size: 0.75rem;
+            color: #cfbcfa;
+        }
+        .branch-tag .remove-tag {
+            cursor: pointer;
+            color: #b08acf;
+            font-size: 0.8rem;
+            transition: 0.2s;
+            background: none;
+            border: none;
+        }
+        .branch-tag .remove-tag:hover {
+            color: #f58aae;
+        }
+
+        /* Course Block - compact */
+        .course-block {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+        .course-block .remove-course {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            background: transparent;
+            border: none;
+            color: #b08acf;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .course-block .remove-course:hover {
+            color: #f58aae;
+            transform: scale(1.2);
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem;
+        }
+        .course-grid .form-group {
+            margin-bottom: 0;
+        }
+        .course-grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        .course-grid-2col .form-group {
+            margin-bottom: 0;
+        }
+
+        /* Dynamic sub-forms */
+        .pacing-subform {
+            margin-top: 0.6rem;
+            padding: 0.6rem 0.8rem;
+            background: rgba(20, 14, 40, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            display: none;
+        }
+        .pacing-subform.visible {
+            display: block;
+        }
+        .pacing-subform .subform-title {
+            font-size: 0.75rem;
+            color: #b8aad0;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+        .pacing-subform .topic-entry {
+            background: rgba(12, 8, 24, 0.3);
+            border-radius: 8px;
+            padding: 0.4rem 0.6rem;
+            margin-bottom: 0.4rem;
+            border: 1px solid rgba(160, 120, 200, 0.06);
+        }
+        .pacing-subform .topic-entry .topic-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.4rem;
+        }
+        .pacing-subform .topic-entry .topic-row .form-group {
+            margin-bottom: 0;
+        }
+        .pacing-subform .topic-entry .topic-row input,
+        .pacing-subform .topic-entry .topic-row select {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.5rem;
+        }
+        .pacing-subform .topic-entry .topic-row label {
+            font-size: 0.65rem;
+        }
+        .add-topic-btn {
+            background: rgba(130, 80, 190, 0.15);
+            border: 1px solid rgba(170, 130, 220, 0.2);
+            color: #cfbcfa;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            margin-top: 0.1rem;
+        }
+        .add-topic-btn:hover {
+            background: rgba(160, 110, 220, 0.2);
+            color: white;
+        }
+        .remove-topic {
+            background: transparent;
+            border: none;
+            color: #b08acf;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 0 0.2rem;
+        }
+        .remove-topic:hover {
+            color: #f58aae;
+        }
+
+        .add-course-btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.25);
+            color: #cfbcfa;
+            padding: 0.25rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.2rem;
+        }
+        .add-course-btn:hover {
+            background: rgba(160, 110, 220, 0.25);
+            border-color: #b18be0;
+            color: white;
+        }
+
+        .enrollment-section {
+            background: rgba(30, 22, 50, 0.5);
+            border-radius: 12px;
+            padding: 0.6rem 0.8rem 0.4rem 0.8rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            transition: 0.2s;
+        }
+        .enrollment-section:hover {
+            border-color: rgba(160, 120, 200, 0.25);
+            background: rgba(30, 22, 50, 0.6);
+        }
+        .enrollment-type-label {
+            font-size: 0.85rem;
+            color: #e0d0ee;
+            font-weight: 600;
+            margin: 0 0 0.3rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .enrollment-type-label i {
+            font-size: 1rem;
+        }
+        .enrollment-type-label .type-badge {
+            font-size: 0.55rem;
+            background: rgba(130, 80, 190, 0.3);
+            padding: 0.05rem 0.4rem;
+            border-radius: 10px;
+            color: #b08acf;
+            font-weight: 400;
+        }
+        .enrollment-section .add-course-btn {
+            margin-top: 0.1rem;
+        }
+
+        /* Enrollment types grid - 4 columns for compact display */
+        .enrollment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(145deg, #4ade80, #22a65e);
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0e0a1a;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+        .submit-btn:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+        }
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        #formFeedback {
+            margin-top: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            background: rgba(74, 222, 128, 0.05);
+            border: 1px solid rgba(74, 222, 128, 0.1);
+            color: #b8aad0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.08);
+            color: #5e4d78;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid-2col {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            .enrollment-grid {
+                grid-template-columns: 1fr;
+            }
+            .branch-social-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .pacing-subform .topic-entry .topic-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+            .course-grid-2col {
+                grid-template-columns: 1fr;
+            }
+            .branch-address-row {
+                grid-template-columns: 1fr;
+            }
+            .branch-social-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-card {
+                padding: 0.8rem;
+            }
+            .form-header h1 {
+                font-size: 1.2rem;
+            }
+            body {
+                padding: 0.8rem;
+            }
+            .enrollment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Chat styles (unchanged, compact) */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        .chat-toggle {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 60px;
+            padding: 0.6rem 1.2rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 30px rgba(125, 86, 181, 0.4);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+        }
+        .chat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(125, 86, 181, 0.5);
+        }
+        .chat-toggle .badge {
+            background: #4ade80;
+            color: #0e0a1a;
+            font-size: 0.55rem;
+            padding: 0.05rem 0.4rem;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+        .chat-window {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 340px;
+            max-width: 90vw;
+            background: rgba(22, 18, 38, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(160, 120, 200, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: chatSlideUp 0.3s ease;
+        }
+        .chat-window.open {
+            display: block;
+        }
+        @keyframes chatSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            background: rgba(40, 30, 65, 0.5);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.08);
+        }
+        .chat-header h3 {
+            font-size: 0.9rem;
+            color: #f0ecf7;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin: 0;
+        }
+        .chat-header .online-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.4;
+            }
+        }
+        .chat-close {
+            background: transparent;
+            border: none;
+            color: #b08acf;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.1rem 0.3rem;
+            border-radius: 6px;
+        }
+        .chat-close:hover {
+            color: #f58aae;
+            background: rgba(245, 138, 174, 0.1);
+        }
+        .chat-messages {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.5rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .chat-messages .msg {
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .chat-messages .msg.bot {
+            background: rgba(40, 30, 65, 0.5);
+            color: #e8ddf5;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-messages .msg.user {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-messages .msg.system {
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80;
+            align-self: center;
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 16px;
+            max-width: 95%;
+        }
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.2rem;
+            padding: 0.3rem 0.8rem 0.5rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+        .quick-replies button {
+            background: rgba(40, 30, 65, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.12);
+            border-radius: 30px;
+            padding: 0.15rem 0.6rem;
+            font-size: 0.65rem;
+            color: #cfbcf5;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quick-replies button:hover {
+            background: rgba(60, 40, 90, 0.5);
+            border-color: rgba(160, 120, 200, 0.25);
+            color: white;
+        }
+        .auth-overlay {
+            display: none;
+            padding: 0.6rem;
+            background: rgba(20, 14, 40, 0.8);
+            text-align: center;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+        }
+        .auth-overlay.show {
+            display: block;
+        }
+        .auth-overlay .auth-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+        .auth-overlay h4 {
+            color: #dac9f0;
+            font-size: 0.85rem;
+            margin-bottom: 0.1rem;
+        }
+        .auth-overlay p {
+            color: #7a6a94;
+            font-size: 0.7rem;
+            margin-bottom: 0.4rem;
+        }
+        .auth-btns {
+            display: flex;
+            gap: 0.4rem;
+            justify-content: center;
+        }
+        .auth-btns button {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.7rem;
+        }
+        .auth-btns .login-btn {
+            background: rgba(130, 80, 190, 0.2);
+            border: 1px solid rgba(170, 130, 220, 0.2);
+            color: #cfbcfa;
+        }
+        .auth-btns .login-btn:hover {
+            background: rgba(160, 110, 220, 0.2);
+        }
+        .auth-btns .register-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            color: white;
+        }
+        .auth-btns .register-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+        .chat-footer {
+            display: flex;
+            gap: 0.3rem;
+            padding: 0.4rem 0.8rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.06);
+            background: rgba(12, 8, 24, 0.3);
+        }
+        .chat-footer input {
+            flex: 1;
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            background: rgba(12, 8, 24, 0.5);
+            color: #f0eaff;
+            font-size: 0.8rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .chat-footer input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+        .chat-footer input::placeholder {
+            color: #7a6a94;
+        }
+        .chat-footer .send-btn {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            border-radius: 30px;
+            padding: 0.4rem 1rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+        .chat-footer .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(125, 86, 181, 0.3);
+        }
+        @media (max-width: 600px) {
+            .chat-window {
+                width: 100vw;
+                max-width: 100vw;
+                bottom: 60px;
+                right: -10px;
+                border-radius: 16px 16px 0 0;
+            }
+            .chat-toggle {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-card">
+        <div class="form-header">
+            <h1>
+                <a href="institution.html">⬅️</a> 🏛️ Institution Course Registration
+            </h1>
+            <p>Fill in your institution details to list courses on EDULINK</p>
+        </div>
+
+        <form id="institutionForm">
+            <!-- ===== TWO-COLUMN GRID ===== -->
+            <div class="form-grid-2col">
+
+                <!-- Left Column: Institution Details -->
+                <div>
+                    <div class="form-group">
+                        <label>Institution Name <span class="required">*</span></label>
+                        <input type="text" id="instName" placeholder="e.g. EDULINK Tech Academy" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Institution Logo</label>
+                        <div class="logo-upload">
+                            <input type="file" id="logoInput" accept="image/*">
+                            <div class="logo-preview" id="logoPreview">📷 Logo</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>About Institution <span class="required">*</span></label>
+                        <textarea id="instAbout" placeholder="Tell us about your institution, mission, vision, etc." required></textarea>
+                    </div>
+                </div>
+
+                <!-- Right Column: Contact & Achievements -->
+                <div>
+                    <div class="form-group">
+                        <label>Achievements &amp; Accreditations</label>
+                        <textarea id="instAchievements" placeholder="Notable achievements, accreditations, awards, partnerships..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Institution Email <span class="required">*</span></label>
+                        <input type="email" id="instEmail" placeholder="contact@institution.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Website Link</label>
+                        <input type="url" id="instWebsite" placeholder="https://www.institution.com">
+                    </div>
+                </div>
+
+                <!-- ===== BRANCHES SECTION - Full Width ===== -->
+                <div class="full-width">
+                    <div class="section-divider">
+                        <span class="section-icon">🏫</span>
+                        <h2>Branches / Campuses</h2>
+                        <hr>
+                    </div>
+
+                    <div style="margin-top: 0.3rem;">
+                        <small style="color: rgba(200, 170, 220, 0.5); display:block; margin-bottom:0.5rem;">Add branches with their details. Each branch can have its own logo and website.</small>
+
+                        <div id="branchFormContainer">
+                            <div class="branch-card" id="branchFormCard">
+                                <div class="branch-title"><i>📍</i> Add New Branch</div>
+
+                                <div class="form-grid-2col" style="gap:0.6rem;">
+                                    <div class="form-group">
+                                        <label style="font-size:0.75rem; opacity:0.7;">Branch Name <span class="required">*</span></label>
+                                        <input type="text" id="branchNameInput" placeholder="e.g. Nairobi Campus" required style="font-size:0.85rem;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:0.75rem; opacity:0.7;">Branch Website</label>
+                                        <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                                            <input type="url" id="branchWebsite" placeholder="https://campus.institution.com" style="font-size:0.85rem;">
+                                            <div class="same-as-institution">
+                                                <input type="checkbox" id="sameWebsiteCheckbox">
+                                                <label for="sameWebsiteCheckbox"><i class="fas fa-copy"></i> Same as Institution Website</label>
+                                                <span class="copied-indicator" id="websiteCopiedIndicator">✅ Copied</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:0.75rem; opacity:0.7;">Branch Logo</label>
+                                        <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                                            <div class="logo-upload">
+                                                <input type="file" id="branchLogoInput" accept="image/*" style="font-size:0.75rem;">
+                                                <div class="logo-preview" id="branchLogoPreview" style="width:40px;height:40px;">📷</div>
+                                            </div>
+                                            <div class="same-as-institution">
+                                                <input type="checkbox" id="sameLogoCheckbox">
+                                                <label for="sameLogoCheckbox"><i class="fas fa-copy"></i> Same as Institution Logo</label>
+                                                <span class="copied-indicator" id="logoCopiedIndicator">✅ Copied</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:0.75rem; opacity:0.7;">Branch Address</label>
+                                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem;">
+                                            <input type="text" id="branchManualAddress" placeholder="Manual address" style="font-size:0.8rem;">
+                                            <div style="display:flex; gap:0.3rem; align-items:center;">
+                                                <input type="text" id="branchAutoAddress" placeholder="GPS" style="flex:1; font-size:0.75rem;" readonly>
+                                                <button type="button" class="branch-location-btn" id="branchLocationBtn" style="font-size:0.65rem;">📍</button>
+                                            </div>
+                                        </div>
+                                        <div class="branch-location-status" id="branchLocationStatus"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-top:0.3rem;">
+                                    <label style="font-size:0.75rem; opacity:0.7;">Branch Social Media</label>
+                                    <div class="branch-social-grid">
+                                        <div class="branch-social-field"><span class="social-icon">💬</span><span class="social-label">WA</span><input type="text" id="branchSocialWA" placeholder="WhatsApp"></div>
+                                        <div class="branch-social-field"><span class="social-icon">📸</span><span class="social-label">IG</span><input type="text" id="branchSocialIG" placeholder="@instagram"></div>
+                                        <div class="branch-social-field"><span class="social-icon">💼</span><span class="social-label">LI</span><input type="text" id="branchSocialLI" placeholder="LinkedIn"></div>
+                                        <div class="branch-social-field"><span class="social-icon">🐦</span><span class="social-label">X</span><input type="text" id="branchSocialTW" placeholder="@twitter"></div>
+                                        <div class="branch-social-field"><span class="social-icon">✈️</span><span class="social-label">TG</span><input type="text" id="branchSocialTG" placeholder="@telegram"></div>
+                                        <div class="branch-social-field"><span class="social-icon">📘</span><span class="social-label">FB</span><input type="text" id="branchSocialFB" placeholder="Facebook"></div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="add-branch-btn" id="addBranchBtn">➕ Add Branch</button>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 0.3rem;">
+                            <label style="font-size:0.8rem; color:#b8aad0;">Added Branches:</label>
+                            <div class="saved-branches-horizontal" id="savedBranchesList">
+                                <span class="empty-msg">No branches added yet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== COURSE ENROLLMENT TYPES - Full Width ===== -->
+                <div class="full-width">
+                    <div class="section-divider" style="margin-top: 0.8rem;">
+                        <span class="section-icon">📚</span>
+                        <h2>Course Enrollment Types</h2>
+                        <hr>
+                    </div>
+
+                    <small style="color: rgba(200, 170, 220, 0.6); display:block; margin-bottom:0.6rem;">Add courses for any enrollment type. You can fill one or all — only filled types will be saved.</small>
+
+                    <div class="enrollment-grid">
+                        <!-- 8 Enrollment type sections in 2 columns -->
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>🔄</i> Online Rolling Fulltime <span class="type-badge">rolling</span></div>
+                            <div class="branch-enroll-container" data-enroll="onlineRollingFulltime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="onlineRollingFulltime">➕ Add Course</button>
+                        </div>
+
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>🔄</i> Online Rolling Parttime <span class="type-badge">rolling</span></div>
+                            <div class="branch-enroll-container" data-enroll="onlineRollingParttime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="onlineRollingParttime">➕ Add Course</button>
+                        </div>
+
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>📅</i> Online Intake Fulltime <span class="type-badge">intake</span></div>
+                            <div class="branch-enroll-container" data-enroll="onlineIntakeFulltime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="onlineIntakeFulltime">➕ Add Course</button>
+                        </div>
+
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>📅</i> Online Intake Parttime <span class="type-badge">intake</span></div>
+                            <div class="branch-enroll-container" data-enroll="onlineIntakeParttime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="onlineIntakeParttime">➕ Add Course</button>
+                        </div>
+
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>🏫</i> Physical Rolling Fulltime <span class="type-badge">rolling</span></div>
+                            <div class="branch-enroll-container" data-enroll="physicalRollingFulltime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="physicalRollingFulltime">➕ Add Course</button>
+                        </div>
+
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>🏫</i> Physical Rolling Parttime <span class="type-badge">rolling</span></div>
+                            <div class="branch-enroll-container" data-enroll="physicalRollingParttime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="physicalRollingParttime">➕ Add Course</button>
+                        </div>
+
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>🏛️</i> Physical Intake Fulltime <span class="type-badge">intake</span></div>
+                            <div class="branch-enroll-container" data-enroll="physicalIntakeFulltime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="physicalIntakeFulltime">➕ Add Course</button>
+                        </div>
+
+                        <div class="enrollment-section">
+                            <div class="enrollment-type-label"><i>🏛️</i> Physical Intake Parttime <span class="type-badge">intake</span></div>
+                            <div class="branch-enroll-container" data-enroll="physicalIntakeParttime"></div>
+                            <button type="button" class="add-course-btn" data-enroll="physicalIntakeParttime">➕ Add Course</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">📤 Submit All Branches & Courses</button>
+                </div>
+
+            </div><!-- end form-grid-2col -->
+        </form>
+
+        <div id="formFeedback"></div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 EDULINK | Smart Solutions for Smart Learners</p>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- ===== CHAT ===== -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>EDULINK Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Welcome to EDULINK! I'm here to help with courses, institutions, library, and study abroad. What would you like to know?</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What is EDULINK?">🏠 About</button>
+                <button data-q="How do I find courses?">🎓 Courses</button>
+                <button data-q="Register institution">🏛️ Institution</button>
+                <button data-q="Library services">📖 Library</button>
+                <button data-q="Study abroad">🌍 Uni Abroad</button>
+                <button data-q="Contact support">📧 Contact</button>
+            </div>
+            <div class="auth-overlay" id="authOverlay">
+                <div class="auth-icon">🔒</div>
+                <h4>Connect to a Live Person</h4>
+                <p>Please login or register to chat with a live agent.</p>
+                <div class="auth-btns">
+                    <button class="login-btn" id="loginBtn">🔑 Login</button>
+                    <button class="register-btn" id="registerBtn">📝 Register</button>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything about EDULINK...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script>
+        // ==============================================
+        // CHAT FUNCTIONALITY (unchanged)
+        // ==============================================
+        (function() {
+            const W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn'),
+                A = document.getElementById('authOverlay'),
+                Q = document.querySelectorAll('.quick-replies button');
+            let open = !1,
+                auth = !1;
+
+            const KB = {
+                'edulink about platform company': `🏫 **About EDULINK**\n\nEDULINK is a dedicated educational platform focused on connecting students with quality learning opportunities and helping institutions reach more learners.\n\n**Our Education Services:**\n\n1️⃣ **Students 🎓** - Search and enroll in courses from various institutions\n2️⃣ **Institution Registration 🏛️** - Schools and training centers can register and list courses\n3️⃣ **Library 📖** - Access a wide range of educational materials\n4️⃣ **Study Abroad 🌍** - International university opportunities\n\n**Our Mission:** Making quality education accessible to everyone.`,
+                'students page search courses enroll find': `🎓 **Students Page - Course Search**\n\n**How to Find Courses:**\n1. Go to Students page\n2. Type your desired course in the search bar\n3. Click Search or press Enter\n4. View institutions offering that course\n5. Click "Enroll now" to start enrollment\n\n**Available Institutions:**\n• EDULINK Tech Academy - Data Science, AI, Full Stack, UI/UX\n• Nairobi Digital Institute - Digital Marketing, Graphic Design, Web Dev\n• Crestview University - Business Admin, Economics, Data Analytics\n• Innovation Hub Lagos - Product Design, Mobile Dev, Cloud Computing\n• Global School of Design - Fashion Design, Interior Design, Animation\n• CodeCraft Academy - Python, JavaScript, React, Node.js, DevOps\n• Eco Business School - Sustainability, Green Finance, ESG\n\n**Course Categories:** Technology, Business, Design, Programming, Marketing, Data Science\n\n**Enrollment Process:** Click "Enroll now" → Institution contacts you → Complete registration`,
+                'institution registration form register': `🏛️ **Institution Registration - Complete Guide**\n\nRegister your institution to list courses on EDULINK.\n\n**Form Fields:**\n\n📋 **Institution Details:**\n• Institution Name (required)\n• Branches/Campuses (required)\n• Institution Logo\n• Email (required)\n• Website\n• Social Handles\n\n📚 **Courses:**\n• Courses Offered (comma separated)\n• Course Mode - Online, Offline, Hybrid\n• Intake Date\n• Study Type - Full-time, Part-time, Both\n• Cluster Points (optional)\n• Period (years) - required\n• Cost Per Year (USD) - required\n• Category - Degree, Diploma, Certificate, Professional, Short Course\n• Branch Offering\n\n**Review takes 2-5 business days.**`,
+                'library read free buy sell books': `📖 **EDULINK Digital Library**\n\n**1️⃣ Read Free Content 📚**\n20+ categories at no cost:\n• Novels, Short Stories, Poems\n• Tongue Twisters, Classic Literature\n• Adventure, Fantasy, Science Fiction\n• Detective, Children's Books\n• Historical, Philosophy, Drama\n• Essays, Biography, Fairytales\n• Religion, Romance, Mystery\n• Professional Literature\n\n**2️⃣ Buy Written Content 🛒**\nFeatured Books:\n• The Alchemist - Adventure ($12.99)\n• Dune - Science Fiction ($18.50)\n• Pride and Prejudice - Classic ($9.99)\n• Sherlock Holmes - Detective ($14.20)\n• Harry Potter - Fantasy ($22.00)\n• The Hobbit - Adventure ($11.40)\n• 1984 - Science Fiction ($10.99)\n• Little Women - Classic ($8.75)\n\n**3️⃣ Sell Your Written Content ✍️**\n• You must be the author\n• 10% revenue share to EDULINK\n• You keep 90% of all sales`,
+                'study abroad universities international': `🌍 **Study Abroad**\n\n**Partner Universities:**\n🇬🇧 University of London - UK (QS #45)\n🇺🇸 Harvard University - USA (QS #5)\n🇨🇦 University of Toronto - Canada (QS #21)\n🇦🇺 University of Melbourne - Australia (QS #33)\n🇩🇪 Technical University of Munich - Germany (QS #49)\n🇳🇱 University of Amsterdam - Netherlands (QS #55)\n🇫🇷 Sorbonne University - France (QS #75)\n🇸🇬 National University of Singapore - Singapore (QS #11)\n\n**Services:**\n• Scholarships Available\n• 50+ Countries\n• Free Application Support\n• Accommodation Assistance\n• Visa Guidance\n• Internship Opportunities`,
+                'contact support email phone location': `📧 **Contact Us**\n\n**Visit Us:**\nThika Road Wendani, Nairobi, Kenya\n\n**Call Us:**\n+254 794914597\n+254 758887164\n\n**Email Us:**\nedulink254@edulink.com\nsupport@edulink.com\n\n**FAQs:**\n• Response time: Within 24 hours\n• Free consultation: 30-minute initial consultation\n• Payment methods: Bank transfers, M-Pesa, Credit Cards, PayPal`
+            };
+
+            function findAnswer(q) {
+                q = q.toLowerCase();
+                if (q.includes('person') || q.includes('agent') || q.includes('live')) return 'person';
+                for (let [keys, val] of Object.entries(KB)) {
+                    let k = keys.split(' ');
+                    for (let word of k) {
+                        if (q.includes(word) || word.includes(q.split(' ')[0])) return val;
+                    }
+                }
+                const courses = ['data science', 'programming', 'design', 'marketing', 'development', 'ai', 'machine learning',
+                    'business', 'analytics', 'cybersecurity', 'cloud', 'blockchain', 'python', 'javascript', 'react',
+                    'node', 'devops', 'full stack', 'ui/ux', 'graphic', 'web', 'mobile', 'sustainability', 'finance', 'esg'
+                ];
+                for (let c of courses) {
+                    if (q.includes(c)) {
+                        return `📚 **${c.charAt(0).toUpperCase()+c.slice(1)} Courses** available! Go to Students page and search "${c}" to see institutions offering this course.`;
+                    }
+                }
+                return `I can help with: 🏠 About EDULINK | 🎓 Courses | 🏛️ Institution | 📖 Library | 🌍 Study Abroad | 📧 Contact. What would you like to know?`;
+            }
+
+            function send() {
+                let t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                let r = findAnswer(t);
+                if (r === 'person') {
+                    if (auth) {
+                        addMsg('🟢 Connecting to agent...', 'system');
+                        setTimeout(() => { addMsg('👤 Agent: How can I help you?', 'bot');
+                            A.classList.remove('show'); }, 1200);
+                    } else {
+                        A.classList.add('show');
+                        I.disabled = S.disabled = !0;
+                        addMsg('🔐 Please login or register to connect with a live person.', 'system');
+                    }
+                    return;
+                }
+                setTimeout(() => addMsg(r, 'bot'), 300 + Math.random() * 500);
+            }
+
+            function addMsg(t, c) {
+                let d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            T.onclick = () => { open = !open;
+                W.classList.toggle('open', open); if (open) I.focus(); };
+            C.onclick = () => { open = !1;
+                W.classList.remove('open'); };
+            document.onkeydown = e => { if (e.key === 'Escape' && open) { open = !1;
+                    W.classList.remove('open'); } };
+            S.onclick = send;
+            I.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault();
+                    send(); } };
+            Q.forEach(b => b.onclick = () => { I.value = b.dataset.q;
+                send(); });
+            document.getElementById('loginBtn').onclick = () => { auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Logged in! You can now connect to a live person.', 'system'); };
+            document.getElementById('registerBtn').onclick = () => { auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Registered! You can now connect to a live person.', 'system'); };
+            I.disabled = S.disabled = !1;
+            setTimeout(() => addMsg('💡 Ask about: Courses, Institution Registration, Library, or Study Abroad!', 'system'),
+                1200);
+        })();
+    </script>
+
+    <script>
+        // ==============================================
+        // MAIN FORM LOGIC - WITH CERTIFICATION BODY FIELD
+        // ==============================================
+
+        (function() {
+            // ----- TOAST -----
+            function showToast(message, isError) {
+                isError = isError || false;
+                var toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = 'toast-notification' + (isError ? ' error' : '');
+                setTimeout(function() { toast.classList.add('show'); }, 10);
+                setTimeout(function() { toast.classList.remove('show'); }, 3000);
+            }
+
+            // ----- GET INSTITUTION VALUES -----
+            function getInstitutionValues() {
+                return {
+                    website: document.getElementById('instWebsite').value.trim(),
+                    logoFile: document.getElementById('logoInput').files[0] || null,
+                    logoName: document.getElementById('logoInput').files[0] ? document.getElementById('logoInput').files[0]
+                        .name : ''
+                };
+            }
+
+            // ===== SAME AS INSTITUTION - WEBSITE =====
+            var sameWebsiteCheckbox = document.getElementById('sameWebsiteCheckbox');
+            var branchWebsiteInput = document.getElementById('branchWebsite');
+            var websiteCopiedIndicator = document.getElementById('websiteCopiedIndicator');
+
+            sameWebsiteCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    var instWebsite = document.getElementById('instWebsite').value.trim();
+                    if (instWebsite) {
+                        branchWebsiteInput.value = instWebsite;
+                        websiteCopiedIndicator.classList.add('show');
+                        setTimeout(function() {
+                            websiteCopiedIndicator.classList.remove('show');
+                        }, 2000);
+                        showToast('✅ Branch website copied from institution');
+                    } else {
+                        showToast('⚠️ Please enter institution website first.', true);
+                        this.checked = false;
+                    }
+                } else {
+                    branchWebsiteInput.value = '';
+                    websiteCopiedIndicator.classList.remove('show');
+                }
+            });
+
+            // Also update when institution website changes
+            document.getElementById('instWebsite').addEventListener('input', function() {
+                if (sameWebsiteCheckbox.checked && this.value.trim()) {
+                    branchWebsiteInput.value = this.value.trim();
+                }
+            });
+
+            // ===== SAME AS INSTITUTION - LOGO =====
+            var sameLogoCheckbox = document.getElementById('sameLogoCheckbox');
+            var branchLogoInput = document.getElementById('branchLogoInput');
+            var branchLogoPreview = document.getElementById('branchLogoPreview');
+            var logoCopiedIndicator = document.getElementById('logoCopiedIndicator');
+
+            sameLogoCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    var instLogoInput = document.getElementById('logoInput');
+                    if (instLogoInput.files && instLogoInput.files.length > 0) {
+                        var file = instLogoInput.files[0];
+                        var dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        branchLogoInput.files = dataTransfer.files;
+
+                        var reader = new FileReader();
+                        reader.onload = function(ev) {
+                            branchLogoPreview.innerHTML = '<img src="' + ev.target.result + '" alt="Branch Logo" style="width:100%;height:100%;object-fit:contain;">';
+                        };
+                        reader.readAsDataURL(file);
+
+                        logoCopiedIndicator.classList.add('show');
+                        setTimeout(function() {
+                            logoCopiedIndicator.classList.remove('show');
+                        }, 2000);
+                        showToast('✅ Branch logo copied from institution');
+                    } else {
+                        showToast('⚠️ Please upload institution logo first.', true);
+                        this.checked = false;
+                    }
+                } else {
+                    branchLogoInput.value = '';
+                    branchLogoPreview.innerHTML = '📷';
+                    logoCopiedIndicator.classList.remove('show');
+                }
+            });
+
+            // Also update when institution logo changes
+            document.getElementById('logoInput').addEventListener('change', function() {
+                if (sameLogoCheckbox.checked && this.files && this.files.length > 0) {
+                    var file = this.files[0];
+                    var dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    branchLogoInput.files = dataTransfer.files;
+
+                    var reader = new FileReader();
+                    reader.onload = function(ev) {
+                        branchLogoPreview.innerHTML = '<img src="' + ev.target.result + '" alt="Branch Logo" style="width:100%;height:100%;object-fit:contain;">';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ----- LOGO PREVIEW (Institution) -----
+            var logoInput = document.getElementById('logoInput');
+            var logoPreview = document.getElementById('logoPreview');
+            logoInput.addEventListener('change', function(e) {
+                var file = this.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(ev) {
+                        logoPreview.innerHTML = '<img src="' + ev.target.result + '" alt="Logo" style="width:100%;height:100%;object-fit:contain;">';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    logoPreview.innerHTML = '📷 Logo';
+                }
+            });
+
+            // ----- BRANCH LOGO PREVIEW (manual) -----
+            branchLogoInput.addEventListener('change', function(e) {
+                if (!sameLogoCheckbox.checked) {
+                    var file = this.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function(ev) {
+                            branchLogoPreview.innerHTML = '<img src="' + ev.target.result + '" alt="Branch Logo" style="width:100%;height:100%;object-fit:contain;">';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        branchLogoPreview.innerHTML = '📷';
+                    }
+                }
+            });
+
+            // ===== BRANCH MANAGEMENT =====
+            var branchNameInput = document.getElementById('branchNameInput');
+            var branchManualAddress = document.getElementById('branchManualAddress');
+            var branchAutoAddress = document.getElementById('branchAutoAddress');
+            var branchWebsite = document.getElementById('branchWebsite');
+            var branchSocialWA = document.getElementById('branchSocialWA');
+            var branchSocialIG = document.getElementById('branchSocialIG');
+            var branchSocialLI = document.getElementById('branchSocialLI');
+            var branchSocialTW = document.getElementById('branchSocialTW');
+            var branchSocialTG = document.getElementById('branchSocialTG');
+            var branchSocialFB = document.getElementById('branchSocialFB');
+            var addBranchBtn = document.getElementById('addBranchBtn');
+            var savedBranchesList = document.getElementById('savedBranchesList');
+            var branchLocationBtn = document.getElementById('branchLocationBtn');
+            var branchLocationStatus = document.getElementById('branchLocationStatus');
+
+            var savedBranches = [];
+
+            function renderSavedBranches() {
+                if (savedBranches.length === 0) {
+                    savedBranchesList.innerHTML = '<span class="empty-msg">No branches added yet</span>';
+                    return;
+                }
+                var html = '';
+                savedBranches.forEach(function(b, i) {
+                    html += `
+                        <span class="branch-tag">
+                            📍 ${b.name}
+                            <button type="button" class="remove-tag" data-index="${i}" title="Remove branch">✕</button>
+                        </span>
+                    `;
+                });
+                savedBranchesList.innerHTML = html;
+                savedBranchesList.querySelectorAll('.remove-tag').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var index = parseInt(this.dataset.index);
+                        savedBranches.splice(index, 1);
+                        renderSavedBranches();
+                        updateEnrollmentBranchDropdowns();
+                    });
+                });
+            }
+
+            function getBranchNames() {
+                return savedBranches.map(function(b) { return b.name; });
+            }
+
+            function updateEnrollmentBranchDropdowns() {
+                var branchNames = getBranchNames();
+                document.querySelectorAll('.enroll-branch-dropdown').forEach(function(dropdown) {
+                    var currentVal = dropdown.value;
+                    dropdown.innerHTML = '<option value="">Select branch</option>';
+                    branchNames.forEach(function(name) {
+                        dropdown.innerHTML += '<option value="' + name + '">' + name + '</option>';
+                    });
+                    if (currentVal && branchNames.indexOf(currentVal) !== -1) {
+                        dropdown.value = currentVal;
+                    }
+                });
+            }
+
+            // Location
+            branchLocationBtn.addEventListener('click', function() {
+                if (!navigator.geolocation) {
+                    branchLocationStatus.textContent = '❌ Geolocation not supported';
+                    branchLocationStatus.style.color = '#f87171';
+                    return;
+                }
+                branchLocationBtn.disabled = true;
+                branchLocationBtn.textContent = '⏳...';
+                branchLocationStatus.textContent = '📍 Fetching...';
+                branchLocationStatus.style.color = '#8fcbff';
+
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        var lat = position.coords.latitude;
+                        var lng = position.coords.longitude;
+                        var coords = lat + ', ' + lng;
+                        branchAutoAddress.value = coords;
+                        branchLocationStatus.textContent = '✅ ' + coords;
+                        branchLocationStatus.style.color = '#4ade80';
+                        branchLocationBtn.textContent = '📍';
+                        branchLocationBtn.disabled = false;
+                        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' +
+                                lng + '&zoom=18&addressdetails=1')
+                            .then(function(res) { return res.json(); })
+                            .then(function(data) {
+                                if (data && data.display_name) {
+                                    branchAutoAddress.value = coords + ' - ' + data.display_name;
+                                    branchLocationStatus.textContent = '✅ ' + data.display_name;
+                                }
+                            })
+                            .catch(function() {});
+                    },
+                    function(error) {
+                        var msg = '❌ ';
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                msg += 'Allow location access.';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                msg += 'Location unavailable.';
+                                break;
+                            case error.TIMEOUT:
+                                msg += 'Request timed out.';
+                                break;
+                            default:
+                                msg += 'Unknown error.';
+                        }
+                        branchLocationStatus.textContent = msg;
+                        branchLocationStatus.style.color = '#f87171';
+                        branchLocationBtn.textContent = '📍';
+                        branchLocationBtn.disabled = false;
+                    }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+                );
+            });
+
+            // Add Branch
+            addBranchBtn.addEventListener('click', function() {
+                var name = branchNameInput.value.trim();
+                if (!name) {
+                    showToast('⚠️ Branch Name is required.', true);
+                    return;
+                }
+                if (savedBranches.some(function(b) { return b.name.toLowerCase() === name.toLowerCase(); })) {
+                    showToast('⚠️ A branch with this name already exists.', true);
+                    return;
+                }
+
+                var branchLogoFile = branchLogoInput.files[0] || null;
+                var branchLogoName = branchLogoFile ? branchLogoFile.name : 'No logo';
+
+                if (sameLogoCheckbox.checked) {
+                    var instLogo = document.getElementById('logoInput').files[0];
+                    branchLogoName = instLogo ? instLogo.name : 'Institution logo';
+                }
+
+                var branchData = {
+                    name: name,
+                    logo: branchLogoName,
+                    logoFile: branchLogoFile,
+                    website: branchWebsite.value.trim() || 'Not provided',
+                    manualAddress: branchManualAddress.value.trim(),
+                    automaticAddress: branchAutoAddress.value.trim(),
+                    social: {
+                        whatsapp: branchSocialWA.value.trim(),
+                        instagram: branchSocialIG.value.trim(),
+                        linkedin: branchSocialLI.value.trim(),
+                        twitter: branchSocialTW.value.trim(),
+                        telegram: branchSocialTG.value.trim(),
+                        facebook: branchSocialFB.value.trim()
+                    },
+                    sameWebsite: sameWebsiteCheckbox.checked,
+                    sameLogo: sameLogoCheckbox.checked
+                };
+
+                savedBranches.push(branchData);
+                renderSavedBranches();
+                updateEnrollmentBranchDropdowns();
+
+                branchNameInput.value = '';
+                branchWebsite.value = '';
+                branchManualAddress.value = '';
+                branchAutoAddress.value = '';
+                branchSocialWA.value = '';
+                branchSocialIG.value = '';
+                branchSocialLI.value = '';
+                branchSocialTW.value = '';
+                branchSocialTG.value = '';
+                branchSocialFB.value = '';
+                branchLogoInput.value = '';
+                branchLogoPreview.innerHTML = '📷';
+                branchLocationStatus.textContent = '';
+                sameWebsiteCheckbox.checked = false;
+                sameLogoCheckbox.checked = false;
+                websiteCopiedIndicator.classList.remove('show');
+                logoCopiedIndicator.classList.remove('show');
+
+                showToast('✅ Branch "' + name + '" added successfully!');
+            });
+
+            // ===== ENROLLMENT COURSE BLOCKS =====
+            var enrollTypes = [
+                'onlineRollingFulltime', 'onlineRollingParttime',
+                'onlineIntakeFulltime', 'onlineIntakeParttime',
+                'physicalRollingFulltime', 'physicalRollingParttime',
+                'physicalIntakeFulltime', 'physicalIntakeParttime'
+            ];
+
+            var enrollCounters = {};
+            enrollTypes.forEach(function(type) { enrollCounters[type] = 0; });
+
+            // Helper: create topic entry for self-paced
+            function createTopicEntry(topicData) {
+                topicData = topicData || {};
+                var div = document.createElement('div');
+                div.className = 'topic-entry';
+                div.innerHTML = `
+                    <div class="topic-row">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem;">Topic Name <span class="required">*</span></label>
+                            <input type="text" class="topic-name" placeholder="e.g. Introduction to AI" value="${topicData.name || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.65rem;">Topic Video</label>
+                            <input type="file" class="topic-video" accept="video/*">
+                            ${topicData.video ? `<small style="color:#4ade80;">${topicData.video}</small>` : ''}
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.65rem;">Topic PDF</label>
+                            <input type="file" class="topic-pdf" accept=".pdf">
+                            ${topicData.pdf ? `<small style="color:#4ade80;">${topicData.pdf}</small>` : ''}
+                        </div>
+                    </div>
+                    <button type="button" class="remove-topic" style="margin-top:0.1rem;">✕ Remove Topic</button>
+                `;
+                div.querySelector('.remove-topic').addEventListener('click', function() {
+                    div.remove();
+                });
+                return div;
+            }
+
+            function createEnrollCourseBlock(enrollType, val) {
+                val = val || null;
+                var block = document.createElement('div');
+                block.className = 'course-block';
+                var cidx = enrollCounters[enrollType]++;
+                var branchNames = getBranchNames();
+                var branchOptions = '';
+                branchNames.forEach(function(name) {
+                    var selected = (val && val.branch === name) ? 'selected' : '';
+                    branchOptions += '<option value="' + name + '" ' + selected + '>' + name + '</option>';
+                });
+
+                var pacingVal = (val && val.pacing) || '';
+                var certVal = (val && val.certificate) || '';
+                var certBodyVal = (val && val.certificationBody) || '';
+
+                block.innerHTML = `
+                    <button type="button" class="remove-course" title="Remove this course">✕</button>
+                    <div class="course-grid">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Course Name <span class="required">*</span></label>
+                            <input type="text" class="enroll-course-name" placeholder="e.g. Data Science" required style="font-size:0.75rem;" value="${(val && val.name) || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Cluster Points</label>
+                            <input type="number" class="enroll-cluster" placeholder="e.g. 32" min="0" max="84" style="font-size:0.75rem;" value="${(val && val.cluster) || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Period (Years) <span class="required">*</span></label>
+                            <input type="number" class="enroll-period" placeholder="e.g. 4" step="0.5" min="0.5" required style="font-size:0.75rem;" value="${(val && val.period) || ''}">
+                        </div>
+                    </div>
+                    <div class="course-grid" style="margin-top:0.3rem;">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Category <span class="required">*</span></label>
+                            <select class="enroll-category" required style="font-size:0.75rem;">
+                                <option value="">Select</option>
+                                <option value="Degree" ${(val && val.category === 'Degree') ? 'selected' : ''}>Degree</option>
+                                <option value="Diploma" ${(val && val.category === 'Diploma') ? 'selected' : ''}>Diploma</option>
+                                <option value="Certificate" ${(val && val.category === 'Certificate') ? 'selected' : ''}>Certificate</option>
+                                <option value="Professional" ${(val && val.category === 'Professional') ? 'selected' : ''}>Professional</option>
+                                <option value="Short Course" ${(val && val.category === 'Short Course') ? 'selected' : ''}>Short Course</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Branch <span class="required">*</span></label>
+                            <select class="enroll-branch-dropdown" required style="font-size:0.75rem;">
+                                <option value="">Select</option>
+                                ${branchOptions}
+                            </select>
+                        </div>
+                       
+                    </div>
+                    <div class="course-grid-2col" style="margin-top:0.3rem;">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Semesters <span class="required">*</span></label>
+                            <input type="number" class="enroll-semesters" placeholder="e.g. 8" min="1" required style="font-size:0.75rem;" value="${(val && val.semesters) || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Certificate? <span class="required">*</span></label>
+                            <select class="enroll-certificate" required style="font-size:0.75rem;">
+                                <option value="">Select</option>
+                                <option value="Yes" ${(val && val.certificate === 'Yes') ? 'selected' : ''}>Yes</option>
+                                <option value="No" ${(val && val.certificate === 'No') ? 'selected' : ''}>No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="course-grid-2col" style="margin-top:0.3rem;">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Pacing <span class="required">*</span></label>
+                            <select class="enroll-pacing" required style="font-size:0.75rem;">
+                                <option value="">Select</option>
+                                <option value="Self-paced" ${(val && val.pacing === 'Self-paced') ? 'selected' : ''}>Self-paced</option>
+                                <option value="Semester Live" ${(val && val.pacing === 'Semester Live') ? 'selected' : ''}>Semester Live</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Cost Per Year (KES) <span class="required">*</span></label>
+                            <input type="number" class="enroll-cost-per-year" placeholder="e.g. 150000" step="100" min="0" required style="font-size:0.75rem;" value="${(val && val.costPerYear) || ''}">
+                        </div>
+                    </div>
+
+                    <!-- Certification Body Field (appears when Certificate = Yes) -->
+                    <div class="certification-body-group" id="certBodyGroup_${enrollType}_${cidx}">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Certification Body <span class="required">*</span></label>
+                            <input type="text" class="enroll-certification-body" placeholder="e.g. TVET Authority, KNQA, KASNEB" style="font-size:0.75rem;" value="${certBodyVal}">
+                            <small style="color:#7a6a94; font-size:0.6rem; display:block; margin-top:0.1rem;">Enter the name of the awarding/certification body</small>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:0.3rem;">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; opacity:0.6;">Intake Date <span class="required">*</span></label>
+                            <input type="date" class="enroll-intake-date" required style="font-size:0.75rem;" value="${(val && val.intakeDate) || ''}">
+                        </div>
+                    </div>
+
+                    <!-- Dynamic sub-form for pacing -->
+                    <div class="pacing-subform" id="pacingSubform_${enrollType}_${cidx}">
+                        <div class="subform-title" id="subformTitle_${enrollType}_${cidx}">Self-paced Topics</div>
+                        <div class="topics-container" id="topicsContainer_${enrollType}_${cidx}">
+                            ${(val && val.pacing === 'Self-paced' && val.topics && val.topics.length) ? 
+                                val.topics.map(t => createTopicEntry(t).outerHTML).join('') : 
+                                (val && val.pacing === 'Self-paced' ? createTopicEntry().outerHTML : '')}
+                        </div>
+                        <button type="button" class="add-topic-btn" id="addTopicBtn_${enrollType}_${cidx}">➕ Add Topic</button>
+                        <div class="weekly-timetable-area" id="timetableArea_${enrollType}_${cidx}" style="display:none; margin-top:0.4rem;">
+                            <div class="form-group">
+                                <label style="font-size:0.65rem;">Upload Weekly Timetable (PDF or MS Word) <span class="required">*</span></label>
+                                <input type="file" class="weekly-timetable" accept=".pdf,.doc,.docx" style="font-size:0.75rem;">
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // ----- Setup certification body toggle -----
+                var certSelect = block.querySelector('.enroll-certificate');
+                var certBodyGroup = block.querySelector('.certification-body-group');
+
+                function toggleCertificationBody() {
+                    if (certSelect.value === 'Yes') {
+                        certBodyGroup.classList.add('visible');
+                    } else {
+                        certBodyGroup.classList.remove('visible');
+                        // Clear the certification body input
+                        var certBodyInput = certBodyGroup.querySelector('.enroll-certification-body');
+                        if (certBodyInput) certBodyInput.value = '';
+                    }
+                }
+
+                certSelect.addEventListener('change', toggleCertificationBody);
+
+                // Initial state
+                if (certVal === 'Yes') {
+                    toggleCertificationBody();
+                } else {
+                    certBodyGroup.classList.remove('visible');
+                }
+
+                // ----- Setup pacing toggle logic -----
+                var pacingSelect = block.querySelector('.enroll-pacing');
+                var subform = block.querySelector('.pacing-subform');
+                var subformTitle = block.querySelector('.subform-title');
+                var topicsContainer = block.querySelector('.topics-container');
+                var addTopicBtn = block.querySelector('.add-topic-btn');
+                var timetableArea = block.querySelector('.weekly-timetable-area');
+
+                function updatePacingSubform() {
+                    var val = pacingSelect.value;
+                    if (val === 'Self-paced') {
+                        subform.classList.add('visible');
+                        subformTitle.textContent = '📚 Self-paced Topics (Add topics with video & PDF)';
+                        timetableArea.style.display = 'none';
+                        if (topicsContainer.querySelectorAll('.topic-entry').length === 0) {
+                            topicsContainer.appendChild(createTopicEntry());
+                        }
+                    } else if (val === 'Semester Live') {
+                        subform.classList.add('visible');
+                        subformTitle.textContent = '📅 Semester Live — Upload Weekly Timetable';
+                        timetableArea.style.display = 'block';
+                        topicsContainer.innerHTML = '';
+                    } else {
+                        subform.classList.remove('visible');
+                        timetableArea.style.display = 'none';
+                    }
+                }
+
+                pacingSelect.addEventListener('change', updatePacingSubform);
+
+                addTopicBtn.addEventListener('click', function() {
+                    topicsContainer.appendChild(createTopicEntry());
+                });
+
+                if (pacingVal === 'Self-paced') {
+                    updatePacingSubform();
+                    if (topicsContainer.querySelectorAll('.topic-entry').length === 0) {
+                        topicsContainer.appendChild(createTopicEntry());
+                    }
+                } else if (pacingVal === 'Semester Live') {
+                    updatePacingSubform();
+                } else {
+                    subform.classList.remove('visible');
+                }
+
+                block.querySelector('.remove-course').addEventListener('click', function() {
+                    var container = block.parentElement;
+                    var blocks = container.querySelectorAll('.course-block');
+                    if (blocks.length > 1) {
+                        block.remove();
+                    } else {
+                        showToast('You need at least one course per enrollment type.', true);
+                    }
+                });
+
+                return block;
+            }
+
+            // Initialize each enrollment container with one default block
+            enrollTypes.forEach(function(type) {
+                var container = document.querySelector('.branch-enroll-container[data-enroll="' + type + '"]');
+                if (container) {
+                    container.appendChild(createEnrollCourseBlock(type));
+                }
+            });
+
+            // Add course buttons
+            document.querySelectorAll('.add-course-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var type = this.dataset.enroll;
+                    var container = document.querySelector('.branch-enroll-container[data-enroll="' + type + '"]');
+                    if (container) {
+                        container.appendChild(createEnrollCourseBlock(type));
+                    }
+                });
+            });
+
+            window.updateEnrollmentBranchDropdowns = updateEnrollmentBranchDropdowns;
+
+            // ===== GET ALL COURSES FROM ENROLLMENT TYPES =====
+            function getAllEnrollmentCourses() {
+                var enrollments = {};
+                enrollTypes.forEach(function(type) {
+                    var container = document.querySelector('.branch-enroll-container[data-enroll="' + type + '"]');
+                    var courses = [];
+                    if (container) {
+                        var blocks = container.querySelectorAll('.course-block');
+                        blocks.forEach(function(block) {
+                            var name = block.querySelector('.enroll-course-name') ? block.querySelector(
+                                '.enroll-course-name').value.trim() : '';
+                            var cluster = block.querySelector('.enroll-cluster') ? block.querySelector(
+                                '.enroll-cluster').value.trim() : '';
+                            var period = block.querySelector('.enroll-period') ? block.querySelector(
+                                '.enroll-period').value.trim() : '';
+                            var category = block.querySelector('.enroll-category') ? block.querySelector(
+                                '.enroll-category').value : '';
+                            var branch = block.querySelector('.enroll-branch-dropdown') ? block.querySelector(
+                                '.enroll-branch-dropdown').value : '';
+                            var programType = block.querySelector('.enroll-program-type') ? block.querySelector(
+                                '.enroll-program-type').value : '';
+                            var costPerYear = block.querySelector('.enroll-cost-per-year') ? block.querySelector(
+                                '.enroll-cost-per-year').value.trim() : '';
+                            var intakeDate = block.querySelector('.enroll-intake-date') ? block.querySelector(
+                                '.enroll-intake-date').value : '';
+                            var semesters = block.querySelector('.enroll-semesters') ? block.querySelector(
+                                '.enroll-semesters').value.trim() : '';
+                            var certificate = block.querySelector('.enroll-certificate') ? block.querySelector(
+                                '.enroll-certificate').value : '';
+                            var pacing = block.querySelector('.enroll-pacing') ? block.querySelector(
+                                '.enroll-pacing').value : '';
+                            
+                            // Get certification body
+                            var certificationBody = '';
+                            var certBodyInput = block.querySelector('.enroll-certification-body');
+                            if (certBodyInput) {
+                                certificationBody = certBodyInput.value.trim();
+                            }
+
+                            var topics = [];
+                            if (pacing === 'Self-paced') {
+                                var topicEntries = block.querySelectorAll('.topic-entry');
+                                topicEntries.forEach(function(entry) {
+                                    var tName = entry.querySelector('.topic-name') ? entry.querySelector(
+                                        '.topic-name').value.trim() : '';
+                                    var tVideo = entry.querySelector('.topic-video') ? entry.querySelector(
+                                        '.topic-video').files[0] : null;
+                                    var tPdf = entry.querySelector('.topic-pdf') ? entry.querySelector(
+                                        '.topic-pdf').files[0] : null;
+                                    if (tName) {
+                                        topics.push({
+                                            name: tName,
+                                            video: tVideo ? tVideo.name : '',
+                                            pdf: tPdf ? tPdf.name : ''
+                                        });
+                                    }
+                                });
+                            }
+
+                            var weeklyTimetable = null;
+                            if (pacing === 'Semester Live') {
+                                var ttInput = block.querySelector('.weekly-timetable');
+                                if (ttInput && ttInput.files.length > 0) {
+                                    weeklyTimetable = ttInput.files[0].name;
+                                }
+                            }
+
+                            if (name && period && category && branch && programType && costPerYear && intakeDate &&
+                                semesters && certificate && pacing) {
+                                courses.push({
+                                    name: name,
+                                    cluster: cluster || 'Not specified',
+                                    period: period,
+                                    category: category,
+                                    branch: branch,
+                                    programType: programType,
+                                    costPerYear: costPerYear,
+                                    intakeDate: intakeDate,
+                                    semesters: semesters,
+                                    certificate: certificate,
+                                    certificationBody: certificationBody,
+                                    pacing: pacing,
+                                    topics: topics,
+                                    weeklyTimetable: weeklyTimetable
+                                });
+                            }
+                        });
+                    }
+                    enrollments[type] = courses;
+                });
+                return enrollments;
+            }
+
+            // ===== FORM SUBMIT =====
+            var form = document.getElementById('institutionForm');
+            var feedback = document.getElementById('formFeedback');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                var instName = document.getElementById('instName').value.trim();
+                var email = document.getElementById('instEmail').value.trim();
+                var website = document.getElementById('instWebsite').value.trim();
+                var about = document.getElementById('instAbout').value.trim();
+                var achievements = document.getElementById('instAchievements').value.trim();
+
+                if (!instName) {
+                    feedback.textContent = '⚠️ Institution name is required.';
+                    feedback.style.color = '#f87171';
+                    return;
+                }
+                if (!email) {
+                    feedback.textContent = '⚠️ Email is required.';
+                    feedback.style.color = '#f87171';
+                    return;
+                }
+                if (!about) {
+                    feedback.textContent = '⚠️ About section is required.';
+                    feedback.style.color = '#f87171';
+                    return;
+                }
+                if (savedBranches.length === 0) {
+                    feedback.textContent = '⚠️ Please add at least one branch.';
+                    feedback.style.color = '#f87171';
+                    return;
+                }
+
+                var enrollments = getAllEnrollmentCourses();
+                var hasCourses = false;
+                Object.values(enrollments).forEach(function(courses) {
+                    if (courses.length > 0) hasCourses = true;
+                });
+
+                if (!hasCourses) {
+                    feedback.textContent = '⚠️ Please add at least one course in any enrollment type.';
+                    feedback.style.color = '#f87171';
+                    return;
+                }
+
+                var formData = {
+                    institution: instName,
+                    email: email,
+                    logo: logoInput.files[0] ? logoInput.files[0].name : 'No logo uploaded',
+                    website: website || 'Not provided',
+                    about: about,
+                    achievements: achievements || 'Not provided',
+                    branches: savedBranches,
+                    enrollmentTypes: enrollments
+                };
+
+                var submitBtn = form.querySelector('.submit-btn');
+                submitBtn.textContent = '⏳ Submitting...';
+                submitBtn.disabled = true;
+
+                fetch('http://localhost:5000/api/institution-hosted', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(result) {
+                    console.log('✅ Response:', result);
+
+                    var summaryHtml = '';
+                    summaryHtml += '✅ <strong>Success!</strong> Institution "<strong>' + instName +
+                        '</strong>" registered.<br>';
+                    summaryHtml += '<span style="font-size:0.85rem; opacity:0.7;">📧 ' + email + ' | ' + (
+                        website || 'No website') + '</span><br>';
+                    summaryHtml +=
+                        '<span style="font-size:0.85rem; opacity:0.7;">🏫 Total branches: ' + savedBranches
+                        .length + '</span><br>';
+                    summaryHtml +=
+                        '<span style="font-size:0.85rem; opacity:0.7; color:#4ade80;">✅ ' + (result.message ||
+                            'Data saved to database!') + '</span><br>';
+
+                    savedBranches.forEach(function(b, i) {
+                        summaryHtml +=
+                            '<br><span style="font-size:0.85rem; opacity:0.7; display:block; margin-top:0.3rem;">';
+                        summaryHtml += '<strong>Branch ' + (i + 1) + ': ' + b.name + '</strong><br>';
+                        summaryHtml += '<span style="margin-left:1rem;">📍 ' + (b.automaticAddress || b
+                            .manualAddress || 'No address') + '</span>';
+                        if (b.sameWebsite) {
+                            summaryHtml +=
+                            '<br><span style="margin-left:1rem; color:#4ade80;">🌐 Same website as institution</span>';
+                        }
+                        if (b.sameLogo) {
+                            summaryHtml +=
+                            '<br><span style="margin-left:1rem; color:#4ade80;">🖼️ Same logo as institution</span>';
+                        }
+                        summaryHtml += '</span>';
+                    });
+
+                    var totalCourses = 0;
+                    var typeLabels = {
+                        onlineRollingFulltime: 'Online Rolling Fulltime',
+                        onlineRollingParttime: 'Online Rolling Parttime',
+                        onlineIntakeFulltime: 'Online Intake Fulltime',
+                        onlineIntakeParttime: 'Online Intake Parttime',
+                        physicalRollingFulltime: 'Physical Rolling Fulltime',
+                        physicalRollingParttime: 'Physical Rolling Parttime',
+                        physicalIntakeFulltime: 'Physical Intake Fulltime',
+                        physicalIntakeParttime: 'Physical Intake Parttime'
+                    };
+
+                    enrollTypes.forEach(function(type) {
+                        var courses = enrollments[type] || [];
+                        if (courses.length > 0) {
+                            totalCourses += courses.length;
+                            summaryHtml +=
+                                '<br><span style="font-size:0.85rem; opacity:0.7; display:block; margin-top:0.3rem;">';
+                            summaryHtml += '<strong>' + typeLabels[type] + ':</strong> ';
+                            var courseStrings = courses.map(function(c) {
+                                var pacingInfo = '';
+                                if (c.pacing === 'Self-paced' && c.topics && c.topics.length > 0) {
+                                    pacingInfo = ' [Self-paced: ' + c.topics.map(function(t) { return t
+                                            .name; }).join(', ') + ']';
+                                } else if (c.pacing === 'Semester Live' && c.weeklyTimetable) {
+                                    pacingInfo = ' [Semester Live: ' + c.weeklyTimetable + ']';
+                                } else if (c.pacing === 'Semester Live') {
+                                    pacingInfo = ' [Semester Live: timetable pending]';
+                                }
+                                
+                                var certInfo = '';
+                                if (c.certificate === 'Yes' && c.certificationBody) {
+                                    certInfo = ' [Certified by: ' + c.certificationBody + ']';
+                                } else if (c.certificate === 'Yes' && !c.certificationBody) {
+                                    certInfo = ' [Certification pending body]';
+                                } else {
+                                    certInfo = ' [No certificate]';
+                                }
+                                
+                                return c.name + ' (' + c.category + ', ' + c.period + ' yrs, ' + c
+                                    .programType + ', ' + c.branch + ', KES ' + c.costPerYear +
+                                    '/yr, ' + c.intakeDate + ', ' + c.semesters + ' sem' + 
+                                    certInfo + ', ' + c.pacing + ')' + pacingInfo;
+                            });
+                            summaryHtml += courseStrings.join(' | ');
+                            summaryHtml += '</span>';
+                        }
+                    });
+
+                    summaryHtml +=
+                        '<br><span style="font-size:0.85rem; opacity:0.7;">Total courses: ' + totalCourses +
+                        '</span>';
+                    summaryHtml +=
+                        '<br><span style="font-size:0.85rem; opacity:0.7; color:#4ade80;">✅ Data will appear on the students\' search page.</span>';
+
+                    feedback.innerHTML = summaryHtml;
+                    feedback.style.color = '#a78fa';
+
+                    showToast('✅ Institution "' + instName + '" registered successfully with ' + totalCourses +
+                        ' courses!');
+
+                    // Reset form
+                    savedBranches = [];
+                    renderSavedBranches();
+                    updateEnrollmentBranchDropdowns();
+                    document.getElementById('instName').value = '';
+                    document.getElementById('instEmail').value = '';
+                    document.getElementById('instWebsite').value = '';
+                    document.getElementById('instAbout').value = '';
+                    document.getElementById('instAchievements').value = '';
+                    logoPreview.innerHTML = '📷 Logo';
+                    logoInput.value = '';
+                    branchWebsite.value = '';
+                    branchLogoInput.value = '';
+                    branchLogoPreview.innerHTML = '📷';
+                    sameWebsiteCheckbox.checked = false;
+                    sameLogoCheckbox.checked = false;
+                    websiteCopiedIndicator.classList.remove('show');
+                    logoCopiedIndicator.classList.remove('show');
+                    enrollTypes.forEach(function(type) {
+                        var container = document.querySelector(
+                            '.branch-enroll-container[data-enroll="' + type + '"]');
+                        if (container) {
+                            container.innerHTML = '';
+                            container.appendChild(createEnrollCourseBlock(type));
+                        }
+                    });
+
+                    submitBtn.textContent = '📤 Submit All Branches & Courses';
+                    submitBtn.disabled = false;
+                })
+                .catch(function(error) {
+                    console.error('❌ Error:', error);
+                    feedback.innerHTML = '❌ <strong>Error:</strong> ' + (error.message ||
+                        'Failed to save data. Please try again.');
+                    feedback.style.color = '#f87171';
+                    showToast('❌ Error: ' + (error.message || 'Failed to save data'), true);
+                    submitBtn.textContent = '📤 Submit All Branches & Courses';
+                    submitBtn.disabled = false;
+                });
+            });
+        })();
+    </script>
+    <!-- Tracking Script -->
+    <script>
+        (function() {
+            var API_BASE = 'http://localhost:5000/api';
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var data = {
+                    pageUrl: window.location.pathname || '/',
+                    pageTitle: document.title || 'Unknown Page',
+                    referrerUrl: document.referrer || ''
+                };
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            }
+
+            function setupClickTracking() {
+                document.addEventListener('click', function(e) {
+                    var target = e.target;
+                    var data = {
+                        elementId: target.id || '',
+                        elementClass: target.className || '',
+                        elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                        pageUrl: window.location.pathname || '/'
+                    };
+                    if (target.tagName === 'A' || target.tagName === 'BUTTON' ||
+                        target.closest('a') || target.closest('button')) {
+                        fetch(API_BASE + '/track/click', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        }).catch(function() {});
+                    }
+                });
+            }
+
+            function setupFormTracking() {
+                document.addEventListener('submit', function(e) {
+                    var form = e.target;
+                    var data = {
+                        formType: form.id || form.name || 'unknown',
+                        formData: {}
+                    };
+                    var inputs = form.querySelectorAll('input, select, textarea');
+                    inputs.forEach(function(input) {
+                        if (input.name) {
+                            data.formData[input.name] = input.value || '';
+                        }
+                    });
+                    fetch(API_BASE + '/track/formsubmit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                });
+            }
+
+            trackPageView();
+            setupClickTracking();
+            setupFormTracking();
+        })();
+    </script>
+</body>
+
+</html>

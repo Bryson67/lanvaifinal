@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai Marketing - Contact Us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles/contactus.css">
+    <style>
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    </style>
+</head>
+
+<body>
+    <!-- Toast -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- Navbar -->
+     <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="logo-icon"><img src="/images/lanvai.png" alt="Lanvai Logo"></span>
+                <div>
+                    <span class="brand-text">Lanvai</span>
+                    <span class="brand-tagline">Your Business Growth Partner</span>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html"><span class="icon">🏠</span> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html"><span class="icon">ℹ️</span> About Us</a>
+                    </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="contactus.html"><span class="icon">👥</span> Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="team.html"><span class="icon">👥</span> Our Team</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="otherWebsitesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="icon">🌐</span> Websites
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="otherWebsitesDropdown">
+                            <li><a class="dropdown-item" href="courses.html" target="_blank"><span class="icon">📚</span> Edulink Courses</a></li>
+                            <li><a class="dropdown-item" href="https://bryson67.github.io/Brystech-website/" target="_blank"><span class="icon">📚</span>BRYSTECH</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- Hero Section -->
+        <div class="contact-hero">
+            <h1><i class="fas fa-envelope"></i> Contact Us</h1>
+            <p>Have questions? We'd love to hear from you. Send us a message and we'll respond within 24 hours.</p>
+        </div>
+
+        <!-- Contact Info Cards -->
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Visit Us</h4>
+                    <p>Thika Road Wendani</p>
+                    <p>Nairobi, Kenya</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h4>Call Us</h4>
+                    
+                    <p>+254 758887164</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Email Us</h4>
+                    <p>Lanvaicompany@gmail.com</p>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form and Map -->
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="contact-form-container">
+                    <h2><i class="fas fa-paper-plane"></i> Send Us a Message</h2>
+                    <p class="text-muted mb-4">Fill out the form below and we'll get back to you as soon as possible.</p>
+
+                    <form id="contactForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Full Name *</label>
+                                    <input type="text" id="fullName" class="form-control-custom" placeholder="Enter your full name">
+                                    <div class="error-msg" id="fullNameError">Name is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email Address *</label>
+                                    <input type="email" id="emailAddress" class="form-control-custom" placeholder="Enter your email">
+                                    <div class="error-msg" id="emailAddressError">Valid email is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="phoneNumber" class="form-control-custom" placeholder="Enter your phone number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Subject *</label>
+                                    <select id="subject" class="form-control-custom">
+                                        <option value="">Select a subject</option>
+                                        <option value="General Inquiry">General Inquiry</option>
+                                        <option value="Media Services">Media Services</option>
+                                        <option value="Expert Consultation">Expert Consultation</option>
+                                        <option value="Ad Exchange">Ad Exchange</option>
+                                        <option value="Partnership">Partnership Opportunity</option>
+                                        <option value="Support">Technical Support</option>
+                                    </select>
+                                    <div class="error-msg" id="subjectError">Please select a subject</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Message *</label>
+                            <textarea id="message" class="form-control-custom" placeholder="Tell us how we can help you..."></textarea>
+                            <div class="error-msg" id="messageError">Message is required</div>
+                        </div>
+                        <button type="submit" class="btn-submit" id="submitBtn">Send Message →</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="map-container">
+                    <h4><i class="fas fa-map"></i> Our Location</h4>
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h5>Nairobi, Kenya</h5>
+                        <p class="text-muted">Thika Road, Wendani</p>
+                        <hr>
+                        <div class="social-icons d-flex justify-content-center gap-3">
+                            <a href="https://www.instagram.com/lanvaiofficial/" target="_blank" style="color: #e4405f;"><i class="fab fa-instagram"></i></a>
+                           <a href="https://twitter.com/lanvaiofficial" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.linkedin.com/in/lanvai-company-8413453b5/?isSelfProfile=true" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://www.facebook.com/lanvaiofficial/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h3 class="text-center mb-4" style="color: #1e3a5f;"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="faq-item" data-faq="1">
+                        <div class="faq-question">
+                            <span>How quickly do you respond to inquiries?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">We typically respond within 24 hours during business days. For urgent matters, please call us directly.</div>
+                    </div>
+                    <div class="faq-item" data-faq="2">
+                        <div class="faq-question">
+                            <span>Do you offer free consultations?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Yes, we offer free  consultation to understand your needs and see how we can help.</div>
+                    </div>
+                    <div class="faq-item" data-faq="3">
+                        <div class="faq-question">
+                            <span>What areas do you serve?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">We serve clients across Kenya and internationally. Our services are delivered remotely and on-site when needed.</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="faq-item" data-faq="4">
+                        <div class="faq-question">
+                            <span>What payment methods do you accept?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">We accept bank transfers, M-Pesa, credit cards, and PayPal. Payment terms are discussed during consultation.</div>
+                    </div>
+                    <div class="faq-item" data-faq="5">
+                        <div class="faq-question">
+                            <span>Can I get a custom package?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Absolutely! We tailor our services to meet your specific business needs and budget. Contact us for a custom quote.</div>
+                    </div>
+                    <div class="faq-item" data-faq="6">
+                        <div class="faq-question">
+                            <span>Do you have a satisfaction guarantee?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Yes, we're committed to your satisfaction. If you're not happy with our services, we'll work to make it right.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Lanvai Marketing | Smart Solutions for Smart Businesses</p>
+    </footer>
+
+    <!-- ===== FLOATING CHAT BUTTON - Website Knowledge Base ===== -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>Lanvai Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Welcome to Lanvai! I have complete knowledge about our entire website - Courses, Institution Registration, Library, Ad Exchange, Media, Experts, and more. What would you like to know?</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What is Lanvai?">🏠 About</button>
+                
+                <button data-q="Ad Exchange">💰 Ads</button>
+                <button data-q="Media services">📺 Media</button>
+                <button data-q="Expert consultation">👔 Experts</button>
+            </div>
+            <div class="auth-overlay" id="authOverlay">
+                <div class="auth-icon">🔒</div>
+                <h4>Connect to a Live Person</h4>
+                <p>Please login or register to chat with a live agent.</p>
+                <div class="auth-btns">
+                    <button class="login-btn" id="loginBtn">🔑 Login</button>
+                    <button class="register-btn" id="registerBtn">📝 Register</button>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script>
+        // ==============================================
+        // CHAT FUNCTIONALITY (Keep your existing chat code)
+        // ==============================================
+        (function() {
+            const W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn'),
+                A = document.getElementById('authOverlay'),
+                Q = document.querySelectorAll('.quick-replies button');
+            let open = !1,
+                auth = !1,
+                person = !1;
+
+            // Your existing KB object here (keep it as is)
+            const KB = {
+                'lanvai about platform company': '🏫 **About Lanvai**\n\nLanvai is a business platform.\n\n**Core Services:** \n5️⃣ Ad Exchange 💰 - Premium advertising placements\n6️⃣ Media 📺 - News and insights platform\n7️⃣ Experts 👔 - Business consultation services',
+            
+                
+                'ad exchange premium advertising ads': '💰 **Ad Exchange**\n\n**Available Ads:**\n• Premium Homepage Banner - $2,500/month\n• Sidebar Banner - $800/month\n• In-Content Native Ad - $1,200/month\n• Newsletter Sponsorship - $600/month\n• Video Pre-roll Ad - $3,000/month\n• Category Page Banner - $500/month\n• Sponsored Article - $1,800/month\n• Weekly Spotlight - $400/month',
+                'media news insights articles': '📺 **Media - News & Insights**\n\n**Latest News:**\n1. Digital Marketing Trends 2024 - Technology\n2. E-commerce Boom in Africa - E-commerce ⚠️\n3. Healthcare Tech Revolution - Healthcare\n4. Real Estate Market Update - Real Estate ⚠️\n5. EdTech Growth Statistics - Education\n6. AI in Marketing - Technology ⚠️',
+                'expert consultation business services strategies': '👔 **Experts - Business Services**\n\n**Business Categories:**\nE-commerce, Technology, Financial, Real Estate, Education, Agriculture, Media, Logistics, Energy, Manufacturing, Retail, Healthcare, Hospitality, Construction, Legal, Nonprofit\n\n**Services:** SEO & Marketing, Lead Generation, Branding, Automation, Analytics',
+                'contact support email phone location': '📧 **Contact Us**\n📍 Thika Road Wendani, Nairobi, Kenya\n📞 +254 794914597 / +254 758887164\n📧 Lanvai254@lanvai.com / support@lanvai.com'
+            };
+
+
+            // ===== SEARCH ENGINE =====
+            function findAnswer(q) {
+                q = q.toLowerCase();
+
+                if (q.includes('person') || q.includes('agent') || q.includes('live') || (q.includes('support') && q.includes(
+                    'talk')))
+                    return 'person';
+
+                // Your existing KB search logic here
+                // ... (keep your existing chat code)
+
+                return `I have complete knowledge about the entire Lanvai website! Type "talk to a person" to connect with a live support agent!`;
+            }
+
+            // ===== CHAT FUNCTIONS =====
+            function send() {
+                let t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                let r = findAnswer(t);
+                if (r === 'person') {
+                    if (auth) {
+                        addMsg('🟢 Connecting to agent...', 'system');
+                        setTimeout(() => {
+                            addMsg('👤 Agent: How can I help you with Lanvai today?', 'bot');
+                            person = !0;
+                            A.classList.remove('show');
+                        }, 1200);
+                    } else {
+                        A.classList.add('show');
+                        I.disabled = S.disabled = !0;
+                        addMsg('🔐 Please login or register to connect with a live person.', 'system');
+                    }
+                    return;
+                }
+                setTimeout(() => addMsg(r, 'bot'), 300 + Math.random() * 500);
+            }
+
+            function addMsg(t, c) {
+                let d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            // ===== EVENTS =====
+            T.onclick = () => {
+                open = !open;
+                W.classList.toggle('open', open);
+                if (open) I.focus();
+            };
+            C.onclick = () => {
+                open = !1;
+                W.classList.remove('open');
+            };
+            document.onkeydown = e => {
+                if (e.key === 'Escape' && open) {
+                    open = !1;
+                    W.classList.remove('open');
+                }
+            };
+            S.onclick = send;
+            I.onkeydown = e => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+            Q.forEach(b => b.onclick = () => {
+                I.value = b.dataset.q;
+                send();
+            });
+            document.getElementById('loginBtn').onclick = () => {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Logged in! You can now connect to a live person.', 'system');
+            };
+            document.getElementById('registerBtn').onclick = () => {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = S.disabled = !1;
+                addMsg('✅ Registered! You can now connect to a live person.', 'system');
+            };
+            I.disabled = S.disabled = !1;
+            setTimeout(() => addMsg('💡 Tip: Ask about any page - "Students", "Institution", "Library", "Ad Exchange", "Media", "Experts", "Courses", or "Contact Us"!', 'system'), 1200);
+        })();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script>
+        // ==============================================
+        // TOAST NOTIFICATION
+        // ==============================================
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ==============================================
+        // CONTACT FORM - SEND TO BACKEND
+        // ==============================================
+        var API_BASE = '/api';
+        var contactForm = document.getElementById('contactForm');
+        var submitBtn = document.getElementById('submitBtn');
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var isValid = true;
+            var fullName = document.getElementById('fullName').value.trim();
+            var email = document.getElementById('emailAddress').value.trim();
+            var phone = document.getElementById('phoneNumber').value.trim();
+            var subject = document.getElementById('subject').value;
+            var message = document.getElementById('message').value.trim();
+
+            // Validate
+            if (!fullName) {
+                document.getElementById('fullNameError').style.display = 'block';
+                document.getElementById('fullName').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('fullNameError').style.display = 'none';
+                document.getElementById('fullName').classList.remove('invalid');
+            }
+
+            if (!email || !validateEmail(email)) {
+                document.getElementById('emailAddressError').style.display = 'block';
+                document.getElementById('emailAddress').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('emailAddressError').style.display = 'none';
+                document.getElementById('emailAddress').classList.remove('invalid');
+            }
+
+            if (!subject) {
+                document.getElementById('subjectError').style.display = 'block';
+                document.getElementById('subject').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('subjectError').style.display = 'none';
+                document.getElementById('subject').classList.remove('invalid');
+            }
+
+            if (!message) {
+                document.getElementById('messageError').style.display = 'block';
+                document.getElementById('message').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('messageError').style.display = 'none';
+                document.getElementById('message').classList.remove('invalid');
+            }
+
+            if (!isValid) return;
+
+            var formData = {
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                subject: subject,
+                message: message
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Sending...';
+
+            // Send to Lanvai inquiries endpoint
+            fetch(API_BASE + '/lanvai/inquiries/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(function(response) { 
+                if (!response.ok) {
+                    return response.text().then(function(text) {
+                        throw new Error('Server error: ' + response.status + ' - ' + text);
+                    });
+                }
+                return response.json(); 
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('✅ ' + result.message);
+                    document.getElementById('fullName').value = '';
+                    document.getElementById('emailAddress').value = '';
+                    document.getElementById('phoneNumber').value = '';
+                    document.getElementById('subject').value = '';
+                    document.getElementById('message').value = '';
+                } else {
+                    showToast('❌ Error: ' + (result.error || 'Failed to send message'), true);
+                }
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message →';
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                showToast('❌ Failed to send message: ' + error.message, true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message →';
+            });
+        });
+
+        // ===== FAQ TOGGLE =====
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // ===== SOCIAL ICON CLICKS =====
+        document.querySelectorAll('.social-icons i').forEach(function(icon) {
+            icon.addEventListener('click', function() {
+                var platform = this.classList[1].replace('fa-', '');
+                showToast('📱 Follow us on ' + platform.toUpperCase() + '!');
+            });
+        });
+
+        // ===== CHAT TOGGLE =====
+        document.getElementById('chatToggle').addEventListener('click', function() {
+            showToast('💬 Lanvai Assistant - Ask me about our services!');
+        });
+    </script>
+
+    <!-- Tracking Script -->
+    <script>
+        (function() {
+            var API_BASE = '/api';
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var data = {
+                    pageUrl: window.location.pathname || '/',
+                    pageTitle: document.title || 'Unknown Page',
+                    referrerUrl: document.referrer || ''
+                };
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            }
+
+            function setupClickTracking() {
+                document.addEventListener('click', function(e) {
+                    var target = e.target;
+                    var data = {
+                        elementId: target.id || '',
+                        elementClass: target.className || '',
+                        elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                        pageUrl: window.location.pathname || '/'
+                    };
+                    if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                        target.closest('a') || target.closest('button')) {
+                        fetch(API_BASE + '/track/click', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        }).catch(function() {});
+                    }
+                });
+            }
+
+            function setupFormTracking() {
+                document.addEventListener('submit', function(e) {
+                    var form = e.target;
+                    var data = {
+                        formType: form.id || form.name || 'unknown',
+                        formData: {}
+                    };
+                    var inputs = form.querySelectorAll('input, select, textarea');
+                    inputs.forEach(function(input) {
+                        if (input.name) {
+                            data.formData[input.name] = input.value || '';
+                        }
+                    });
+                    fetch(API_BASE + '/track/formsubmit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                });
+            }
+
+            trackPageView();
+            setupClickTracking();
+            setupFormTracking();
+        })();
+    </script>
+</body>
+
+</html>

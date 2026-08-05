@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lanvai ADExchange - Ad Owner Contact</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #f5f0eb;
+      min-height: 100vh;
+      color: #1a142b;
+    }
+
+    /* ===== HEADER / NAVBAR ===== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #fbbf24;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .navbar .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      height: 45px;
+    }
+
+    .brand-text {
+      color: #1a142b;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .brand-text span {
+      color: #d97706;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.15);
+      color: #4b3d2b;
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.25s;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background: rgba(251, 191, 36, 0.2);
+      border-color: #fbbf24;
+      color: #1a142b;
+    }
+
+    .nav-links a.active {
+      background: #fbbf24;
+      border-color: #fbbf24;
+      color: #1a142b;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero-section {
+      text-align: center;
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    .hero-section .icon {
+      font-size: 4rem;
+      color: #d97706;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-section h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #1a142b;
+    }
+
+    .hero-section h1 span {
+      color: #d97706;
+    }
+
+    .hero-section p {
+      color: #4b3d2b;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0.5rem auto 1.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-section .sub-text {
+      color: #7a6a94;
+      font-size: 0.9rem;
+    }
+
+    /* ===== TWO COLUMN LINKS ===== */
+    .marketplace-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .marketplace-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    .marketplace-card {
+      background: white;
+      border: 2px solid rgba(251, 191, 36, 0.15);
+      border-radius: 24px;
+      padding: 2rem 1.8rem;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .marketplace-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), transparent);
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .marketplace-card:hover {
+      border-color: #fbbf24;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(251, 191, 36, 0.15);
+    }
+
+    .marketplace-card:hover::before {
+      opacity: 1;
+    }
+
+    .marketplace-card .card-icon {
+      font-size: 3.5rem;
+      color: #d97706;
+      margin-bottom: 1rem;
+    }
+
+    .marketplace-card .card-icon .fa-arrow-right {
+      font-size: 1.5rem;
+      color: #d97706;
+      margin-left: 0.5rem;
+      opacity: 0.6;
+    }
+
+    .marketplace-card h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #1a142b;
+      margin-bottom: 0.5rem;
+    }
+
+    .marketplace-card h2 span {
+      color: #d97706;
+    }
+
+    .marketplace-card p {
+      color: #4b3d2b;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .marketplace-card .badge-count {
+      display: inline-block;
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      color: #d97706;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .marketplace-card .arrow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #d97706;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      transition: 0.2s;
+    }
+
+    .marketplace-card .arrow-link i {
+      transition: 0.2s;
+    }
+
+    .marketplace-card:hover .arrow-link i {
+      transform: translateX(4px);
+    }
+
+    /* ===== FEATURES SECTION ===== */
+    .features-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    .features-section h3 {
+      text-align: center;
+      color: #1a142b;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .features-section h3 span {
+      color: #d97706;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-item {
+      background: white;
+      border: 1px solid rgba(251, 191, 36, 0.1);
+      border-radius: 16px;
+      padding: 1.2rem;
+      text-align: center;
+      transition: 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .feature-item:hover {
+      border-color: rgba(251, 191, 36, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(251, 191, 36, 0.1);
+    }
+
+    .feature-item .fi-icon {
+      font-size: 2rem;
+      color: #d97706;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-item .fi-title {
+      color: #1a142b;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .feature-item .fi-desc {
+      color: #6b5d4a;
+      font-size: 0.8rem;
+      margin-top: 0.2rem;
+    }
+
+    /* ===== TOAST ===== */
+    .toast-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #1a142b;
+      padding: 12px 24px;
+      border-radius: 50px;
+      z-index: 10001;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      font-weight: 600;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .toast-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-notification.error {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(251, 191, 36, 0.15);
+      color: #6b5d4a;
+      font-size: 0.85rem;
+    }
+
+    /* ===== CHAT BUTTON ===== */
+    .chat-float {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1000;
+    }
+
+    .chat-toggle {
+      background: linear-gradient(145deg, #d97706, #b45309);
+      border: none;
+      border-radius: 60px;
+      padding: 0.8rem 1.5rem;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: 1px solid rgba(255, 200, 50, 0.2);
+    }
+
+    .chat-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 40px rgba(251, 191, 36, 0.4);
+    }
+
+    .chat-toggle .badge {
+      background: #fbbf24;
+      color: #0e0a1a;
+      font-size: 0.6rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .chat-window {
+      display: none;
+      position: absolute;
+      bottom: 80px;
+      right: 0;
+      width: 360px;
+      max-width: 90vw;
+      background: white;
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 2px solid rgba(251, 191, 36, 0.2);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      animation: chatSlideUp 0.3s ease;
+    }
+
+    .chat-window.open {
+      display: block;
+    }
+
+    @keyframes chatSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.2rem;
+      background: rgba(251, 191, 36, 0.08);
+      border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+    }
+
+    .chat-header h3 {
+      font-size: 1rem;
+      color: #1a142b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
+    }
+
+    .chat-header .online-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .chat-close {
+      background: transparent;
+      border: none;
+      color: #6b5d4a;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 0.2rem 0.5rem;
+      border-radius: 8px;
+    }
+
+    .chat-close:hover {
+      color: #dc2626;
+      background: rgba(220, 38, 38, 0.05);
+    }
+
+    .chat-messages {
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 0.8rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .chat-messages .msg {
+      padding: 0.6rem 1rem;
+      border-radius: 16px;
+      max-width: 85%;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      word-wrap: break-word;
+    }
+
+    .chat-messages .msg.bot {
+      background: rgba(251, 191, 36, 0.08);
+      color: #1a142b;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid rgba(251, 191, 36, 0.08);
+    }
+
+    .chat-messages .msg.user {
+      background: linear-gradient(145deg, #d97706, #b45309);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-messages .msg.system {
+      background: rgba(251, 191, 36, 0.08);
+      color: #d97706;
+      align-self: center;
+      text-align: center;
+      font-size: 0.8rem;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      max-width: 95%;
+      border: 1px solid rgba(251, 191, 36, 0.1);
+    }
+
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      padding: 0.4rem 1rem 0.8rem;
+      border-top: 1px solid rgba(251, 191, 36, 0.08);
+    }
+
+    .quick-replies button {
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.1);
+      border-radius: 30px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.7rem;
+      color: #4b3d2b;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .quick-replies button:hover {
+      background: rgba(251, 191, 36, 0.2);
+      border-color: #fbbf24;
+      color: #1a142b;
+    }
+
+    .auth-overlay {
+      display: none;
+      padding: 1rem;
+      background: rgba(251, 191, 36, 0.04);
+      text-align: center;
+      border-top: 1px solid rgba(251, 191, 36, 0.08);
+    }
+
+    .auth-overlay.show {
+      display: block;
+    }
+
+    .auth-overlay .auth-icon {
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .auth-overlay h4 {
+      color: #1a142b;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .auth-overlay p {
+      color: #6b5d4a;
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .auth-btns {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .auth-btns button {
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.8rem;
+    }
+
+    .auth-btns .login-btn {
+      background: rgba(130, 80, 190, 0.08);
+      border: 1px solid rgba(130, 80, 190, 0.15);
+      color: #6d28d9;
+    }
+
+    .auth-btns .login-btn:hover {
+      background: rgba(130, 80, 190, 0.15);
+    }
+
+    .auth-btns .register-btn {
+      background: linear-gradient(145deg, #d97706, #b45309);
+      color: white;
+    }
+
+    .auth-btns .register-btn:hover {
+      box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+    }
+
+    .chat-footer {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      border-top: 1px solid rgba(251, 191, 36, 0.08);
+      background: rgba(251, 191, 36, 0.04);
+    }
+
+    .chat-footer input {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      border: 1px solid rgba(251, 191, 36, 0.15);
+      background: rgba(255, 255, 255, 0.8);
+      color: #1a142b;
+      font-size: 0.85rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .chat-footer input:focus {
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+    }
+
+    .chat-footer input::placeholder {
+      color: #7a6a94;
+    }
+
+    .chat-footer .send-btn {
+      background: linear-gradient(145deg, #d97706, #b45309);
+      border: none;
+      border-radius: 30px;
+      padding: 0.5rem 1.2rem;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.85rem;
+    }
+
+    .chat-footer .send-btn:hover {
+      box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+    }
+
+    @media (max-width: 600px) {
+      .hero-section h1 {
+        font-size: 2rem;
+      }
+      .hero-section .icon {
+        font-size: 3rem;
+      }
+      .marketplace-card {
+        padding: 1.5rem;
+      }
+      .marketplace-card h2 {
+        font-size: 1.3rem;
+      }
+      .navbar .container {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      .chat-window {
+        width: 100vw;
+        max-width: 100vw;
+        bottom: 70px;
+        right: -10px;
+        border-radius: 20px 20px 0 0;
+      }
+      .chat-toggle {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* ===== CONTACT FORM (modal) ===== */
+    .contact-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+    .contact-modal.active {
+      display: flex;
+    }
+    .contact-modal .modal-card {
+      background: white;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 28px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      position: relative;
+      animation: modalIn 0.3s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-card .close-modal {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: #6b5d4a;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .modal-card .close-modal:hover { color: #dc2626; }
+    .modal-card h2 {
+      color: #1a142b;
+      margin-bottom: 0.5rem;
+      font-size: 1.7rem;
+    }
+    .modal-card h2 span { color: #d97706; }
+    .modal-card p {
+      color: #4b3d2b;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .modal-card .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .modal-card .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1a142b;
+      margin-bottom: 0.3rem;
+    }
+    .modal-card .form-group input,
+    .modal-card .form-group textarea,
+    .modal-card .form-group select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: 14px;
+      font-size: 0.9rem;
+      background: #faf8f6;
+      transition: 0.2s;
+    }
+    .modal-card .form-group input:focus,
+    .modal-card .form-group textarea:focus,
+    .modal-card .form-group select:focus {
+      border-color: #fbbf24;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1);
+    }
+    .modal-card .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .modal-card .submit-btn {
+      background: linear-gradient(145deg, #d97706, #b45309);
+      border: none;
+      border-radius: 40px;
+      padding: 0.8rem 1.8rem;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      width: 100%;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+    }
+    .modal-card .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(217, 119, 6, 0.3);
+    }
+    .modal-card .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 500px) {
+      .modal-card .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Toast -->
+  <div id="toast" class="toast-notification"></div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="/images/lanvai.png" alt="Lanvai Logo" class="brand-logo">
+        <span class="brand-text">Lanvai <span>ADExchange</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="adexchange.html" class="active"><i class="fas fa-ad"></i> Ad Exchange</a>
+        <a href="contactus.html"><i class="fas fa-headset"></i> Support</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero-section">
+    <div class="icon">📢</div>
+    <h1>Lanvai <span>ADExchange</span></h1>
+    <p>Connect with the right audience through premium advertising placements. Whether you're looking to advertise your brand or monetize your ad space, we've got you covered.</p>
+    <p class="sub-text">Choose your role below to get started</p>
+  </section>
+
+  <!-- ===== MARKETPLACE GRID ===== -->
+  <div class="marketplace-grid">
+    <!-- Ad Owner Card (opens contact modal) -->
+    <a href="#" class="marketplace-card" id="adOwnerCard">
+      <div class="card-icon">
+        <i class="fas fa-building"></i>
+        <i class="fas fa-arrow-right"></i>
+      </div>
+      <h2><span>Ad</span> Owner</h2>
+      <p>List your ad space and earn revenue. Get paid when advertisers place ads on your platform, website, or app.</p>
+      <span class="badge-count">💰 Earn Revenue</span>
+      <div class="arrow-link">
+        Get Started <i class="fas fa-chevron-right"></i>
+      </div>
+    </a>
+
+    <!-- Advertiser Card (links to advertiser.html) -->
+    <a href="advertiser.html" class="marketplace-card">
+      <div class="card-icon">
+        <i class="fas fa-bullhorn"></i>
+        <i class="fas fa-arrow-right"></i>
+      </div>
+      <h2><span>Ad</span>vertiser</h2>
+      <p>Reach your target audience with targeted ad campaigns. Choose from various ad formats and placements.</p>
+      <span class="badge-count">🎯 Target Audience</span>
+      <div class="arrow-link">
+        Start Advertising <i class="fas fa-chevron-right"></i>
+      </div>
+    </a>
+  </div>
+
+  <!-- ===== FEATURES SECTION ===== -->
+  <section class="features-section">
+    <h3>Why Choose <span>Lanvai ADExchange</span>?</h3>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="fi-icon"><i class="fas fa-globe"></i></div>
+        <div class="fi-title">Global Reach</div>
+        <div class="fi-desc">Reach audiences across multiple platforms and regions</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="fi-title">Real-time Analytics</div>
+        <div class="fi-desc">Track your ad performance with detailed insights</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="fi-title">Secure & Transparent</div>
+        <div class="fi-desc">Safe transactions with full transparency</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon"><i class="fas fa-hand-holding-usd"></i></div>
+        <div class="fi-title">Flexible Pricing</div>
+        <div class="fi-desc">Choose from various pricing models that suit your budget</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Lanvai ADExchange | Smart Advertising Solutions</p>
+  </footer>
+
+  <!-- ===== CONTACT MODAL (for Ad Owner) ===== -->
+  <div class="contact-modal" id="contactModal">
+    <div class="modal-card">
+      <button class="close-modal" id="closeModalBtn">&times;</button>
+      <h2><span>Ad</span> Owner Contact</h2>
+      <p>Fill in your details and we'll get back to you about listing your ad space.</p>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="john@example.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+254 700 000 000" required>
+        </div>
+        <div class="form-group">
+          <label for="adSpace">Ad Space / Platform</label>
+          <input type="text" id="adSpace" placeholder="Website, App, or Blog name" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" placeholder="Tell us about your ad space, audience, and any special requirements..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Submit Request</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== CHAT BUTTON ===== -->
+  <div class="chat-float">
+    <div class="chat-window" id="chatWindow">
+      <div class="chat-header">
+        <h3><span class="online-dot"></span>Lanvai Assistant</h3>
+        <button class="chat-close" id="chatClose">✕</button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg bot">👋 Welcome to Lanvai ADExchange! I can help you with advertising, ad placements, and monetization. What would you like to know?</div>
+      </div>
+      <div class="quick-replies">
+        <button data-q="What is ADExchange?">📢 About</button>
+        <button data-q="How do I advertise?">🎯 Advertise</button>
+        <button data-q="How do I earn?">💰 Earn</button>
+        <button data-q="Pricing">💲 Pricing</button>
+        <button data-q="Contact support">📧 Contact</button>
+      </div>
+      <div class="auth-overlay" id="authOverlay">
+        <div class="auth-icon">🔒</div>
+        <h4>Connect to a Live Person</h4>
+        <p>Please login or register to chat with a live agent.</p>
+        <div class="auth-btns">
+          <button class="login-btn" id="loginBtn">🔑 Login</button>
+          <button class="register-btn" id="registerBtn">📝 Register</button>
+        </div>
+      </div>
+      <div class="chat-footer">
+        <input type="text" id="chatInput" placeholder="Ask me about advertising...">
+        <button class="send-btn" id="sendBtn">Send</button>
+      </div>
+    </div>
+    <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+  </div>
+
+  <script>
+    // ==============================================
+    // TOAST NOTIFICATION
+    // ==============================================
+    function showToast(message, isError) {
+      isError = isError || false;
+      var toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast-notification' + (isError ? ' error' : '');
+      setTimeout(function() { toast.classList.add('show'); }, 10);
+      setTimeout(function() { toast.classList.remove('show'); }, 4000);
+    }
+
+    // ==============================================
+    // CONTACT MODAL (Ad Owner) - CONNECTED TO BACKEND
+    // ==============================================
+    (function() {
+      const modal = document.getElementById('contactModal');
+      const openBtn = document.getElementById('adOwnerCard');
+      const closeBtn = document.getElementById('closeModalBtn');
+      const form = document.getElementById('contactForm');
+      const submitBtn = form.querySelector('.submit-btn');
+
+      // open modal
+      openBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+
+      // close modal
+      function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+      });
+
+      // ===== FORM SUBMIT - CONNECTED TO BACKEND =====
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Gather data
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const adSpace = document.getElementById('adSpace').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (!name || !email || !phone || !adSpace) {
+          showToast('⚠️ Please fill in all required fields.', true);
+          return;
+        }
+
+        // Disable button and show loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+        // ===== SEND TO ADEXCHANGE BACKEND =====
+        // Using the /api/adexchange/submit endpoint for Ad Exchange inquiries
+        const inquiryData = {
+          full_name: name,
+          email: email,
+          phone: phone,
+          type: 'adowner',
+          course: 'Ad Space Listing: ' + adSpace,
+          message: 'Ad Space: ' + adSpace + '\n\nMessage: ' + message
+        };
+
+        console.log('📤 Sending Ad Owner inquiry:', inquiryData);
+
+        fetch('/api/adexchange/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(inquiryData)
+        })
+        .then(function(response) {
+          if (!response.ok) {
+            return response.json().then(function(errData) {
+              throw new Error(errData.error || 'Server error: ' + response.status);
+            });
+          }
+          return response.json();
+        })
+        .then(function(result) {
+          console.log('✅ Ad Owner inquiry submitted:', result);
+          if (result.success) {
+            showToast('✅ Thank you! Your request has been sent to the admin.');
+            form.reset();
+            closeModal();
+          } else {
+            showToast('❌ Failed to submit: ' + (result.error || 'Unknown error'), true);
+          }
+        })
+        .catch(function(error) {
+          console.error('❌ Submit error:', error);
+          showToast('❌ Error: ' + error.message, true);
+        })
+        .finally(function() {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Submit Request';
+        });
+      });
+    })();
+
+    // ==============================================
+    // CHAT FUNCTIONALITY
+    // ==============================================
+    (function() {
+      const W = document.getElementById('chatWindow'),
+        T = document.getElementById('chatToggle'),
+        C = document.getElementById('chatClose'),
+        M = document.getElementById('chatMessages'),
+        I = document.getElementById('chatInput'),
+        S = document.getElementById('sendBtn'),
+        A = document.getElementById('authOverlay'),
+        Q = document.querySelectorAll('.quick-replies button');
+      let open = !1,
+        auth = !1,
+        person = !1;
+
+      const KB = {
+        'adexchange about platform': `📢 **Lanvai ADExchange**
+
+  Lanvai ADExchange is a premium advertising marketplace that connects ad owners with advertisers.
+
+  **Two Main Roles:**
+
+  1️⃣ **Ad Owner** 🏢 - List your ad space and earn revenue
+  2️⃣ **Advertiser** 🎯 - Reach your target audience with targeted campaigns
+
+  **Key Features:**
+  • Real-time analytics
+  • Secure transactions
+  • Flexible pricing models
+  • Global reach`,
+
+        'how do I advertise advertiser': `🎯 **How to Advertise on Lanvai ADExchange**
+
+  **Step 1:** Click the "Advertiser" card on the ADExchange page.
+
+  **Step 2:** Browse available ad spaces.
+
+  **Step 3:** Select your target audience and budget.
+
+  **Step 4:** Choose your ad format:
+  • Banner Ads
+  • Native Ads
+  • Video Ads
+  • Sponsored Content
+
+  **Step 5:** Launch your campaign and track performance.
+
+  **Benefits:**
+  • Reach your target audience
+  • Real-time analytics
+  • Flexible pricing
+  • Multiple ad formats`,
+
+        'how do I earn ad owner': `💰 **How to Earn as an Ad Owner**
+
+  **Step 1:** Click the "Ad Owner" card on the ADExchange page.
+
+  **Step 2:** List your ad space by providing:
+  • Ad space details
+  • Pricing
+  • Target audience
+  • Ad formats supported
+
+  **Step 3:** Set your pricing model:
+  • CPM (Cost Per Mille)
+  • CPC (Cost Per Click)
+  • CPA (Cost Per Action)
+  • Fixed Rate
+
+  **Step 4:** Approve or reject ad requests.
+
+  **Step 5:** Get paid for every ad displayed.
+
+  **Benefits:**
+  • Passive income
+  • Flexible pricing
+  • Full control over approvals
+  • Real-time earnings tracking`,
+
+        'pricing advertising costs': `💲 **Lanvai ADExchange Pricing**
+
+  **For Advertisers:**
+  • CPM: $2.50 - $10.00 per 1000 impressions
+  • CPC: $0.50 - $2.00 per click
+  • CPA: $5.00 - $50.00 per action
+  • Fixed Rate: Custom pricing available
+
+  **For Ad Owners:**
+  • Platform Fee: 10% of revenue
+  • Payment: Monthly payouts
+  • Minimum Payout: $50
+
+  **Payment Methods:**
+  • Bank Transfer
+  • M-Pesa
+  • PayPal
+  • Credit Card`,
+
+        'contact support email phone': `📧 **Contact Us**
+  📍 Thika Road Wendani, Nairobi, Kenya
+  📞 +254 794914597 / +254 758887164
+  📧 lanvai254@lanvai.com / support@lanvai.com`
+      };
+
+      function findAnswer(q) {
+        q = q.toLowerCase();
+
+        if (q.includes('person') || q.includes('agent') || q.includes('live') || (q.includes('support') && q.includes(
+            'talk'))) return 'person';
+
+        if (q.includes('advertise') || q.includes('advertising') || q.includes('campaign') || q.includes('target') || q
+          .includes('audience') || q.includes('sponsor')) {
+          return KB['how do I advertise advertiser'];
+        }
+
+        if (q.includes('earn') || q.includes('owner') || q.includes('monetize') || q.includes('revenue') || q.includes(
+            'income') || q.includes('list ad') || q.includes('ad space')) {
+          return KB['how do I earn ad owner'];
+        }
+
+        if (q.includes('price') || q.includes('cost') || q.includes('fee') || q.includes('pay') || q.includes(
+            'cp') || q.includes('cpm') || q.includes('cpc') || q.includes('cpa')) {
+          return KB['pricing advertising costs'];
+        }
+
+        for (let [keys, val] of Object.entries(KB)) {
+          let k = keys.split(' ');
+          for (let word of k) {
+            if (q.includes(word) || word.includes(q.split(' ')[0])) return val;
+          }
+        }
+
+        return `I can help with: 📢 About ADExchange | 🎯 How to Advertise | 💰 How to Earn | 💲 Pricing | 📧 Contact. What would you like to know?`;
+      }
+
+      function send() {
+        let t = I.value.trim();
+        if (!t) return;
+        addMsg(t, 'user');
+        I.value = '';
+        let r = findAnswer(t);
+        if (r === 'person') {
+          if (auth) {
+            addMsg('🟢 Connecting to agent...', 'system');
+            setTimeout(() => {
+              addMsg('👤 Agent: How can I help you with advertising?', 'bot');
+              person = !0;
+              A.classList.remove('show');
+            }, 1200);
+          } else {
+            A.classList.add('show');
+            I.disabled = S.disabled = !0;
+            addMsg('🔐 Please login or register to connect with a live person.', 'system');
+          }
+          return;
+        }
+        setTimeout(() => addMsg(r, 'bot'), 300 + Math.random() * 500);
+      }
+
+      function addMsg(t, c) {
+        let d = document.createElement('div');
+        d.className = 'msg ' + c;
+        d.textContent = t;
+        M.appendChild(d);
+        M.scrollTop = M.scrollHeight;
+      }
+
+      T.onclick = () => {
+        open = !open;
+        W.classList.toggle('open', open);
+        if (open) I.focus();
+      };
+      C.onclick = () => {
+        open = !1;
+        W.classList.remove('open');
+      };
+      document.onkeydown = e => {
+        if (e.key === 'Escape' && open) {
+          open = !1;
+          W.classList.remove('open');
+        }
+      };
+      S.onclick = send;
+      I.onkeydown = e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          send();
+        }
+      };
+      Q.forEach(b => b.onclick = () => {
+        I.value = b.dataset.q;
+        send();
+      });
+      document.getElementById('loginBtn').onclick = () => {
+        auth = !0;
+        A.classList.remove('show');
+        I.disabled = S.disabled = !1;
+        addMsg('✅ Logged in! You can now connect to a live person.', 'system');
+      };
+      document.getElementById('registerBtn').onclick = () => {
+        auth = !0;
+        A.classList.remove('show');
+        I.disabled = S.disabled = !1;
+        addMsg('✅ Registered! You can now connect to a live person.', 'system');
+      };
+      I.disabled = S.disabled = !1;
+      setTimeout(() => addMsg('💡 Ask about: Advertising, Earning, Pricing, or Contact Support!', 'system'), 1200);
+    })();
+
+    // ==============================================
+    // TRACKING
+    // ==============================================
+    (function() {
+      var API_BASE = 'http://localhost:5000/api';
+      var visitorId = localStorage.getItem('visitor_id');
+      if (!visitorId) {
+        visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+        localStorage.setItem('visitor_id', visitorId);
+      }
+
+      function trackPageView() {
+        var data = {
+          pageUrl: window.location.pathname || '/',
+          pageTitle: document.title || 'Unknown Page',
+          referrerUrl: document.referrer || ''
+        };
+        fetch(API_BASE + '/track/pageview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }).catch(function() {});
+      }
+
+      trackPageView();
+    })();
+  </script>
+</body>
+</html>

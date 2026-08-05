@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institution - Sign In / Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            color: #f0ecf7;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 520px;
+            padding: 1.5rem;
+        }
+
+        .auth-card {
+            background: rgba(40, 30, 65, 0.35);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-logo img {
+            height: 50px;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-logo h2 {
+            color: #f2ecff;
+            font-weight: 700;
+        }
+
+        .auth-logo h2 span {
+            color: #a87cdb;
+        }
+
+        .auth-logo p {
+            color: #7a6a94;
+            font-size: 0.85rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: none;
+            background: transparent;
+            color: #7a6a94;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .auth-tab:hover {
+            color: #b8aad0;
+            background: rgba(40, 30, 65, 0.3);
+        }
+
+        .auth-tab.active {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .auth-tab i {
+            margin-right: 0.5rem;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-control {
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            color: #f0eaff;
+            padding: 0.7rem 1rem;
+            transition: 0.25s;
+        }
+
+        .form-control:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+            color: #f0eaff;
+        }
+
+        .form-control::placeholder {
+            color: #7a6a94;
+        }
+
+        .form-label {
+            color: #b8aad0;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .form-select {
+            background: rgba(12, 8, 24, 0.5);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            color: #f0eaff;
+            padding: 0.7rem 1rem;
+        }
+
+        .form-select option {
+            background: #1b142b;
+            color: #f0eaff;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-auth.btn-signup {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            color: white;
+        }
+
+        .btn-auth.btn-signup:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-auth.btn-signin {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-auth.btn-signin:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-auth.btn-reset {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .btn-auth.btn-reset:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-auth.btn-back {
+            background: rgba(255, 255, 255, 0.05);
+            color: #b8aad0;
+            border: 1px solid rgba(160, 120, 200, 0.1);
+        }
+
+        .btn-auth.btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .btn-auth:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.2rem 0;
+            color: #7a6a94;
+            font-size: 0.8rem;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(160, 120, 200, 0.1);
+        }
+
+        .auth-divider span {
+            padding: 0 1rem;
+        }
+
+        .forgot-password-link {
+            color: #a87cdb;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .forgot-password-link:hover {
+            color: #cfbcfa;
+            text-decoration: underline;
+        }
+
+        /* Verification */
+        .verification-section {
+            display: none;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .verification-section.show {
+            display: block;
+        }
+
+        .verification-section .icon {
+            font-size: 3rem;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+
+        .verification-section h4 {
+            color: #f0ecf7;
+            margin-bottom: 0.3rem;
+        }
+
+        .verification-section p {
+            color: #7a6a94;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .code-input-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 0.8rem 0;
+        }
+
+        .code-input {
+            width: 45px;
+            height: 55px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: rgba(12, 8, 24, 0.5);
+            border: 2px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            color: #f0eaff;
+            transition: 0.25s;
+        }
+
+        .code-input:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+            outline: none;
+        }
+
+        .resend-link {
+            color: #a87cdb;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .resend-link:hover {
+            color: #cfbcfa;
+            text-decoration: underline;
+        }
+
+        .resend-link.disabled {
+            color: #7a6a94;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .alert-message {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .alert-message.show {
+            display: block;
+        }
+
+        .alert-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .alert-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #4ade80;
+        }
+
+        .alert-message.info {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            color: #a78bfa;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7a6a94;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .password-toggle:hover {
+            color: #b8aad0;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.2rem;
+            }
+            .code-input {
+                width: 38px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+            .auth-tab {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toast" class="toast-notification"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <h2>🏛️ Institution <span>Access</span></h2>
+                <p>Sign in or register your institution</p>
+            </div>
+
+            <div class="auth-tabs" id="authTabs">
+                <button class="auth-tab active" data-tab="signin" onclick="switchTab('signin')">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                <button class="auth-tab" data-tab="signup" onclick="switchTab('signup')">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+            </div>
+
+            <div id="alertMessage" class="alert-message"></div>
+
+            <!-- Sign In Form -->
+            <div id="signinForm" class="auth-form active">
+                <form onsubmit="signIn(event)">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" class="form-control" id="signinEmail" placeholder="institution@email.com" required>
+                    </div>
+                    <div class="mb-3 position-relative">
+                        <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" class="form-control" id="signinPassword" placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('signinPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="text-end mb-3">
+                        <a href="#" class="forgot-password-link" onclick="showForgotPassword()">
+                            <i class="fas fa-key"></i> Forgot Password?
+                        </a>
+                    </div>
+                    <button type="submit" class="btn-auth btn-signin" id="signinBtn">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+                <div class="auth-divider">
+                    <span>New institution? <a href="#" onclick="switchTab('signup')" style="color:#a87cdb;">Register Here</a></span>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signupForm" class="auth-form">
+                <form onsubmit="signUp(event)">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-university"></i> Institution Name *</label>
+                        <input type="text" class="form-control" id="instName" placeholder="Full institution name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-user-tie"></i> Admin Name *</label>
+                        <input type="text" class="form-control" id="adminName" placeholder="Full name of admin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email Address *</label>
+                        <input type="email" class="form-control" id="signupEmail" placeholder="institution@email.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-tag"></i> Institution Type</label>
+                        <select class="form-select" id="instType">
+                            <option value="">Select Type</option>
+                            <option value="University">University</option>
+                            <option value="College">College</option>
+                            <option value="Training Center">Training Center</option>
+                            <option value="Bootcamp">Bootcamp</option>
+                            <option value="Online Academy">Online Academy</option>
+                            <option value="Vocational School">Vocational School</option>
+                            <option value="High School">High School</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-hashtag"></i> Registration Number</label>
+                        <input type="text" class="form-control" id="regNumber" placeholder="e.g., TVET/2024/0123">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-globe"></i> Website (Optional)</label>
+                        <input type="url" class="form-control" id="instWebsite" placeholder="https://your-institution.com">
+                    </div>
+                    <div class="mb-3 position-relative">
+                        <label class="form-label"><i class="fas fa-lock"></i> Password *</label>
+                        <input type="password" class="form-control" id="signupPassword" placeholder="Min 6 characters" minlength="6" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="btn-auth btn-signup" id="signupBtn">
+                        <i class="fas fa-user-plus"></i> Register Institution
+                    </button>
+                </form>
+                <div class="auth-divider">
+                    <span>Already registered? <a href="#" onclick="switchTab('signin')" style="color:#a87cdb;">Sign In</a></span>
+                </div>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgotPasswordForm" class="auth-form">
+                <div class="text-center mb-3">
+                    <i class="fas fa-key" style="font-size: 2.5rem; color: #f59e0b;"></i>
+                    <h4 style="color: #f0ecf7; margin-top: 0.5rem;">Reset Password</h4>
+                    <p style="color: #7a6a94; font-size: 0.85rem;">
+                        Enter your email address and we'll send you a link to reset your password.
+                    </p>
+                </div>
+                <form onsubmit="resetPassword(event)">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" class="form-control" id="resetEmail" placeholder="institution@email.com" required>
+                    </div>
+                    <button type="submit" class="btn-auth btn-reset" id="resetBtn">
+                        <i class="fas fa-paper-plane"></i> Send Reset Link
+                    </button>
+                    <button type="button" class="btn-auth btn-back mt-2" onclick="hideForgotPassword()">
+                        <i class="fas fa-arrow-left"></i> Back to Sign In
+                    </button>
+                </form>
+            </div>
+
+            <!-- Reset Password Confirmation -->
+            <div id="resetConfirmation" class="verification-section">
+                <div class="icon">📧</div>
+                <h4>Check Your Email</h4>
+                <p>We've sent a password reset link to <strong id="resetEmailDisplay"></strong></p>
+                <p style="color: #7a6a94; font-size: 0.85rem; margin-top: 0.5rem;">
+                    Please check your inbox and follow the instructions to reset your password.
+                </p>
+                <button class="btn-auth btn-back mt-3" onclick="hideForgotPassword()">
+                    <i class="fas fa-arrow-left"></i> Back to Sign In
+                </button>
+            </div>
+
+            <!-- Verification Section -->
+            <div id="verificationSection" class="verification-section">
+                <div class="icon">📧</div>
+                <h4>Verify Your Email</h4>
+                <p>We've sent a 6-digit verification code to <strong id="verifyEmailDisplay"></strong></p>
+                <div class="code-input-group" id="codeInputGroup">
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]" required>
+                </div>
+                <button class="btn-auth btn-signup" onclick="verifyCode()" id="verifyBtn">
+                    <i class="fas fa-check"></i> Verify Account
+                </button>
+                <p style="margin-top: 0.8rem; font-size: 0.8rem; color: #7a6a94;">
+                    Didn't receive the code?
+                    <span class="resend-link" onclick="resendCode()" id="resendLink">Resend Code</span>
+                </p>
+                <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #7a6a94;">
+                    <a href="#" onclick="switchTab('signin')" style="color:#a87cdb;">Back to Sign In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==============================================
+        // API BASE
+        // ==============================================
+        var API_BASE = '/api';
+
+        // ==============================================
+        // TOAST NOTIFICATION
+        // ==============================================
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ==============================================
+        // SHOW ALERT MESSAGE
+        // ==============================================
+        function showAlert(message, type) {
+            var alertEl = document.getElementById('alertMessage');
+            alertEl.textContent = message;
+            alertEl.className = 'alert-message show ' + type;
+        }
+
+        function hideAlert() {
+            document.getElementById('alertMessage').className = 'alert-message';
+        }
+
+        // ==============================================
+        // SWITCH TAB
+        // ==============================================
+        function switchTab(tab) {
+            hideAlert();
+            document.querySelectorAll('.auth-tab').forEach(function(t) {
+                t.classList.remove('active');
+            });
+            document.querySelector('.auth-tab[data-tab="' + tab + '"]').classList.add('active');
+
+            document.getElementById('signinForm').classList.remove('active');
+            document.getElementById('signupForm').classList.remove('active');
+            document.getElementById('forgotPasswordForm').classList.remove('active');
+            document.getElementById('resetConfirmation').classList.remove('show');
+
+            if (tab === 'signin') {
+                document.getElementById('signinForm').classList.add('active');
+            } else if (tab === 'signup') {
+                document.getElementById('signupForm').classList.add('active');
+            }
+
+            document.getElementById('verificationSection').classList.remove('show');
+        }
+
+        // ==============================================
+        // FORGOT PASSWORD
+        // ==============================================
+        function showForgotPassword() {
+            hideAlert();
+            document.getElementById('signinForm').classList.remove('active');
+            document.getElementById('signupForm').classList.remove('active');
+            document.getElementById('forgotPasswordForm').classList.add('active');
+            document.getElementById('resetConfirmation').classList.remove('show');
+            document.getElementById('authTabs').style.display = 'none';
+        }
+
+        function hideForgotPassword() {
+            document.getElementById('forgotPasswordForm').classList.remove('active');
+            document.getElementById('resetConfirmation').classList.remove('show');
+            document.getElementById('authTabs').style.display = 'flex';
+            switchTab('signin');
+        }
+
+        function resetPassword(event) {
+            event.preventDefault();
+            hideAlert();
+
+            var email = document.getElementById('resetEmail').value.trim();
+            var btn = document.getElementById('resetBtn');
+
+            if (!email) {
+                showAlert('Please enter your email address', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Sending...';
+
+            var data = { email: email };
+
+            fetch(API_BASE + '/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    document.getElementById('resetEmailDisplay').textContent = email;
+                    document.getElementById('forgotPasswordForm').classList.remove('active');
+                    document.getElementById('resetConfirmation').classList.add('show');
+                    showToast('✅ Password reset link sent to your email');
+                } else {
+                    showAlert(result.error || 'Failed to send reset link', 'error');
+                    showToast('❌ ' + (result.error || 'Failed to send reset link'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Reset password error:', error);
+                showAlert(error.message || 'An error occurred', 'error');
+                showToast('❌ ' + (error.message || 'Failed to send reset link'), true);
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link';
+            });
+        }
+
+        // ==============================================
+        // TOGGLE PASSWORD
+        // ==============================================
+        function togglePassword(inputId, btn) {
+            var input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        }
+
+        // ==============================================
+        // CODE INPUT AUTO-FOCUS
+        // ==============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            var codeInputs = document.querySelectorAll('.code-input');
+            codeInputs.forEach(function(input, index) {
+                input.addEventListener('input', function(e) {
+                    var val = this.value;
+                    if (val.length === 1 && index < codeInputs.length - 1) {
+                        codeInputs[index + 1].focus();
+                    }
+                    if (val.length === 0 && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                    if (val.length > 1) {
+                        var chars = val.split('');
+                        for (var i = 0; i < Math.min(chars.length, codeInputs.length - index); i++) {
+                            codeInputs[index + i].value = chars[i];
+                        }
+                        if (index + chars.length < codeInputs.length) {
+                            codeInputs[index + chars.length].focus();
+                        }
+                    }
+                    var allFilled = true;
+                    codeInputs.forEach(function(c) {
+                        if (c.value.length === 0) allFilled = false;
+                    });
+                });
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+                input.addEventListener('keypress', function(e) {
+                    var charCode = e.which ? e.which : e.keyCode;
+                    if (charCode < 48 || charCode > 57) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+
+        // ==============================================
+        // SIGN UP INSTITUTION
+        // ==============================================
+        function signUp(event) {
+            event.preventDefault();
+            hideAlert();
+
+            var instName = document.getElementById('instName').value.trim();
+            var adminName = document.getElementById('adminName').value.trim();
+            var email = document.getElementById('signupEmail').value.trim();
+            var password = document.getElementById('signupPassword').value;
+            var instType = document.getElementById('instType').value;
+            var regNumber = document.getElementById('regNumber').value.trim();
+            var website = document.getElementById('instWebsite').value.trim();
+            var btn = document.getElementById('signupBtn');
+
+            if (!instName || !adminName || !email || !password) {
+                showAlert('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters long', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Registering...';
+
+            var data = {
+                institution_name: instName,
+                admin_name: adminName,
+                email: email,
+                password: password,
+                institution_type: instType,
+                reg_number: regNumber,
+                website: website,
+                branches: [],
+                verification_docs: {}
+            };
+
+            fetch(API_BASE + '/institution/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showAlert('Institution registered! Please check your email for verification code.', 'success');
+                    document.getElementById('verifyEmailDisplay').textContent = email;
+                    document.getElementById('verificationSection').classList.add('show');
+                    showToast('✅ Verification code sent to your email');
+                } else {
+                    showAlert(result.error || 'Registration failed', 'error');
+                    showToast('❌ ' + (result.error || 'Registration failed'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Signup error:', error);
+                showAlert(error.message || 'An error occurred during registration', 'error');
+                showToast('❌ ' + (error.message || 'Registration failed'), true);
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Register Institution';
+            });
+        }
+
+        // ==============================================
+        // VERIFY CODE
+        // ==============================================
+        function verifyCode() {
+            var codeInputs = document.querySelectorAll('.code-input');
+            var code = '';
+            codeInputs.forEach(function(input) {
+                code += input.value;
+            });
+
+            if (code.length < 6) {
+                showAlert('Please enter the complete 6-digit code', 'error');
+                return;
+            }
+
+            var email = document.getElementById('signupEmail').value.trim() || document.getElementById('verifyEmailDisplay').textContent.trim();
+            var btn = document.getElementById('verifyBtn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Verifying...';
+
+            var data = {
+                email: email,
+                code: code
+            };
+
+            fetch(API_BASE + '/auth/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showAlert('✅ Account verified successfully! Please sign in.', 'success');
+                    showToast('✅ Account verified successfully!');
+                    setTimeout(function() {
+                        switchTab('signin');
+                        document.getElementById('signinEmail').value = email;
+                        document.getElementById('signinPassword').value = '';
+                    }, 1500);
+                } else {
+                    showAlert(result.error || 'Verification failed', 'error');
+                    showToast('❌ ' + (result.error || 'Verification failed'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Verification error:', error);
+                showAlert(error.message || 'An error occurred during verification', 'error');
+                showToast('❌ ' + (error.message || 'Verification failed'), true);
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Verify Account';
+            });
+        }
+
+        // ==============================================
+        // RESEND CODE
+        // ==============================================
+        var resendCooldown = 0;
+
+        function resendCode() {
+            var email = document.getElementById('signupEmail').value.trim() || document.getElementById('verifyEmailDisplay').textContent.trim();
+            var link = document.getElementById('resendLink');
+
+            if (resendCooldown > 0) {
+                showToast('⏳ Please wait ' + resendCooldown + ' seconds before resending', true);
+                return;
+            }
+
+            if (!email) {
+                showAlert('Please enter your email address first', 'error');
+                return;
+            }
+
+            link.classList.add('disabled');
+            link.textContent = 'Sending...';
+
+            var data = { email: email };
+
+            fetch(API_BASE + '/auth/resend', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('✅ Verification code resent to your email');
+                    showAlert('New verification code sent to your email', 'success');
+                    resendCooldown = 60;
+                    updateResendTimer();
+                } else {
+                    showAlert(result.error || 'Failed to resend code', 'error');
+                    showToast('❌ ' + (result.error || 'Failed to resend code'), true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Resend error:', error);
+                showAlert(error.message || 'An error occurred', 'error');
+                showToast('❌ ' + (error.message || 'Failed to resend code'), true);
+            })
+            .finally(function() {
+                link.classList.remove('disabled');
+                link.textContent = 'Resend Code';
+            });
+        }
+
+        function updateResendTimer() {
+            var link = document.getElementById('resendLink');
+            if (resendCooldown > 0) {
+                link.classList.add('disabled');
+                link.textContent = 'Wait ' + resendCooldown + 's';
+                resendCooldown--;
+                setTimeout(updateResendTimer, 1000);
+            } else {
+                link.classList.remove('disabled');
+                link.textContent = 'Resend Code';
+            }
+        }
+
+        // ==============================================
+        // SIGN IN INSTITUTION
+        // ==============================================
+        function signIn(event) {
+            event.preventDefault();
+            hideAlert();
+
+            var email = document.getElementById('signinEmail').value.trim();
+            var password = document.getElementById('signinPassword').value;
+            var btn = document.getElementById('signinBtn');
+
+            if (!email || !password) {
+                showAlert('Please enter your email and password', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Signing In...';
+
+            var data = {
+                email: email,
+                password: password
+            };
+
+            fetch(API_BASE + '/institution/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(errData) {
+                        throw new Error(errData.error || 'Server error');
+                    });
+                }
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.success) {
+                    localStorage.setItem('session_token', result.session_token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    showToast('✅ Welcome back, ' + (result.user.institution_name || result.user.full_name) + '!');
+                    window.location.href = result.redirect || '/institution-dashboard.html';
+                } else {
+                    if (result.verified === false) {
+                        document.getElementById('verifyEmailDisplay').textContent = email;
+                        document.getElementById('verificationSection').classList.add('show');
+                        showAlert('Please verify your email first. Check your inbox for the verification code.', 'info');
+                    } else {
+                        showAlert(result.error || 'Sign in failed', 'error');
+                        showToast('❌ ' + (result.error || 'Sign in failed'), true);
+                    }
+                }
+            })
+            .catch(function(error) {
+                console.error('Signin error:', error);
+                showAlert(error.message || 'An error occurred during sign in', 'error');
+                showToast('❌ ' + (error.message || 'Sign in failed'), true);
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            });
+        }
+
+        // ==============================================
+        // CHECK SESSION
+        // ==============================================
+        function checkSession() {
+            var token = localStorage.getItem('session_token');
+            if (!token) return;
+
+            fetch(API_BASE + '/institution/status?token=' + encodeURIComponent(token), {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(function(response) {
+                if (!response.ok) return;
+                return response.json();
+            })
+            .then(function(data) {
+                if (data && data.success) {
+                    window.location.href = data.redirect || '/institution-dashboard.html';
+                } else {
+                    localStorage.removeItem('session_token');
+                    localStorage.removeItem('user');
+                }
+            })
+            .catch(function() {});
+        }
+
+        // ==============================================
+        // INITIALIZE
+        // ==============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSession();
+        });
+    </script>
+</body>
+
+</html>

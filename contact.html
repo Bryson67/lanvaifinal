@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai Courses - Contact Us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0e0a1a 0%, #1a142b 100%);
+            min-height: 100vh;
+            color: #f0ecf7;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        /* Navbar */
+        .navbar-custom {
+            background: rgba(14, 10, 26, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(160, 120, 200, 0.1);
+            padding: 0.8rem 0;
+        }
+        .navbar-brand {
+            color: #f0ecf7 !important;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .navbar-brand i {
+            font-size: 1.5rem;
+            color: #a87cdb;
+        }
+        .nav-link {
+            color: #b8aad0 !important;
+            transition: 0.2s;
+        }
+        .nav-link:hover {
+            color: #f0ecf7 !important;
+        }
+        .nav-link.active {
+            color: #cfbcfa !important;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Hero Section */
+        .contact-hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-bottom: 2.5rem;
+            background: rgba(40, 30, 65, 0.3);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 24px;
+        }
+        .contact-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f2ecff;
+        }
+        .contact-hero h1 i {
+            color: #a87cdb;
+        }
+        .contact-hero p {
+            color: #b8aad0;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0.5rem auto 0;
+        }
+
+        /* Course Info Cards */
+        .course-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        .course-info-card {
+            background: rgba(30, 22, 50, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 14px;
+            padding: 1rem;
+            text-align: center;
+            transition: 0.25s;
+        }
+        .course-info-card:hover {
+            border-color: rgba(160, 120, 200, 0.2);
+            background: rgba(40, 30, 65, 0.4);
+            transform: translateY(-3px);
+        }
+        .course-info-card .course-icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .course-info-card .course-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e8ddf5;
+        }
+        .course-info-card .course-category {
+            font-size: 0.7rem;
+            color: #7a6a94;
+        }
+
+        /* Contact Info Cards */
+        .info-card {
+            background: rgba(30, 22, 50, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: 0.25s;
+            height: 100%;
+        }
+        .info-card:hover {
+            border-color: rgba(160, 120, 200, 0.2);
+            background: rgba(40, 30, 65, 0.4);
+        }
+        .info-card i {
+            font-size: 2.5rem;
+            color: #a87cdb;
+            margin-bottom: 0.5rem;
+        }
+        .info-card h4 {
+            color: #dac9f0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .info-card p {
+            color: #b8aad0;
+            margin-bottom: 0.2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Contact Form */
+        .contact-form-container {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+        .contact-form-container h2 {
+            color: #dac9f0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .contact-form-container h2 i {
+            color: #a87cdb;
+        }
+        .contact-form-container .text-muted {
+            color: #7a6a94 !important;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #b8aad0;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+        .form-control-custom {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(12, 8, 24, 0.6);
+            border: 1px solid rgba(180, 150, 220, 0.15);
+            border-radius: 12px;
+            color: #f0eaff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.25s;
+        }
+        .form-control-custom:focus {
+            border-color: #a87cdb;
+            box-shadow: 0 0 0 3px rgba(150, 100, 210, 0.15);
+        }
+        .form-control-custom::placeholder {
+            color: #7a6a94;
+        }
+        .form-control-custom.invalid {
+            border-color: #f87171;
+        }
+        .form-control-custom select option {
+            background: #1b142b;
+            color: #eae0f5;
+        }
+        textarea.form-control-custom {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .error-msg {
+            display: none;
+            font-size: 0.75rem;
+            color: #f87171;
+            margin-top: 0.2rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(145deg, #7d56b5, #5b3a8a);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .btn-submit:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 20px rgba(125, 86, 181, 0.3);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Map */
+        .map-container {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: 100%;
+        }
+        .map-container h4 {
+            color: #dac9f0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+        .map-placeholder {
+            background: rgba(12, 8, 24, 0.4);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .map-placeholder i.fa-map-marker-alt {
+            font-size: 3rem;
+            color: #a87cdb;
+        }
+        .map-placeholder h5 {
+            color: #f0ecf7;
+            margin-top: 0.5rem;
+        }
+        .map-placeholder .text-muted {
+            color: #7a6a94 !important;
+        }
+        .map-placeholder hr {
+            border-color: rgba(160, 120, 200, 0.08);
+            margin: 1rem 0;
+        }
+        .map-placeholder .social-icons i {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .map-placeholder .social-icons i:hover {
+            transform: scale(1.1);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: rgba(30, 22, 50, 0.5);
+            border: 1px solid rgba(160, 120, 200, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2.5rem;
+        }
+        .faq-section h3 {
+            color: #dac9f0;
+            font-weight: 600;
+        }
+        .faq-section h3 i {
+            color: #a87cdb;
+        }
+
+        .faq-item {
+            background: rgba(12, 8, 24, 0.3);
+            border: 1px solid rgba(160, 120, 200, 0.06);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.6rem;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .faq-item:hover {
+            border-color: rgba(160, 120, 200, 0.15);
+        }
+        .faq-item .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #e8ddf5;
+            font-weight: 500;
+        }
+        .faq-item .faq-question i {
+            color: #7a6a94;
+            transition: 0.3s;
+        }
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        .faq-item .faq-answer {
+            display: none;
+            color: #b8aad0;
+            font-size: 0.9rem;
+            padding-top: 0.5rem;
+            line-height: 1.6;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(160, 120, 200, 0.08);
+            color: #5e4d78;
+            font-size: 0.85rem;
+        }
+
+        /* Chat floating */
+        .chat-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+        }
+        .chat-float .chat-toggle {
+            background: #5a3a8a;
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 1.2rem;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .chat-float .chat-toggle .badge {
+            background: #4ade80;
+            color: #0e0a1a;
+            font-size: 0.6rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            margin-left: 0.3rem;
+        }
+
+        @media (max-width: 600px) {
+            .contact-hero h1 { font-size: 1.8rem; }
+            .contact-hero { padding: 2rem 1rem; }
+            .contact-form-container { padding: 1.2rem; }
+            .course-info-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="courses.html">
+                <i class="fas fa-chart-line"></i> EDULINK
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="courses.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="library.html">Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="institution.html">📋 institution</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Hero Section -->
+        <div class="contact-hero">
+            <h1><i class="fas fa-graduation-cap"></i> Contact EDULINK</h1>
+            <p>Have questions about our courses, enrollment, or need assistance? We're here to help you every step of the way.</p>
+        </div>
+
+        <!-- Course Categories Grid -->
+        <h4 style="color:#dac9f0; margin-bottom:0.8rem;"><i class="fas fa-book-open"></i> Our Course Categories</h4>
+        <div class="course-info-grid">
+            <div class="course-info-card">
+                <div class="course-icon">💻</div>
+                <div class="course-name">Technology</div>
+                <div class="course-category">AI, Cloud, Cybersecurity</div>
+            </div>
+            <div class="course-info-card">
+                <div class="course-icon">📊</div>
+                <div class="course-name">Data Science</div>
+                <div class="course-category">Analytics, ML, Python</div>
+            </div>
+            <div class="course-info-card">
+                <div class="course-icon">🎨</div>
+                <div class="course-name">Design</div>
+                <div class="course-category">UI/UX, Graphic Design</div>
+            </div>
+            <div class="course-info-card">
+                <div class="course-icon">📈</div>
+                <div class="course-name">Business</div>
+                <div class="course-category">Admin, Finance, Marketing</div>
+            </div>
+            <div class="course-info-card">
+                <div class="course-icon">⚕️</div>
+                <div class="course-name">Healthcare</div>
+                <div class="course-category">Management, Administration</div>
+            </div>
+            <div class="course-info-card">
+                <div class="course-icon">🌍</div>
+                <div class="course-name">Study Abroad</div>
+                <div class="course-category">International Programs</div>
+            </div>
+        </div>
+
+        <!-- Contact Info Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Visit Us</h4>
+                    <p>Thika Road Wendani</p>
+                    <p>Nairobi, Kenya</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h4>Call Us</h4>
+                    <p>+254 794914597</p>
+                    <p>+254 758887164</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Email Us</h4>
+                    <p>courses@lanvai.com</p>
+                    <p>support@lanvai.com</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form and Map -->
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="contact-form-container">
+                    <h2><i class="fas fa-paper-plane"></i> Course Inquiry</h2>
+                    <p class="text-muted mb-4">Fill out the form below and we'll get back to you with course information.</p>
+
+                    <form id="contactForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Full Name *</label>
+                                    <input type="text" id="fullName" class="form-control-custom" placeholder="Enter your full name">
+                                    <div class="error-msg" id="fullNameError">Name is required</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email Address *</label>
+                                    <input type="email" id="emailAddress" class="form-control-custom" placeholder="Enter your email">
+                                    <div class="error-msg" id="emailAddressError">Valid email is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="phoneNumber" class="form-control-custom" placeholder="Enter your phone number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Course of Interest *</label>
+                                    <select id="subject" class="form-control-custom">
+                                        <option value="">Select a course</option>
+                                        <option value="Data Science">Data Science & Analytics</option>
+                                        <option value="Web Development">Full Stack Web Development</option>
+                                        <option value="Digital Marketing">Digital Marketing Mastery</option>
+                                        <option value="UI/UX Design">UI/UX Design Pro</option>
+                                        <option value="Business Admin">Business Administration</option>
+                                        <option value="AI & ML">AI & Machine Learning</option>
+                                        <option value="Graphic Design">Graphic Design Essentials</option>
+                                        <option value="Python">Python Programming</option>
+                                        <option value="Cloud Computing">Cloud Computing & DevOps</option>
+                                        <option value="Healthcare">Healthcare Management</option>
+                                        <option value="Study Abroad">Study Abroad Programs</option>
+                                        <option value="Other">Other / General Inquiry</option>
+                                    </select>
+                                    <div class="error-msg" id="subjectError">Please select a course</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Message *</label>
+                            <textarea id="message" class="form-control-custom" placeholder="Tell us what you'd like to learn or ask about the course..."></textarea>
+                            <div class="error-msg" id="messageError">Message is required</div>
+                        </div>
+                        <button type="submit" class="btn-submit" id="submitBtn">Send Inquiry →</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="map-container">
+                    <h4><i class="fas fa-map"></i> Our Location</h4>
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h5>Nairobi, Kenya</h5>
+                        <p class="text-muted">Thika Road, Wendani</p>
+                        <hr>
+                        <div class="social-icons d-flex justify-content-center gap-3">
+                            <a href="https://www.facebook.com/lanvaiofficial/" target="_blank" style="color: #1877f2;"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://twitter.com/lanvaiofficial" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.linkedin.com/in/lanvai-company-8413453b5/?isSelfProfile=true" target="_blank" style="color: #0077b5;"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://www.instagram.com/lanvaiofficial/" target="_blank" style="color: #e4405f;"><i class="fab fa-instagram"></i></a>
+                            
+                            <a href="https://www.youtube.com/lanvaiofficial" target="_blank" style="color: #ff0000;"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h3 class="text-center mb-4"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="faq-item" data-faq="1">
+                        <div class="faq-question">
+                            <span>How do I enroll in a course?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Browse our courses on the Students page, click "Enroll Now" on your chosen course, and fill out the enrollment form. You'll receive a confirmation within 24 hours.</div>
+                    </div>
+                    <div class="faq-item" data-faq="2">
+                        <div class="faq-question">
+                            <span>What payment methods are accepted?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">We accept Bank Transfer, M-Pesa, Credit/Debit Cards, and PayPal. All payments are securely processed.</div>
+                    </div>
+                    <div class="faq-item" data-faq="3">
+                        <div class="faq-question">
+                            <span>Do you offer certificates?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Yes! Upon successful completion of any course, you receive a verifiable certificate from the institution and Lanvai Courses.</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="faq-item" data-faq="4">
+                        <div class="faq-question">
+                            <span>How long does enrollment take?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Enrollment processing typically takes 24-48 hours. You'll receive a welcome email with course access details.</div>
+                    </div>
+                    <div class="faq-item" data-faq="5">
+                        <div class="faq-question">
+                            <span>Can I get a refund?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Yes, we offer a 7-day money-back guarantee for all courses. Contact us within 7 days for a full refund.</div>
+                    </div>
+                    <div class="faq-item" data-faq="6">
+                        <div class="faq-question">
+                            <span>Do you have study abroad options?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">Yes! We partner with universities in the UK, USA, Canada, Australia, Germany, and more. Contact us for details.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Lanvai Courses | Smart Solutions for Smart Learners</p>
+    </footer>
+
+    <!-- Chat Floating -->
+    <div class="chat-float">
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script>
+        // ==============================================
+        // TOAST NOTIFICATION
+        // ==============================================
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ==============================================
+        // CONTACT FORM - SEND TO BACKEND
+        // ==============================================
+        var API_BASE = '/api';
+
+        var contactForm = document.getElementById('contactForm');
+        var submitBtn = document.getElementById('submitBtn');
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var isValid = true;
+            var fullName = document.getElementById('fullName').value.trim();
+            var email = document.getElementById('emailAddress').value.trim();
+            var phone = document.getElementById('phoneNumber').value.trim();
+            var subject = document.getElementById('subject').value;
+            var message = document.getElementById('message').value.trim();
+
+            // Validate
+            if (!fullName) {
+                document.getElementById('fullNameError').style.display = 'block';
+                document.getElementById('fullName').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('fullNameError').style.display = 'none';
+                document.getElementById('fullName').classList.remove('invalid');
+            }
+
+            if (!email || !validateEmail(email)) {
+                document.getElementById('emailAddressError').style.display = 'block';
+                document.getElementById('emailAddress').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('emailAddressError').style.display = 'none';
+                document.getElementById('emailAddress').classList.remove('invalid');
+            }
+
+            if (!subject) {
+                document.getElementById('subjectError').style.display = 'block';
+                document.getElementById('subject').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('subjectError').style.display = 'none';
+                document.getElementById('subject').classList.remove('invalid');
+            }
+
+            if (!message) {
+                document.getElementById('messageError').style.display = 'block';
+                document.getElementById('message').classList.add('invalid');
+                isValid = false;
+            } else {
+                document.getElementById('messageError').style.display = 'none';
+                document.getElementById('message').classList.remove('invalid');
+            }
+
+            if (!isValid) return;
+
+            var formData = {
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                course: subject,
+                message: message
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Sending...';
+
+            fetch(API_BASE + '/inquiries/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(result) {
+                if (result.success) {
+                    showToast('✅ ' + result.message);
+                    contactForm.reset();
+                } else {
+                    showToast('❌ Error: ' + (result.error || 'Failed to send inquiry'), true);
+                }
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Inquiry →';
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                showToast('❌ Failed to send inquiry. Please try again.', true);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Inquiry →';
+            });
+        });
+
+        // ===== FAQ TOGGLE =====
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // ===== CHAT TOGGLE =====
+        document.getElementById('chatToggle').addEventListener('click', function() {
+            showToast('💬 Lanvai Courses Assistant - Ask me about courses, enrollment, and more!');
+        });
+
+        // ===== SOCIAL ICON CLICKS =====
+        document.querySelectorAll('.social-icons i').forEach(function(icon) {
+            icon.addEventListener('click', function() {
+                var platform = this.classList[1].replace('fa-', '');
+                showToast('📱 Follow us on ' + platform.toUpperCase() + '!');
+            });
+        });
+    </script>
+
+    <!-- Tracking Script -->
+    <script>
+        (function() {
+            var API_BASE = '/api';
+            var visitorId = localStorage.getItem('visitor_id');
+            if (!visitorId) {
+                visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+                localStorage.setItem('visitor_id', visitorId);
+            }
+
+            function trackPageView() {
+                var data = {
+                    pageUrl: window.location.pathname || '/',
+                    pageTitle: document.title || 'Unknown Page',
+                    referrerUrl: document.referrer || ''
+                };
+                fetch(API_BASE + '/track/pageview', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            }
+
+            function setupClickTracking() {
+                document.addEventListener('click', function(e) {
+                    var target = e.target;
+                    var data = {
+                        elementId: target.id || '',
+                        elementClass: target.className || '',
+                        elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                        pageUrl: window.location.pathname || '/'
+                    };
+                    if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                        target.closest('a') || target.closest('button')) {
+                        fetch(API_BASE + '/track/click', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        }).catch(function() {});
+                    }
+                });
+            }
+
+            function setupFormTracking() {
+                document.addEventListener('submit', function(e) {
+                    var form = e.target;
+                    var data = {
+                        formType: form.id || form.name || 'unknown',
+                        formData: {}
+                    };
+                    var inputs = form.querySelectorAll('input, select, textarea');
+                    inputs.forEach(function(input) {
+                        if (input.name) {
+                            data.formData[input.name] = input.value || '';
+                        }
+                    });
+                    fetch(API_BASE + '/track/formsubmit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                });
+            }
+
+            trackPageView();
+            setupClickTracking();
+            setupFormTracking();
+        })();
+    </script>
+</body>
+
+</html>

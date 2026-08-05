@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Expert Services</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ========== MAIN STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #f0ecf7;
+        }
+
+        /* ========== TOAST ========== */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 10001;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        /* ========== NAVBAR ========== */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.8rem 0;
+        }
+
+        .navbar-custom .navbar-brand {
+            color: #f0ecf7;
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-custom .navbar-brand .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(13, 148, 136, 0.3);
+        }
+
+        .navbar-custom .navbar-brand .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .navbar-custom .nav-link.active {
+            background: rgba(13, 148, 136, 0.15);
+            color: #4ade80 !important;
+        }
+
+        /* ========== MAIN CONTAINER ========== */
+        .admin-container {
+            max-width: 1200px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            color: #f0ecf7;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .page-header h1 i {
+            color: #4ade80;
+        }
+
+        .btn-add-service {
+            background: linear-gradient(135deg, #4ade80, #22a65e);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            color: #0e0a1a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-add-service:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .stat-card .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .stat-card .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ===== FILTER SECTION ===== */
+        .filter-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-section select,
+        .filter-section input {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0ecf7;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+            min-width: 150px;
+        }
+
+        .filter-section select:focus,
+        .filter-section input:focus {
+            border-color: #4ade80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+        }
+
+        .filter-section select option {
+            background: #1a1a2e;
+            color: #f0ecf7;
+        }
+
+        .filter-section .btn-filter {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-section .btn-filter:hover {
+            background: rgba(74, 222, 128, 0.25);
+        }
+
+        .filter-section .btn-clear {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .filter-section .btn-clear:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== SERVICES TABLE ===== */
+        .table-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-container th {
+            text-align: left;
+            padding: 0.8rem 0.6rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .table-container td {
+            padding: 0.8rem 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .table-container tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .table-container .service-icon-display {
+            font-size: 1.2rem;
+        }
+
+        .badge-category {
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-marketing {
+            background: rgba(13, 148, 136, 0.15);
+            color: #4ade80;
+        }
+
+        .badge-restructuring {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+
+        .badge-services {
+            background: rgba(37, 99, 235, 0.15);
+            color: #60a5fa;
+        }
+
+        .badge-strategies {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-action:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-edit:hover {
+            color: #60a5fa;
+        }
+
+        .btn-delete:hover {
+            color: #f87171;
+        }
+
+        /* ===== MODAL STYLES ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            color: #f0ecf7;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .modal-content h2 i {
+            color: #4ade80;
+        }
+
+        .modal-content .close-modal {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-left: auto;
+        }
+
+        .modal-content .close-modal:hover {
+            color: #f87171;
+        }
+
+        .modal-content .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .modal-content .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-content .form-group label .required {
+            color: #f87171;
+        }
+
+        .modal-content .form-group input,
+        .modal-content .form-group select,
+        .modal-content .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0ecf7;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .modal-content .form-group input:focus,
+        .modal-content .form-group select:focus,
+        .modal-content .form-group textarea:focus {
+            border-color: #4ade80;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+        }
+
+        .modal-content .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .modal-content .form-group select option {
+            background: #1a1a2e;
+            color: #f0ecf7;
+        }
+
+        .modal-content .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .modal-content .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .modal-content .btn-submit {
+            background: linear-gradient(135deg, #4ade80, #22a65e);
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 30px;
+            color: #0e0a1a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .modal-content .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .modal-content .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .modal-content .btn-delete-modal {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .modal-content .btn-delete-modal:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        /* ===== LOADING ===== */
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .loading-spinner i {
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+            color: #4ade80;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .no-data i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            opacity: 0.3;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-section select,
+            .filter-section input {
+                min-width: auto;
+            }
+            .page-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .modal-content {
+                padding: 1.5rem;
+                margin: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4ade80, #22a65e);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #22a65e, #059669);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="logo-icon">
+                    <img src="/images/lanvai.png" alt="Lanvai Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23fbbf24%22/%3E%3Ctext x=%2230%22 y=%2268%22 font-size=%2248%22 font-weight=%22bold%22 fill=%22%231a142b%22%3EL%3C/text%3E%3C/svg%3E'">
+                </span>
+                Admin Panel
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin-services.html">Manage Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="experts.html">View Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-cogs"></i> Manage Expert Services</h1>
+            <button class="btn-add-service" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add New Service
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <span class="stat-icon">📊</span>
+                <div class="stat-number" id="totalServices">0</div>
+                <div class="stat-label">Total Services</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📈</span>
+                <div class="stat-number" id="marketingCount">0</div>
+                <div class="stat-label">Marketing</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🔄</span>
+                <div class="stat-number" id="restructuringCount">0</div>
+                <div class="stat-label">Restructuring</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">✅</span>
+                <div class="stat-number" id="activeCount">0</div>
+                <div class="stat-label">Active</div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <select id="filterCategory">
+                <option value="all">All Categories</option>
+                <option value="marketing">Marketing</option>
+                <option value="restructuring">Restructuring</option>
+            </select>
+            <select id="filterType">
+                <option value="all">All Types</option>
+                <option value="services">Services</option>
+                <option value="strategies">Strategies</option>
+            </select>
+            <select id="filterStatus">
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Search by title...">
+            <button class="btn-filter" onclick="applyFilters()"><i class="fas fa-search"></i> Apply</button>
+            <button class="btn-clear" onclick="clearFilters()"><i class="fas fa-undo"></i> Clear</button>
+        </div>
+
+        <!-- Services Table -->
+        <div class="table-container">
+            <div id="servicesTableWrapper">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading services...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: Add/Edit Service ===== -->
+    <div class="modal-overlay" id="serviceModal">
+        <div class="modal-content">
+            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin-bottom: 0;"><i class="fas fa-edit"></i> <span id="modalTitle">Add New Service</span></h2>
+                <button class="close-modal" onclick="closeModal()">✕</button>
+            </div>
+
+            <form id="serviceForm" onsubmit="submitService(event)">
+                <input type="hidden" id="editId" value="">
+
+                <div class="form-group">
+                    <label>Title <span class="required">*</span></label>
+                    <input type="text" id="serviceTitle" placeholder="e.g. SEO Optimization" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category <span class="required">*</span></label>
+                        <select id="serviceCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="restructuring">Restructuring</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Service Type <span class="required">*</span></label>
+                        <select id="serviceType" required>
+                            <option value="">Select Type</option>
+                            <option value="services">Services</option>
+                            <option value="strategies">Strategies</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description <span class="required">*</span></label>
+                    <textarea id="serviceDescription" placeholder="Describe the service in detail..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Icon (Font Awesome class) <span class="required">*</span></label>
+                    <input type="text" id="serviceIcon" placeholder="e.g. fa-magnifying-glass" value="fa-cog" required>
+                    <small style="color: rgba(255,255,255,0.4); font-size: 0.75rem;">Use Font Awesome 6 icon classes. Default: fa-cog</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="serviceStatus">
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-save"></i> Save Service
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== MODAL: Delete Confirmation ===== -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content">
+            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin-bottom: 0; color: #f87171;"><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h2>
+                <button class="close-modal" onclick="closeDeleteModal()">✕</button>
+            </div>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">
+                Are you sure you want to delete the service "<strong id="deleteServiceName"></strong>"? 
+                This action cannot be undone.
+            </p>
+            <input type="hidden" id="deleteId">
+            <button class="btn-delete-modal" onclick="confirmDelete()">
+                <i class="fas fa-trash"></i> Yes, Delete Service
+            </button>
+            <button class="btn-submit" style="margin-top: 0.5rem; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6);" onclick="closeDeleteModal()">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ==============================================
+        // API BASE
+        // ==============================================
+        var API_BASE = 'http://localhost:5000/api';
+
+        // ==============================================
+        // TOAST
+        // ==============================================
+        function showToast(message, isError) {
+            isError = isError || false;
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); }, 4000);
+        }
+
+        // ==============================================
+        // LOAD SERVICES
+        // ==============================================
+        function loadServices() {
+            var wrapper = document.getElementById('servicesTableWrapper');
+            wrapper.innerHTML = `
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner"></i>
+                    <p>Loading services...</p>
+                </div>
+            `;
+
+            fetch(API_BASE + '/expert-services')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.json();
+                })
+                .then(function(data) {
+                    console.log('✅ Services loaded:', data);
+                    renderServices(data);
+                    updateStats(data);
+                })
+                .catch(function(error) {
+                    console.error('❌ Error loading services:', error);
+                    wrapper.innerHTML = `
+                        <div class="no-data">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Error loading services: ${error.message}</p>
+                            <button onclick="loadServices()" class="btn-add-service" style="margin-top: 1rem;">
+                                <i class="fas fa-sync-alt"></i> Retry
+                            </button>
+                        </div>
+                    `;
+                    showToast('❌ Error loading services: ' + error.message, true);
+                });
+        }
+
+        // ==============================================
+        // RENDER SERVICES
+        // ==============================================
+        function renderServices(data) {
+            var wrapper = document.getElementById('servicesTableWrapper');
+
+            // Flatten all services from all categories
+            var allServices = [];
+            var categories = ['marketingServices', 'marketingStrategies', 'restructuringServices', 'restructuringStrategies'];
+            var categoryMap = {
+                'marketingServices': { category: 'marketing', type: 'services' },
+                'marketingStrategies': { category: 'marketing', type: 'strategies' },
+                'restructuringServices': { category: 'restructuring', type: 'services' },
+                'restructuringStrategies': { category: 'restructuring', type: 'strategies' }
+            };
+
+            categories.forEach(function(key) {
+                var items = data[key] || {};
+                Object.keys(items).forEach(function(bizCategory) {
+                    items[bizCategory].forEach(function(service, index) {
+                        allServices.push({
+                            id: key + '_' + bizCategory + '_' + index,
+                            title: service.title,
+                            desc: service.desc || service.description,
+                            icon: service.icon || 'fa-cog',
+                            businessCategory: bizCategory,
+                            category: categoryMap[key].category,
+                            type: categoryMap[key].type,
+                            is_active: service.is_active !== undefined ? service.is_active : true,
+                            _data: service,
+                            _key: key,
+                            _bizCategory: bizCategory,
+                            _index: index
+                        });
+                    });
+                });
+            });
+
+            // Store for filtering
+            window._allServices = allServices;
+            applyFilters();
+        }
+
+        // ==============================================
+        // UPDATE STATS
+        // ==============================================
+        function updateStats(data) {
+            var total = 0;
+            var marketing = 0;
+            var restructuring = 0;
+            var active = 0;
+
+            var categories = ['marketingServices', 'marketingStrategies', 'restructuringServices', 'restructuringStrategies'];
+            var categoryMap = {
+                'marketingServices': 'marketing',
+                'marketingStrategies': 'marketing',
+                'restructuringServices': 'restructuring',
+                'restructuringStrategies': 'restructuring'
+            };
+
+            categories.forEach(function(key) {
+                var items = data[key] || {};
+                Object.keys(items).forEach(function(bizCategory) {
+                    items[bizCategory].forEach(function(service) {
+                        total++;
+                        if (categoryMap[key] === 'marketing') marketing++;
+                        else restructuring++;
+                        if (service.is_active !== false) active++;
+                    });
+                });
+            });
+
+            document.getElementById('totalServices').textContent = total;
+            document.getElementById('marketingCount').textContent = marketing;
+            document.getElementById('restructuringCount').textContent = restructuring;
+            document.getElementById('activeCount').textContent = active;
+        }
+
+        // ==============================================
+        // FILTER SERVICES
+        // ==============================================
+        function applyFilters() {
+            var services = window._allServices || [];
+            var filterCategory = document.getElementById('filterCategory').value;
+            var filterType = document.getElementById('filterType').value;
+            var filterStatus = document.getElementById('filterStatus').value;
+            var search = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            var filtered = services.filter(function(s) {
+                if (filterCategory !== 'all' && s.category !== filterCategory) return false;
+                if (filterType !== 'all' && s.type !== filterType) return false;
+                if (filterStatus !== 'all') {
+                    var isActive = s.is_active !== false;
+                    if (filterStatus === 'active' && !isActive) return false;
+                    if (filterStatus === 'inactive' && isActive) return false;
+                }
+                if (search) {
+                    var match = s.title.toLowerCase().indexOf(search) !== -1 ||
+                                s.desc.toLowerCase().indexOf(search) !== -1 ||
+                                s.businessCategory.toLowerCase().indexOf(search) !== -1;
+                    if (!match) return false;
+                }
+                return true;
+            });
+
+            renderFilteredServices(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterCategory').value = 'all';
+            document.getElementById('filterType').value = 'all';
+            document.getElementById('filterStatus').value = 'all';
+            document.getElementById('searchInput').value = '';
+            applyFilters();
+        }
+
+        // ==============================================
+        // RENDER FILTERED SERVICES
+        // ==============================================
+        function renderFilteredServices(services) {
+            var wrapper = document.getElementById('servicesTableWrapper');
+
+            if (!services || services.length === 0) {
+                wrapper.innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>No services found matching your filters.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            var html = `
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Title</th>
+                                <th>Business Category</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            services.forEach(function(s) {
+                var categoryBadge = s.category === 'marketing' ? 'badge-marketing' : 'badge-restructuring';
+                var categoryLabel = s.category.charAt(0).toUpperCase() + s.category.slice(1);
+                var typeBadge = s.type === 'services' ? 'badge-services' : 'badge-strategies';
+                var typeLabel = s.type.charAt(0).toUpperCase() + s.type.slice(1);
+                var statusColor = s.is_active !== false ? '#4ade80' : '#f87171';
+                var statusLabel = s.is_active !== false ? 'Active' : 'Inactive';
+
+                html += `
+                    <tr>
+                        <td><span class="service-icon-display"><i class="fas ${s.icon}"></i></span></td>
+                        <td><strong>${s.title}</strong></td>
+                        <td>${s.businessCategory}</td>
+                        <td><span class="badge-category ${categoryBadge}">${categoryLabel}</span></td>
+                        <td><span class="badge-category ${typeBadge}">${typeLabel}</span></td>
+                        <td style="color: ${statusColor};">${statusLabel}</td>
+                        <td style="text-align: right;">
+                            <button class="btn-action btn-edit" onclick="openEditModal('${s.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-action btn-delete" onclick="openDeleteModal('${s.id}', '${s.title.replace(/'/g, "\\'")}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 1rem; color: rgba(255,255,255,0.4); font-size: 0.85rem;">
+                    Showing ${services.length} services
+                </div>
+            `;
+
+            wrapper.innerHTML = html;
+        }
+
+        // ==============================================
+        // MODAL: ADD SERVICE
+        // ==============================================
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Service';
+            document.getElementById('editId').value = '';
+            document.getElementById('serviceTitle').value = '';
+            document.getElementById('serviceCategory').value = '';
+            document.getElementById('serviceType').value = '';
+            document.getElementById('serviceDescription').value = '';
+            document.getElementById('serviceIcon').value = 'fa-cog';
+            document.getElementById('serviceStatus').value = '1';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Save Service';
+            document.getElementById('serviceModal').classList.add('show');
+        }
+
+        // ==============================================
+        // MODAL: EDIT SERVICE
+        // ==============================================
+        function openEditModal(id) {
+            var services = window._allServices || [];
+            var service = services.find(function(s) { return s.id === id; });
+
+            if (!service) {
+                showToast('⚠️ Service not found', true);
+                return;
+            }
+
+            document.getElementById('modalTitle').textContent = 'Edit Service';
+            document.getElementById('editId').value = id;
+            document.getElementById('serviceTitle').value = service.title;
+            document.getElementById('serviceCategory').value = service.category;
+            document.getElementById('serviceType').value = service.type;
+            document.getElementById('serviceDescription').value = service.desc;
+            document.getElementById('serviceIcon').value = service.icon;
+            document.getElementById('serviceStatus').value = service.is_active !== false ? '1' : '0';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Service';
+            document.getElementById('serviceModal').classList.add('show');
+        }
+
+        // ==============================================
+        // CLOSE MODAL
+        // ==============================================
+        function closeModal() {
+            document.getElementById('serviceModal').classList.remove('show');
+        }
+
+        // ==============================================
+        // MODAL: DELETE
+        // ==============================================
+        function openDeleteModal(id, title) {
+            document.getElementById('deleteId').value = id;
+            document.getElementById('deleteServiceName').textContent = title;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+        }
+
+        // ==============================================
+        // SUBMIT SERVICE (Add/Edit)
+        // ==============================================
+        function submitService(e) {
+            e.preventDefault();
+
+            var id = document.getElementById('editId').value;
+            var title = document.getElementById('serviceTitle').value.trim();
+            var category = document.getElementById('serviceCategory').value;
+            var type = document.getElementById('serviceType').value;
+            var description = document.getElementById('serviceDescription').value.trim();
+            var icon = document.getElementById('serviceIcon').value.trim() || 'fa-cog';
+            var status = parseInt(document.getElementById('serviceStatus').value);
+
+            if (!title || !category || !type || !description) {
+                showToast('⚠️ Please fill in all required fields.', true);
+                return;
+            }
+
+            var submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            var data = {
+                title: title,
+                category: category,
+                type: type,
+                description: description,
+                icon: icon,
+                status: status,
+                businessCategory: 'General'
+            };
+
+            if (id) {
+                // Edit existing service
+                data.id = id;
+                updateService(data, submitBtn);
+            } else {
+                // Add new service
+                addService(data, submitBtn);
+            }
+        }
+
+        // ==============================================
+        // ADD SERVICE
+        // ==============================================
+        function addService(data, submitBtn) {
+            // Map to the correct structure
+            var payload = {
+                category: data.category,
+                service_type: data.type === 'services' ? 'marketing_services' : 'marketing_strategies',
+                title: data.title,
+                description: data.description,
+                icon: data.icon,
+                is_active: data.status === 1
+            };
+
+            if (data.category === 'restructuring') {
+                payload.service_type = data.type === 'services' ? 'restructuring_services' : 'restructuring_strategies';
+            }
+
+            console.log('📤 Adding service:', payload);
+
+            fetch(API_BASE + '/admin/services', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(result) {
+                console.log('✅ Service added:', result);
+                showToast('✅ Service added successfully!');
+                closeModal();
+                loadServices();
+            })
+            .catch(function(error) {
+                console.error('❌ Error adding service:', error);
+                showToast('❌ Error: ' + error.message, true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Service';
+            });
+        }
+
+        // ==============================================
+        // UPDATE SERVICE
+        // ==============================================
+        function updateService(data, submitBtn) {
+            var payload = {
+                id: data.id,
+                title: data.title,
+                description: data.description,
+                icon: data.icon,
+                is_active: data.status === 1
+            };
+
+            console.log('📤 Updating service:', payload);
+
+            fetch(API_BASE + '/admin/services', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(result) {
+                console.log('✅ Service updated:', result);
+                showToast('✅ Service updated successfully!');
+                closeModal();
+                loadServices();
+            })
+            .catch(function(error) {
+                console.error('❌ Error updating service:', error);
+                showToast('❌ Error: ' + error.message, true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Service';
+            });
+        }
+
+        // ==============================================
+        // CONFIRM DELETE
+        // ==============================================
+        function confirmDelete() {
+            var id = document.getElementById('deleteId').value;
+            var deleteBtn = document.querySelector('#deleteModal .btn-delete-modal');
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+
+            console.log('📤 Deleting service:', id);
+
+            fetch(API_BASE + '/admin/services', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id })
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(result) {
+                console.log('✅ Service deleted:', result);
+                showToast('✅ Service deleted successfully!');
+                closeDeleteModal();
+                loadServices();
+            })
+            .catch(function(error) {
+                console.error('❌ Error deleting service:', error);
+                showToast('❌ Error: ' + error.message, true);
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete Service';
+            });
+        }
+
+        // ==============================================
+        // CLICK OUTSIDE MODAL TO CLOSE
+        // ==============================================
+        document.getElementById('serviceModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDeleteModal();
+        });
+
+        // ==============================================
+        // INIT
+        // ==============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Admin Services page loaded');
+            loadServices();
+
+            // Enter key for search
+            document.getElementById('searchInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    applyFilters();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lanvai Marketing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles/landingpage.css">
+   
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <span class="logo-icon"><img src="/images/lanvai.png" alt="Lanvai Logo"></span>
+                <div>
+                    <span class="brand-text">Lanvai</span>
+                    <span class="brand-tagline">Your Business Growth Partner</span>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html"><span class="icon">🏠</span> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html"><span class="icon">ℹ️</span> About Us</a>
+                    </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="contactus.html"><span class="icon">👥</span> Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="team.html"><span class="icon">👥</span> Our Team</a>
+                    </li>
+                    <div class="dropdown">
+                    <button class="dropdown-btn"><span class="icon">🌐</span> PartnerWebsites ▾</button>
+                    <div class="dropdown-content">
+                        <a href="courses.html" target="_blank"><span class="icon">📚</span> EduLink Courses</a>
+                        <li><a class="dropdown-item" href="https://bryson67.github.io/Brystech-website/" target="_blank"><span class="icon">📚</span>BRYSTECH</a></li>
+                        
+                    </div>
+                </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Carousel Section -->
+    <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+        
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="6" aria-label="Slide 7"></button>
+        </div>
+        
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+                <img src="/images/IMG-20260717-WA0002(1).jpg" alt="Digital Marketing">
+                <div class="carousel-overlay"></div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+                <img src="/images/IMG-20260717-WA0003(1).jpg" alt="Media Services">
+                <div class="carousel-overlay"></div>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <img src="/images/IMG-20260717-WA0004(1).jpg" alt="Business Consultation">
+                <div class="carousel-overlay"></div>
+            </div>
+            
+            <!-- Slide 4 -->
+            <div class="carousel-item">
+                <img src="/images/IMG-20260720-WA0011.jpg" alt="Ad Exchange">
+                <div class="carousel-overlay"></div>
+            </div>
+            
+            <!-- Slide 5 -->
+            <div class="carousel-item">
+                <img src="/images/IMG-20260720-WA0012.jpg" alt="Innovative Solutions">
+                <div class="carousel-overlay"></div>
+            </div>
+            
+            <!-- Slide 6 -->
+            <div class="carousel-item">
+                <img src="/images/IMG-20260717-WA0002(1).jpg" alt="Creative Services">
+                <div class="carousel-overlay"></div>
+            </div>
+            
+            <!-- Slide 7 -->
+            <div class="carousel-item">
+                <img src="/images/IMG-20260717-WA0003(1).jpg" alt="Digital Transformation">
+                <div class="carousel-overlay"></div>
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize carousel when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            var carouselElement = document.getElementById('mainCarousel');
+            
+            // Create new carousel instance
+            var carousel = new bootstrap.Carousel(carouselElement, {
+                interval:3000,      // Slide every 3 seconds
+                wrap: true,          // Loop continuously
+                ride: 'carousel',    // Auto-start
+                pause: 'hover',      // Pause on hover
+                keyboard: true,      // Keyboard navigation
+                touch: true          // Touch/swipe support
+            });
+            
+            console.log('Carousel started successfully!');
+        });
+    </script>
+
+
+
+    <main class="container my-5 py-4">
+       <div class="text-center mb-5">
+            <h2 class="display-4 fw-bold">Welcome to Lanvai Marketing, Restruturing and Ad Exchange</h2>
+            <p class="lead">Your Business Growth Partner</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="service-card card p-4 text-center" id="mediaCard">
+                    <div class="card-body">
+                        <i class="fas fa-chalkboard-user card-icon"></i>
+                        <h5 class="card-title fs-3">MEDIA</h5>
+                        <p class="text-muted">✨ Grow your brand visibility</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-card card p-4 text-center" id="expertsCard">
+                    <div class="card-body">
+                        <i class="fas fa-user-tie card-icon"></i>
+                        <h5 class="card-title fs-3">Experts</h5>
+                        <p class="text-muted">🚀 Get professional strategy</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="ad-card card p-4 text-center" id="adExchangeCard">
+                    <div class="card-body">
+                        <i class="fas fa-ad ad-icon"></i>
+                        <h5 class="card-title fs-3">AD EXCHANGE</h5>
+                        <p class="text-muted">💰 Premium ad placements</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================================= -->
+    <!-- ===== NEW: MISSING INFORMATION SECTIONS (STYLED CARDS) ==== -->
+    <!-- ========================================================= -->
+    
+    <section class="container my-5">
+        <div class="row g-4">
+            <!-- Card 1: Media Description -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card h-100 p-4 text-center" style="background:#ffffff; border-radius:32px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.08); transition:all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); border:1px solid rgba(139,92,246,0.06);">
+                    <div style="display:inline-block; background:rgba(139,92,246,0.08); color:#6d28d9; padding:0.3rem 1.2rem; border-radius:60px; font-weight:800; font-size:1.5rem; letter-spacing:0.3px; margin-bottom:1rem;">Lanvai Media</div>
+                    <h3 style="font-weight:700; font-size:1.4rem; margin-bottom:1rem; background:linear-gradient(135deg, #0f0c29, #1e3a5f); -webkit-background-clip:text; background-clip:text; color:transparent;">Insights That Move Businesses Forward</h3>
+                    <p style="color:#1e293b; font-size:0.95rem; line-height:1.7; text-align:left;">At Lanvai, media is more than content—it's intelligence. Through research, analysis, and expert discussions, we help businesses understand the forces shaping industries, markets, and economies.</p>
+                    <p style="color:#1e293b; font-size:0.95rem; line-height:1.7; text-align:left;">From policy changes to market trends, we transform complex developments into practical insights.</p>
+                    <div style="margin-top:1rem; padding:0.8rem 1rem; background:#f8fafc; border-radius:16px; border-left:4px solid #8b5cf6; text-align:left;">
+                        <strong style="color:#1e3a5f; font-size:0.9rem;">We don't just report—we explain why it matters.</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Expertise Description -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card h-100 p-4 text-center" style="background:#ffffff; border-radius:32px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.08); transition:all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); border:1px solid rgba(139,92,246,0.06);">
+                    <div style="display:inline-block; background:rgba(139,92,246,0.08); color:#6d28d9; padding:0.3rem 1.2rem; border-radius:60px; font-weight:800; font-size:1.5rem; letter-spacing:0.3px; margin-bottom:1rem;">Our Expertise</div>
+                    <h3 style="font-weight:700; font-size:1.4rem; margin-bottom:1rem; background:linear-gradient(135deg, #0f0c29, #1e3a5f); -webkit-background-clip:text; background-clip:text; color:transparent;">Research First. Strategy Always.</h3>
+                    <p style="color:#1e293b; font-size:0.95rem; line-height:1.7; text-align:left;">Every successful strategy begins with understanding. Through continuous research into industries, markets, policies, and consumer behaviour, we uncover the insights that drive sustainable growth.</p>
+                    <p style="color:#1e293b; font-size:0.95rem; line-height:1.7; text-align:left;">Whether helping businesses strengthen marketing, restructure operations, or optimize performance—understand first, then execute.</p>
+                    <div style="margin-top:1rem; padding:0.8rem 1rem; background:#f8fafc; border-radius:16px; border-left:4px solid #8b5cf6; text-align:left;">
+                        <strong style="color:#1e3a5f; font-size:0.9rem;">Lasting growth is created through insight, not activity.</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Ad Exchange Description -->
+            <div class="col-lg-4 col-md-6">
+                <div class="info-card h-100 p-4 text-center" style="background:#ffffff; border-radius:32px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.08); transition:all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); border:1px solid rgba(139,92,246,0.06);">
+                    <div style="display:inline-block; background:rgba(139,92,246,0.08); color:#6d28d9; padding:0.3rem 1.2rem; border-radius:60px; font-weight:800; font-size:1.5rem; letter-spacing:0.3px; margin-bottom:1rem;">Lanvai Ad Exchange</div>
+                    <h3 style="font-weight:700; font-size:1.4rem; margin-bottom:1rem; background:linear-gradient(135deg, #0f0c29, #1e3a5f); -webkit-background-clip:text; background-clip:text; color:transparent;">Connecting Advertisers With The Right Audiences</h3>
+                    <p style="color:#1e293b; font-size:0.95rem; line-height:1.7; text-align:left;">We help businesses place their advertising where it matters most. By matching advertisers with trusted publishers whose audiences align with their products, every investment becomes more targeted.</p>
+                    <p style="color:#1e293b; font-size:0.95rem; line-height:1.7; text-align:left;">We help publishers generate sustainable revenue through high-quality advertising that respects user experience and strengthens trust.</p>
+                    <div style="margin-top:1rem; padding:0.8rem 1rem; background:#f8fafc; border-radius:16px; border-left:4px solid #f59e0b; text-align:left;">
+                        <strong style="color:#b45309; font-size:0.9rem;">Better audiences. Better advertising. Better results for everyone.</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WHY LANVAI - STYLED CARDS ===== -->
+    <section class="container my-5">
+        <div class="text-center mb-4">
+            <span style="background:rgba(139,92,246,0.12); color:#5b21b6; padding:0.3rem 1.4rem; border-radius:60px; font-weight:600; font-size:2rem;" class="display-4 fw-bold">Why Choose Lanvai</span>
+            <h2 style="font-weight:700; font-size:2.2rem; margin:0.8rem 0 0.5rem;">Every Great Strategy Begins With Understanding</h2>
+            <p   style="color:#1e293b; max-width:700px; margin:0 auto 0.5rem; font-size:1.3rem; font-weight:800; border-radius: 20px; background-color:greenyellow;">Businesses operate in different industries, serve different customers, and face different challenges. That is why no two businesses should ever receive the same strategy.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="why-card h-100 p-4" style="background:#ffffff; border-radius:32px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.08); border:1px solid rgba(139,92,246,0.06); transition:all 0.3s;">
+                    <span style="display:inline-block; background:#e0e7ff; color:#4338ca; padding:0.2rem 1rem; border-radius:40px; font-weight:800; font-size:1.5rem; letter-spacing:0.3px; margin-bottom:0.8rem;">Marketing</span>
+                    <h3 style="font-weight:700; font-size:1.4rem; margin:0 0 0.8rem;">Marketing Built On Strategy, Not Assumptions</h3>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Many businesses do not struggle because they lack marketing. They struggle because they lack clarity.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Too often, businesses invest in campaigns before anyone takes the time to understand their industry, customers, competitors, or the real challenges limiting growth.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">At Lanvai, marketing begins with research. We study markets, customer behaviour, competitive positioning, and business objectives before recommending any strategy.</p>
+                    <div style="background:#f8fafc; border-left:4px solid #8b5cf6; padding:0.8rem 1.2rem; border-radius:16px; margin-top:1rem; font-size:0.9rem;">
+                        <strong style="color:#1e3a5f;">Businesses don't need more activity—they need clarity and strategies that create measurable growth.</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="why-card h-100 p-4" style="background:#ffffff; border-radius:32px; box-shadow:0 20px 40px -12px rgba(0,0,0,0.08); border:1px solid rgba(139,92,246,0.06); transition:all 0.3s;">
+                    <span style="display:inline-block; background:#e0e7ff; color:#4338ca; padding:0.2rem 1rem; border-radius:40px; font-weight:800; font-size:1.5rem; letter-spacing:0.3px; margin-bottom:0.8rem;">Business Restructuring</span>
+                    <h3 style="font-weight:700; font-size:1.4rem; margin:0 0 0.8rem;">Structures That Work In Practice</h3>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Many businesses do not struggle because they lack opportunities. They struggle because they lack the structure required to turn those opportunities into sustainable growth.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">Too often, restructuring focuses on reports and charts before understanding how the business truly operates.</p>
+                    <p style="color:#334155; line-height:1.7; font-size:0.95rem;">At Lanvai, restructuring begins with understanding. We take time to understand people, operations, systems, culture, and workflows before recommending change.</p>
+                    <div style="background:#f8fafc; border-left:4px solid #8b5cf6; padding:0.8rem 1.2rem; border-radius:16px; margin-top:1rem; font-size:0.9rem;">
+                        <strong style="color:#1e3a5f;">Businesses don't need more reports—they need structures that work.</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PRINCIPLES - STYLED CARDS ===== -->
+    <section class="container my-5">
+        <div style="background:linear-gradient(145deg, #0f0c29, #1a1040); border-radius:48px; padding:3rem 2.5rem; color:#e0d4ff;">
+            <div style="text-align:center; margin-bottom:2.5rem;">
+                <span style="background:rgba(139,92,246,0.2); color:#c4b5fd; padding:0.3rem 1.4rem; border-radius:60px; font-weight:600; font-size:0.85rem;">What We Stand For</span>
+                <h2 style="font-weight:700; font-size:2.4rem; margin:0.5rem 0 0.8rem; color:#ffffff;">Our Principles</h2>
+                <p style="color:#b8a5d4; max-width:600px; margin:0 auto; font-size:1.05rem;">Every decision, every strategy, and every solution is guided by a simple philosophy: understand first, then act with purpose.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">01</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Research</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Every recommendation begins with evidence, not assumptions. Informed decisions create stronger businesses.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">02</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Understanding</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">We take time to understand businesses, industries, customers, and challenges before proposing solutions.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">03</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Strategy</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Every action should have a clear purpose, measurable direction, and contribute to long-term success.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">04</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Clarity</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Complex business challenges deserve simple, practical, and actionable solutions that businesses can implement.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(4px); border:1px solid rgba(139,92,246,0.1); border-radius:28px; padding:1.8rem 1.5rem; height:100%; transition:0.25s;">
+                        <div style="font-size:2.8rem; font-weight:800; background:linear-gradient(135deg, #8b5cf6, #ec489a); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0.6; line-height:1;">05</div>
+                        <h3 style="font-weight:700; font-size:1.2rem; margin:0.6rem 0 0.4rem; color:#fff;">Impact</h3>
+                        <p style="font-size:0.9rem; color:#b8a5d4; line-height:1.6;">Success is measured by meaningful business outcomes, sustainable growth, and lasting value—not activity alone.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== END OF MISSING INFORMATION SECTIONS ===== -->
+    <!-- ========================================================= -->
+
+    <!-- MEDIA MODAL -->
+    <div id="mediaModal" class="custom-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-chalkboard-user"></i> Media Access</h3>
+                <button class="close-modal" id="closeMediaBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="mediaForm">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="mediaName" class="form-control-custom" placeholder="Enter your name">
+                        <div class="error-msg" id="mediaNameError">Name is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="mediaEmail" class="form-control-custom" placeholder="Enter your email">
+                        <div class="error-msg" id="mediaEmailError">Valid email is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="mediaPhone" class="form-control-custom" placeholder="Enter your phone number">
+                        <div class="error-msg" id="mediaPhoneError">Phone number is required</div>
+                    </div>
+                    <button type="submit" class="btn-submit">Submit & Continue →</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPERTS MODAL -->
+    <div id="expertsModal" class="custom-modal">
+        <div class="modal-card" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-tie"></i> Expert Consultation</h3>
+                <button class="close-modal" id="closeExpertsBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="step-indicators">
+                    <div class="step" id="step1Indicator">
+                        <div class="step-circle">1</div>
+                        <div class="step-title">Business Category</div>
+                    </div>
+                    <div class="step" id="step2Indicator">
+                        <div class="step-circle">2</div>
+                        <div class="step-title">Business Details</div>
+                    </div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div id="step1Content" class="step-pane active-pane">
+                    <div class="form-group">
+                        <label>Select Business Category *</label>
+                        <select id="businessCategory" class="form-control-custom">
+                            <option value="">-- Choose category --</option>
+                            <option value="E-commerce">🛍️ E-commerce</option>
+                            <option value="Technology">💻 Technology & AI</option>
+                            <option value="Financial">🏦 Financial Services</option>
+                            <option value="Real Estate">🏠 Real Estate</option>
+                            <option value="Education">📚 Education</option>
+                            <option value="Agriculture">🌾 Agriculture & Farming</option>
+                            <option value="Media">🎦 Media & Advertising</option>
+                            <option value="Logistic">🚛 Logistic & Transportation</option>
+                            <option value="Energy">💡 Energy & Utilities</option>
+                            <option value="Manufacturing">🏭 Manufacturing Industries</option>
+                            <option value="Retail">🛍️ Retail & Supermarkets</option>
+                            <option value="Healthcare">🏥 Healthcare & Medical</option>
+                            <option value="Hospitality">🍽️ Hospitality & Tourism</option>
+                            <option value="Construction">🏗️ Construction & Engineering</option>
+                            <option value="Legal">⚖️ Legal Services</option>
+                            <option value="Nonprofit">🤝 Nonprofit & NGO</option>
+                        </select>
+                        <div class="error-msg" id="categoryError">Please select a category</div>
+                    </div>
+                    <button class="btn-next-step" id="nextStepBtn" style="width: 100%;">Next Step →</button>
+                </div>
+
+                <div id="step2Content" class="step-pane">
+                    <form id="expertsForm">
+                        <div class="form-group">
+                            <label>Business Name *</label>
+                            <input type="text" id="businessName" class="form-control-custom" placeholder="Enter business name">
+                            <div class="error-msg" id="businessNameError">Business name is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address *</label>
+                            <input type="email" id="businessEmail" class="form-control-custom" placeholder="Enter business email">
+                            <div class="error-msg" id="businessEmailError">Valid email is required</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="tel" id="businessPhone" class="form-control-custom" placeholder="Enter phone number">
+                            <div class="error-msg" id="businessPhoneError">Phone number is required</div>
+                        </div>
+                        <div class="btn-group-flex">
+                            <button type="button" class="btn-outline-step" id="backStepBtn">← Back</button>
+                            <button type="submit" class="btn-next-step">Submit →</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORY SELECTION MODAL (for Ad Exchange) -->
+    <div id="categoryModal" class="custom-modal">
+        <div class="modal-card category-modal-card">
+            <div class="modal-header" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                <h3><i class="fas fa-ad"></i> Select Your Business Category</h3>
+                <button class="close-modal" id="closeCategoryBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3">Select your business category to see relevant ad packages for your industry.</p>
+                <div class="category-grid" id="categoryGrid">
+                    <div class="category-option" data-category="E-commerce">
+                        <i class="fas fa-shopping-cart" style="color: #3b82f6;"></i>
+                        <span>E-commerce</span>
+                    </div>
+                    <div class="category-option" data-category="Technology">
+                        <i class="fas fa-microchip" style="color: #8b5cf6;"></i>
+                        <span>Technology</span>
+                    </div>
+                    <div class="category-option" data-category="Financial">
+                        <i class="fas fa-chart-line" style="color: #10b981;"></i>
+                        <span>Financial</span>
+                    </div>
+                    <div class="category-option" data-category="Real Estate">
+                        <i class="fas fa-building" style="color: #f59e0b;"></i>
+                        <span>Real Estate</span>
+                    </div>
+                    <div class="category-option" data-category="Education">
+                        <i class="fas fa-graduation-cap" style="color: #06b6d4;"></i>
+                        <span>Education</span>
+                    </div>
+                    <div class="category-option" data-category="Healthcare">
+                        <i class="fas fa-hospital-user" style="color: #ef4444;"></i>
+                        <span>Healthcare</span>
+                    </div>
+                    <div class="category-option" data-category="Media">
+                        <i class="fas fa-newspaper" style="color: #ec489a;"></i>
+                        <span>Media</span>
+                    </div>
+                    <div class="category-option" data-category="Retail">
+                        <i class="fas fa-store" style="color: #f97316;"></i>
+                        <span>Retail</span>
+                    </div>
+                    <div class="category-option" data-category="Hospitality">
+                        <i class="fas fa-hotel" style="color: #14b8a6;"></i>
+                        <span>Hospitality</span>
+                    </div>
+                    <div class="category-option" data-category="Manufacturing">
+                        <i class="fas fa-industry" style="color: #64748b;"></i>
+                        <span>Manufacturing</span>
+                    </div>
+                    <div class="category-option" data-category="Logistic">
+                        <i class="fas fa-truck" style="color: #3b82f6;"></i>
+                        <span>Logistics</span>
+                    </div>
+                    <div class="category-option" data-category="Nonprofit">
+                        <i class="fas fa-hand-holding-heart" style="color: #10b981;"></i>
+                        <span>Nonprofit</span>
+                    </div>
+                </div>
+                <button class="btn-next-step mt-4" id="continueToAdsBtn" style="background: linear-gradient(135deg, #f59e0b, #d97706);">Continue to Ad Exchange →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="footer-logo">
+                        <span class="logo-icon"><img src="/images/lanvai.png" alt="Lanvai Logo"></span>
+                        <div>
+                            <span class="brand-text">Lanvai</span>
+                            <span class="brand-tagline">Your Business Growth Partner</span>
+                        </div>
+                    </div>
+                    <p style="color: #b8a5d4; font-size: 0.9rem; line-height: 1.7; margin-top: 0.8rem;">
+                        Lanvai is a leading business growth partner, providing expert consultation, media insights, and ad exchange services to help businesses thrive in a competitive market.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/lanvaiofficial/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/lanvaiofficial" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/in/lanvai-company-8413453b5/?isSelfProfile=true" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/lanvaiofficial/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/lanvaiofficial" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.tiktok.com/@lanvaiofficial" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://www.reddit.com/user/lanvaiOfficial" target="_blank"><i class="fab fa-reddit"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="index.html">🏠 Home</a></li>
+                        <li><a href="about.html">ℹ️ About Us</a></li>
+                        <li><a href="team.html">👥 Our Team</a></li>
+                        <li><a href="adexchange.html">🎓 Ad Exchange</a></li>
+                        <li><a href="contactus.html">📞 Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5>Our Services</h5>
+                    <ul>
+                        <li><a href="media.html">📺 Media Services</a></li>
+                        <li><a href="experts.html">👔 Expert Consultation</a></li>
+                        <li><a href="adexchange.html">💰 Ad Exchange</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Our Partners</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="partner-item">
+                            <span class="partner-icon">🎓</span>
+                            <div>
+                                <div class="partner-name">EDULINK</div>
+                                <div class="partner-desc">Education Platform</div>
+                            </div>
+                        </div>
+                        <div class="partner-item">
+                            <span class="partner-icon">💻</span>
+                            <div>
+                                <div class="partner-name">BrysTech</div>
+                                <div class="partner-desc">Tech Solutions</div>
+                            </div>
+                        </div>
+                       
+                      
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Lanvai Marketing. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a> | <a href="contactus.html">Contact Us</a></p>
+                <p style="font-size: 0.75rem; margin-top: 0.3rem; opacity: 0.6;">Made with ❤️ by Lanvai Team</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cookie Consent Popup -->
+    <div id="cookiePopup" class="cookie-popup">
+        <i class="fas fa-cookie-bite"></i>
+        <div class="cookie-popup-content">
+            <h4>🍪 We Value Your Privacy</h4>
+            <p>We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. Necessary cookies are required for the website to function properly.</p>
+        </div>
+        <div class="cookie-buttons">
+            <button class="cookie-accept" id="acceptAllBtn">Accept All</button>
+            <button class="cookie-necessary" id="necessaryBtn">Necessary Only</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-notification"></div>
+
+    <!-- AI CHAT -->
+    <div class="chat-float">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><span class="online-dot"></span>Lanvai Assistant</h3>
+                <button class="chat-close" id="chatClose">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">👋 Welcome to Lanvai! I have complete knowledge about our entire website. What would you like to know?</div>
+            </div>
+            <div class="quick-replies">
+                <button data-q="What is Lanvai?">🏠 About</button>
+                
+                <button data-q="Ad Exchange">💰 Ads</button>
+                <button data-q="Media services">📺 Media</button>
+                <button data-q="Expert consultation">👔 Experts</button>
+            </div>
+            <div class="auth-overlay" id="authOverlay">
+                <div class="auth-icon">🔒</div>
+                <h4>Connect to a Live Person</h4>
+                <p>Please login or register to chat with a live agent.</p>
+                <div class="auth-btns">
+                    <button class="login-btn" id="loginBtn">🔑 Login</button>
+                    <button class="register-btn" id="registerBtn">📝 Register</button>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ask me anything...">
+                <button class="send-btn" id="sendBtn">Send</button>
+            </div>
+        </div>
+        <button class="chat-toggle" id="chatToggle">💬<span class="badge">AI</span></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ==============================================
+        // JAVASCRIPT - SAVES TO DATABASE
+        // ==============================================
+
+        const API_BASE = 'http://localhost:5000/api';
+
+        // ========== TOAST NOTIFICATION ==========
+        function showToast(message, isError) {
+            isError = isError || false;
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification' + (isError ? ' error' : '');
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ========== COOKIE MANAGEMENT ==========
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            days = days || 365;
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + date.toUTCString() + "; path=/; SameSite=Lax";
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // ========== API CALL - SAVES TO DATABASE ==========
+        async function apiCall(endpoint, data) {
+            try {
+                const response = await fetch(API_BASE + endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.error || 'API request failed');
+                }
+                return await response.json();
+            } catch (error) {
+                console.warn('API Error:', error);
+                showToast('⚠️ Server error, saving locally...', true);
+                // Fallback: save to localStorage
+                const key = 'lanvai_' + endpoint.replace('/', '_');
+                const existing = JSON.parse(localStorage.getItem(key) || '[]');
+                existing.push({ ...data, timestamp: new Date().toISOString() });
+                localStorage.setItem(key, JSON.stringify(existing));
+                return { success: true, message: 'Saved locally (API unavailable)' };
+            }
+        }
+
+        // ========== COOKIE CONSENT ==========
+        function initCookiePopup() {
+            const consent = getCookie('cookie_consent');
+            const popup = document.getElementById('cookiePopup');
+            if (!consent || consent === 'none') {
+                popup.style.display = 'flex';
+                setTimeout(() => popup.classList.add('show'), 100);
+            } else {
+                popup.style.display = 'none';
+            }
+        }
+
+        document.getElementById('acceptAllBtn').addEventListener('click', function() {
+            setCookie('cookie_consent', 'all', 365);
+            document.getElementById('cookiePopup').style.display = 'none';
+            showToast('✅ All cookies accepted!');
+            apiCall('/cookie-consent', { consent_type: 'all' }).catch(() => {});
+        });
+
+        document.getElementById('necessaryBtn').addEventListener('click', function() {
+            setCookie('cookie_consent', 'necessary', 365);
+            document.getElementById('cookiePopup').style.display = 'none';
+            showToast('🔒 Necessary cookies only.');
+            apiCall('/cookie-consent', { consent_type: 'necessary' }).catch(() => {});
+        });
+
+        // ========== MEDIA FORM - SAVES TO DATABASE ==========
+        const mediaModal = document.getElementById('mediaModal');
+        const mediaCard = document.getElementById('mediaCard');
+        const closeMediaBtn = document.getElementById('closeMediaBtn');
+        const mediaForm = document.getElementById('mediaForm');
+        const mediaName = document.getElementById('mediaName');
+        const mediaEmail = document.getElementById('mediaEmail');
+        const mediaPhone = document.getElementById('mediaPhone');
+
+        function clearMediaErrors() {
+            ['mediaNameError', 'mediaEmailError', 'mediaPhoneError'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            [mediaName, mediaEmail, mediaPhone].forEach(el => el.classList.remove('invalid'));
+        }
+
+        function openMediaModal() {
+            mediaModal.style.display = 'flex';
+            mediaForm.reset();
+            clearMediaErrors();
+        }
+
+        function closeMediaModal() {
+            mediaModal.style.display = 'none';
+        }
+
+        if (mediaCard) mediaCard.addEventListener('click', openMediaModal);
+        if (closeMediaBtn) closeMediaBtn.addEventListener('click', closeMediaModal);
+
+        if (mediaForm) {
+            mediaForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                let isValid = true;
+                const name = mediaName.value.trim();
+                const email = mediaEmail.value.trim();
+                const phone = mediaPhone.value.trim();
+
+                if (!name) {
+                    document.getElementById('mediaNameError').style.display = 'block';
+                    mediaName.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    document.getElementById('mediaNameError').style.display = 'none';
+                    mediaName.classList.remove('invalid');
+                }
+
+                if (!email || !validateEmail(email)) {
+                    document.getElementById('mediaEmailError').style.display = 'block';
+                    mediaEmail.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    document.getElementById('mediaEmailError').style.display = 'none';
+                    mediaEmail.classList.remove('invalid');
+                }
+
+                if (!phone) {
+                    document.getElementById('mediaPhoneError').style.display = 'block';
+                    mediaPhone.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    document.getElementById('mediaPhoneError').style.display = 'none';
+                    mediaPhone.classList.remove('invalid');
+                }
+
+                if (isValid) {
+                    const btn = mediaForm.querySelector('.btn-submit');
+                    btn.textContent = 'Saving to database...';
+                    btn.disabled = true;
+
+                    try {
+                        const result = await apiCall('/media-submit', { 
+                            full_name: name, 
+                            email: email, 
+                            phone: phone 
+                        });
+                        showToast('✅ Media saved to database! ID: ' + result.submission_id);
+                        closeMediaModal();
+                        setTimeout(() => {
+                            window.location.href = 'media.html';
+                        }, 1000);
+                    } catch (error) {
+                        showToast('❌ Error: ' + error.message, true);
+                        btn.textContent = 'Submit & Continue →';
+                        btn.disabled = false;
+                    }
+                }
+            });
+        }
+
+        // ========== EXPERTS FORM - SAVES TO DATABASE ==========
+        const expertsModal = document.getElementById('expertsModal');
+        const expertsCard = document.getElementById('expertsCard');
+        const closeExpertsBtn = document.getElementById('closeExpertsBtn');
+        const nextStepBtn = document.getElementById('nextStepBtn');
+        const backStepBtn = document.getElementById('backStepBtn');
+        const businessCategorySelect = document.getElementById('businessCategory');
+        const businessNameInp = document.getElementById('businessName');
+        const businessEmailInp = document.getElementById('businessEmail');
+        const businessPhoneInp = document.getElementById('businessPhone');
+        const expertsFormElem = document.getElementById('expertsForm');
+        let currentExpertStep = 1;
+
+        function updateExpertsUI() {
+            if (currentExpertStep === 1) {
+                document.getElementById('step1Content').classList.add('active-pane');
+                document.getElementById('step2Content').classList.remove('active-pane');
+                document.getElementById('step1Indicator').classList.add('active');
+                document.getElementById('step2Indicator').classList.remove('active', 'completed');
+                document.getElementById('progressFill').style.width = '0%';
+            } else {
+                document.getElementById('step1Content').classList.remove('active-pane');
+                document.getElementById('step2Content').classList.add('active-pane');
+                document.getElementById('step1Indicator').classList.remove('active');
+                document.getElementById('step2Indicator').classList.add('active');
+                document.getElementById('step1Indicator').classList.add('completed');
+                document.getElementById('progressFill').style.width = '50%';
+            }
+        }
+
+        function openExpertsModal() {
+            expertsModal.style.display = 'flex';
+            currentExpertStep = 1;
+            updateExpertsUI();
+            businessCategorySelect.value = '';
+            businessNameInp.value = '';
+            businessEmailInp.value = '';
+            businessPhoneInp.value = '';
+            ['categoryError', 'businessNameError', 'businessEmailError', 'businessPhoneError'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            [businessCategorySelect, businessNameInp, businessEmailInp, businessPhoneInp].forEach(el => {
+                if (el) el.classList.remove('invalid');
+            });
+        }
+
+        function closeExpertsModal() {
+            expertsModal.style.display = 'none';
+        }
+
+        if (expertsCard) expertsCard.addEventListener('click', openExpertsModal);
+        if (closeExpertsBtn) closeExpertsBtn.addEventListener('click', closeExpertsModal);
+
+        if (nextStepBtn) {
+            nextStepBtn.addEventListener('click', function() {
+                const category = businessCategorySelect.value;
+                if (!category) {
+                    document.getElementById('categoryError').style.display = 'block';
+                    businessCategorySelect.classList.add('invalid');
+                    return;
+                }
+                document.getElementById('categoryError').style.display = 'none';
+                businessCategorySelect.classList.remove('invalid');
+                currentExpertStep = 2;
+                updateExpertsUI();
+            });
+        }
+
+        if (backStepBtn) {
+            backStepBtn.addEventListener('click', function() {
+                currentExpertStep = 1;
+                updateExpertsUI();
+            });
+        }
+
+        if (expertsFormElem) {
+            expertsFormElem.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                let isValid = true;
+                const name = businessNameInp.value.trim();
+                const email = businessEmailInp.value.trim();
+                const phone = businessPhoneInp.value.trim();
+                const category = businessCategorySelect.value;
+
+                if (!name) {
+                    document.getElementById('businessNameError').style.display = 'block';
+                    businessNameInp.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    document.getElementById('businessNameError').style.display = 'none';
+                    businessNameInp.classList.remove('invalid');
+                }
+
+                if (!email || !validateEmail(email)) {
+                    document.getElementById('businessEmailError').style.display = 'block';
+                    businessEmailInp.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    document.getElementById('businessEmailError').style.display = 'none';
+                    businessEmailInp.classList.remove('invalid');
+                }
+
+                if (!phone) {
+                    document.getElementById('businessPhoneError').style.display = 'block';
+                    businessPhoneInp.classList.add('invalid');
+                    isValid = false;
+                } else {
+                    document.getElementById('businessPhoneError').style.display = 'none';
+                    businessPhoneInp.classList.remove('invalid');
+                }
+
+                if (isValid) {
+                    const btn = expertsFormElem.querySelector('.btn-next-step');
+                    btn.textContent = 'Saving to database...';
+                    btn.disabled = true;
+
+                    try {
+                        const result = await apiCall('/expert-submit', {
+                            business_category: category,
+                            business_name: name,
+                            email: email,
+                            phone: phone
+                        });
+                        showToast('✅ Expert saved to database! ID: ' + result.consultation_id);
+                        closeExpertsModal();
+                        setTimeout(() => {
+                            window.location.href = 'experts.html?category=' + encodeURIComponent(category);
+                        }, 1000);
+                    } catch (error) {
+                        showToast('❌ Error: ' + error.message, true);
+                        btn.textContent = 'Submit →';
+                        btn.disabled = false;
+                    }
+                }
+            });
+        }
+
+        // ========== AD EXCHANGE - SAVES TO DATABASE ==========
+        const categoryModal = document.getElementById('categoryModal');
+        const adExchangeCard = document.getElementById('adExchangeCard');
+        const closeCategoryBtn = document.getElementById('closeCategoryBtn');
+        const continueToAdsBtn = document.getElementById('continueToAdsBtn');
+        let selectedCategory = null;
+
+        function openCategoryModal() {
+            categoryModal.style.display = 'flex';
+            selectedCategory = null;
+            document.querySelectorAll('.category-option').forEach(el => el.classList.remove('selected'));
+        }
+
+        function closeCategoryModal() {
+            categoryModal.style.display = 'none';
+        }
+
+        if (adExchangeCard) adExchangeCard.addEventListener('click', openCategoryModal);
+        if (closeCategoryBtn) closeCategoryBtn.addEventListener('click', closeCategoryModal);
+
+        document.querySelectorAll('.category-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.category-option').forEach(el => el.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedCategory = this.getAttribute('data-category');
+            });
+        });
+
+        if (continueToAdsBtn) {
+            continueToAdsBtn.addEventListener('click', async function() {
+                if (!selectedCategory) {
+                    showToast('⚠️ Please select a business category first.', true);
+                    return;
+                }
+                try {
+                    const result = await apiCall('/ad-category-select', { category: selectedCategory });
+                    showToast('💰 Category "' + selectedCategory + '" saved to database!');
+                    setCookie('selected_ad_category', selectedCategory, 30);
+                    closeCategoryModal();
+                    setTimeout(() => {
+                        window.location.href = 'adexchange.html?category=' + encodeURIComponent(selectedCategory);
+                    }, 800);
+                } catch (error) {
+                    showToast('❌ Error: ' + error.message, true);
+                }
+            });
+        }
+
+        if (closeCategoryBtn) closeCategoryBtn.addEventListener('click', closeCategoryModal);
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === mediaModal) closeMediaModal();
+            if (e.target === expertsModal) closeExpertsModal();
+            if (e.target === categoryModal) closeCategoryModal();
+        });
+
+        // ===== CAROUSEL =====
+        const carouselElement = document.getElementById('carouselExampleCaptions');
+        if (carouselElement) {
+            new bootstrap.Carousel(carouselElement, {
+                interval: 5000,
+                ride: 'carousel'
+            });
+        }
+
+        // ===== CHAT FUNCTIONALITY =====
+        (function() {
+            const W = document.getElementById('chatWindow'),
+                T = document.getElementById('chatToggle'),
+                C = document.getElementById('chatClose'),
+                M = document.getElementById('chatMessages'),
+                I = document.getElementById('chatInput'),
+                S = document.getElementById('sendBtn'),
+                A = document.getElementById('authOverlay'),
+                Q = document.querySelectorAll('.quick-replies button');
+            let open = !1,
+                auth = !1,
+                person = !1;
+
+            const KB = {
+                'lanvai about platform company': '🏫 **About Lanvai**\n\nLanvai is a business platform.\n\n**Core Services:** \n5️⃣ Ad Exchange 💰 - Premium advertising placements\n6️⃣ Media 📺 - News and insights platform\n7️⃣ Experts 👔 - Business consultation services',
+            
+                
+                'ad exchange premium advertising ads': '💰 **Ad Exchange**\n\n**Available Ads:**\n• Premium Homepage Banner - $2,500/month\n• Sidebar Banner - $800/month\n• In-Content Native Ad - $1,200/month\n• Newsletter Sponsorship - $600/month\n• Video Pre-roll Ad - $3,000/month\n• Category Page Banner - $500/month\n• Sponsored Article - $1,800/month\n• Weekly Spotlight - $400/month',
+                'media news insights articles': '📺 **Media - News & Insights**\n\n**Latest News:**\n1. Digital Marketing Trends 2024 - Technology\n2. E-commerce Boom in Africa - E-commerce ⚠️\n3. Healthcare Tech Revolution - Healthcare\n4. Real Estate Market Update - Real Estate ⚠️\n5. EdTech Growth Statistics - Education\n6. AI in Marketing - Technology ⚠️',
+                'expert consultation business services strategies': '👔 **Experts - Business Services**\n\n**Business Categories:**\nE-commerce, Technology, Financial, Real Estate, Education, Agriculture, Media, Logistics, Energy, Manufacturing, Retail, Healthcare, Hospitality, Construction, Legal, Nonprofit\n\n**Services:** SEO & Marketing, Lead Generation, Branding, Automation, Analytics',
+                'contact support email phone location': '📧 **Contact Us**\n📍 Thika Road Wendani, Nairobi, Kenya\n📞 +254 794914597 / +254 758887164\n📧 Lanvai254@lanvai.com / support@lanvai.com'
+            };
+
+            function findAnswer(q) {
+                q = q.toLowerCase();
+                for (var keys in KB) {
+                    var k = keys.split(' ');
+                    for (var i = 0; i < k.length; i++) {
+                        if (q.indexOf(k[i]) !== -1) {
+                            return KB[keys];
+                        }
+                    }
+                }
+                return 'I can help with: 🏠 About Lanvai | 💰 Ad Exchange | 📺 Media | 👔 Experts | 📧 Contact. What would you like to know?';
+            }
+
+            function send() {
+                var t = I.value.trim();
+                if (!t) return;
+                addMsg(t, 'user');
+                I.value = '';
+                var r = findAnswer(t);
+                setTimeout(function() { addMsg(r, 'bot'); }, 300);
+            }
+
+            function addMsg(t, c) {
+                var d = document.createElement('div');
+                d.className = 'msg ' + c;
+                d.textContent = t;
+                M.appendChild(d);
+                M.scrollTop = M.scrollHeight;
+            }
+
+            T.onclick = function() {
+                open = !open;
+                W.classList.toggle('open', open);
+                if (open) I.focus();
+            };
+            C.onclick = function() {
+                open = !1;
+                W.classList.remove('open');
+            };
+            document.onkeydown = function(e) {
+                if (e.key === 'Escape' && open) {
+                    open = !1;
+                    W.classList.remove('open');
+                }
+            };
+            S.onclick = send;
+            I.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    send();
+                }
+            };
+            Q.forEach(function(b) {
+                b.onclick = function() {
+                    I.value = b.dataset.q;
+                    send();
+                };
+            });
+            document.getElementById('loginBtn').onclick = function() {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = !1;
+                S.disabled = !1;
+                addMsg('✅ Logged in! You can now connect to a live person.', 'system');
+            };
+            document.getElementById('registerBtn').onclick = function() {
+                auth = !0;
+                A.classList.remove('show');
+                I.disabled = !1;
+                S.disabled = !1;
+                addMsg('✅ Registered! You can now connect to a live person.', 'system');
+            };
+            I.disabled = !1;
+            S.disabled = !1;
+            setTimeout(function() {
+                addMsg('💡 Tip: Ask about any page -  "Ad Exchange", "Media", "Experts" or "Contact Us"!', 'system');
+            }, 1200);
+        })();
+
+        // ========== INIT ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            initCookiePopup();
+            console.log('🚀 Lanvai frontend initialized - all data saves to database!');
+            console.log('📡 API Base URL:', API_BASE);
+        });
+    </script>
+    <!-- Tracking Script -->
+<script>
+    (function() {
+        var API_BASE = 'http://localhost:5000/api';
+        var visitorId = localStorage.getItem('visitor_id');
+        if (!visitorId) {
+            visitorId = 'visitor_' + Math.random().toString(36).substring(2, 18);
+            localStorage.setItem('visitor_id', visitorId);
+        }
+
+        // Track page view
+        function trackPageView() {
+            var data = {
+                pageUrl: window.location.pathname || '/',
+                pageTitle: document.title || 'Unknown Page',
+                referrerUrl: document.referrer || ''
+            };
+            
+            fetch(API_BASE + '/track/pageview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(function() {});
+        }
+
+        // Track clicks
+        function setupClickTracking() {
+            document.addEventListener('click', function(e) {
+                var target = e.target;
+                var data = {
+                    elementId: target.id || '',
+                    elementClass: target.className || '',
+                    elementText: target.textContent ? target.textContent.trim().substring(0, 50) : '',
+                    pageUrl: window.location.pathname || '/'
+                };
+                
+                // Only track important clicks (links, buttons, etc.)
+                if (target.tagName === 'A' || target.tagName === 'BUTTON' || 
+                    target.closest('a') || target.closest('button')) {
+                    fetch(API_BASE + '/track/click', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {});
+                }
+            });
+        }
+
+        // Track form submissions
+        function setupFormTracking() {
+            document.addEventListener('submit', function(e) {
+                var form = e.target;
+                var data = {
+                    formType: form.id || form.name || 'unknown',
+                    formData: {}
+                };
+                
+                // Collect form data
+                var inputs = form.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    if (input.name) {
+                        data.formData[input.name] = input.value || '';
+                    }
+                });
+                
+                fetch(API_BASE + '/track/formsubmit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                }).catch(function() {});
+            });
+        }
+
+        // Initialize tracking
+        trackPageView();
+        setupClickTracking();
+        setupFormTracking();
+    })();
+</script>
+</body>
+
+</html>
